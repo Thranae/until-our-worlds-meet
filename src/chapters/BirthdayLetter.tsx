@@ -11,14 +11,50 @@ export const BirthdayLetter: React.FC<BirthdayLetterProps> = ({ onReturnToVoice 
   const [isUnsealed, setIsUnsealed] = useState(false);
   const letterRef = useRef<HTMLDivElement | null>(null);
 
+  const playCelebrationChime = () => {
+    try {
+      const AudioCtx =
+        window.AudioContext ||
+        (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      const ctx = new AudioCtx();
+      const now = ctx.currentTime;
+      const notes = [523.25, 659.25, 783.99, 1046.5]; // C5, E5, G5, C6 starry harp chime
+      notes.forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, now + idx * 0.1);
+        gain.gain.setValueAtTime(0.001, now + idx * 0.1);
+        gain.gain.linearRampToValueAtTime(0.16, now + idx * 0.1 + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.1 + 1.5);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now + idx * 0.1);
+        osc.stop(now + idx * 0.1 + 1.6);
+      });
+    } catch {
+      // Safe fallback if audio context blocked
+    }
+  };
+
   const handleUnseal = () => {
     if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
       try {
-        navigator.vibrate([15, 30, 20]);
+        navigator.vibrate([25, 50, 40, 60, 30]);
       } catch {
         // Safe fallback
       }
     }
+    playCelebrationChime();
+
+    // Trigger celestial shooting star celebration across the sky
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('trigger-celestial-wish'));
+      setTimeout(() => {
+        window.dispatchEvent(new CustomEvent('trigger-celestial-wish'));
+      }, 400);
+    }
+
     setIsUnsealed(true);
   };
 
@@ -357,6 +393,33 @@ export const BirthdayLetter: React.FC<BirthdayLetterProps> = ({ onReturnToVoice 
             >
               <BookOpen size={16} />
               <span>Read my letter again</span>
+            </button>
+
+            {/* Send a Wish Across the Sky Action */}
+            <button
+              type="button"
+              className="btn-secondary"
+              onClick={() => {
+                playCelebrationChime();
+                if (typeof window !== 'undefined') {
+                  window.dispatchEvent(new CustomEvent('trigger-celestial-wish'));
+                }
+                if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
+                  try {
+                    navigator.vibrate(20);
+                  } catch {
+                    // fallback
+                  }
+                }
+              }}
+              style={{
+                borderColor: 'rgba(253, 230, 138, 0.45)',
+                color: 'var(--color-gold-soft)',
+              }}
+              aria-label="Send a birthday wish across the sky"
+            >
+              <Sparkles size={15} color="#FDE68A" />
+              <span>Send a wish to the sky</span>
             </button>
 
             {/* Optional Call Option if enabled in config */}
