@@ -205,7 +205,29 @@ export const Starfield: React.FC = () => {
         }
       }
 
-      // 2. Draw & update interactive stardust particles
+      // 2. Draw dynamic constellation links between nearby interactive stardust particles
+      const pLen = particlesRef.current.length;
+      for (let i = 0; i < pLen; i++) {
+        const p1 = particlesRef.current[i];
+        for (let j = i + 1; j < pLen; j++) {
+          const p2 = particlesRef.current[j];
+          const dx = p1.x - p2.x;
+          const dy = p1.y - p2.y;
+          const distSq = dx * dx + dy * dy;
+          if (distSq < 3600) { // 60px
+            const dist = Math.sqrt(distSq);
+            const lineAlpha = (1 - dist / 60) * Math.min(p1.alpha, p2.alpha) * 0.45;
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.strokeStyle = `rgba(216, 204, 255, ${lineAlpha})`;
+            ctx.lineWidth = 0.8;
+            ctx.stroke();
+          }
+        }
+      }
+
+      // Draw & update interactive stardust particles
       for (let i = particlesRef.current.length - 1; i >= 0; i--) {
         const p = particlesRef.current[i];
         p.x += p.vx;

@@ -1,13 +1,14 @@
 import React, { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Volume2, BookOpen, Phone, Sparkles, MailOpen } from 'lucide-react';
+import { Volume2, BookOpen, Phone, Sparkles, MailOpen, Flame } from 'lucide-react';
 import { siteContent } from '../data/siteContent';
 
 interface BirthdayLetterProps {
   onReturnToVoice: () => void;
+  onOpenLantern?: () => void;
 }
 
-export const BirthdayLetter: React.FC<BirthdayLetterProps> = ({ onReturnToVoice }) => {
+export const BirthdayLetter: React.FC<BirthdayLetterProps> = ({ onReturnToVoice, onOpenLantern }) => {
   const [isUnsealed, setIsUnsealed] = useState(false);
   const letterRef = useRef<HTMLDivElement | null>(null);
 
@@ -421,6 +422,25 @@ export const BirthdayLetter: React.FC<BirthdayLetterProps> = ({ onReturnToVoice 
               <Sparkles size={15} color="#FDE68A" />
               <span>Send a wish to the sky</span>
             </button>
+
+            {/* Release a Midnight Sky Lantern Action */}
+            {onOpenLantern && (
+              <button
+                type="button"
+                className="btn-primary"
+                onClick={onOpenLantern}
+                style={{
+                  background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
+                  boxShadow: '0 6px 20px rgba(245, 158, 11, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3)',
+                  border: '1px solid rgba(254, 240, 138, 0.6)',
+                  color: '#FEF3C7',
+                }}
+                aria-label="Release a midnight sky lantern for Bot"
+              >
+                <Flame size={16} />
+                <span>Release a Sky Lantern ✦</span>
+              </button>
+            )}
 
             {/* Optional Call Option if enabled in config */}
             {contact.enableCallOption && contact.callUrl && (

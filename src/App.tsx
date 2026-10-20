@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
+import { Flame } from 'lucide-react';
 import { Starfield } from './components/Starfield';
 import { AmbientSoundscape } from './components/AmbientSoundscape';
 import { ProgressIndicator } from './components/ProgressIndicator';
+import { SkyLanternModal } from './components/SkyLanternModal';
 import { Invitation } from './chapters/Invitation';
 import { TwoWorlds } from './chapters/TwoWorlds';
 import { OurConnection } from './chapters/OurConnection';
@@ -13,6 +15,7 @@ import { siteContent } from './data/siteContent';
 
 export const App: React.FC = () => {
   const [currentChapter, setCurrentChapter] = useState(0);
+  const [isLanternModalOpen, setIsLanternModalOpen] = useState(false);
 
   const chapterNames = [
     'Invitation',
@@ -121,7 +124,7 @@ export const App: React.FC = () => {
           </span>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem', pointerEvents: 'auto' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', pointerEvents: 'auto' }}>
           <button
             type="button"
             onClick={() => {
@@ -139,8 +142,8 @@ export const App: React.FC = () => {
             style={{
               display: 'inline-flex',
               alignItems: 'center',
-              gap: '0.35rem',
-              padding: '0.35rem 0.75rem',
+              gap: '0.3rem',
+              padding: '0.35rem 0.65rem',
               borderRadius: 'var(--radius-full)',
               background: 'rgba(253, 230, 138, 0.1)',
               border: '1px solid rgba(253, 230, 138, 0.3)',
@@ -152,6 +155,39 @@ export const App: React.FC = () => {
             }}
           >
             <span>✦ Wish</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
+                try {
+                  navigator.vibrate(12);
+                } catch {
+                  // Safe fallback
+                }
+              }
+              setIsLanternModalOpen(true);
+            }}
+            title="Release a midnight sky lantern for Bot"
+            aria-label="Release a sky lantern"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.3rem',
+              padding: '0.35rem 0.65rem',
+              borderRadius: 'var(--radius-full)',
+              background: 'rgba(245, 158, 11, 0.15)',
+              border: '1px solid rgba(251, 191, 36, 0.35)',
+              color: '#FDE68A',
+              fontSize: '0.74rem',
+              fontFamily: 'var(--font-sans)',
+              cursor: 'pointer',
+              touchAction: 'manipulation',
+            }}
+          >
+            <Flame size={12} color="#F59E0B" fill="#F59E0B" />
+            <span>Lantern</span>
           </button>
 
           <AmbientSoundscape />
@@ -185,6 +221,7 @@ export const App: React.FC = () => {
             <BirthdayLetter
               key="ch-5"
               onReturnToVoice={() => setCurrentChapter(3)}
+              onOpenLantern={() => setIsLanternModalOpen(true)}
             />
           )}
         </AnimatePresence>
@@ -196,6 +233,12 @@ export const App: React.FC = () => {
         totalChapters={chapterNames.length}
         chapterNames={chapterNames}
         onSelectChapter={(index) => setCurrentChapter(index)}
+      />
+
+      {/* Interactive Sky Lantern Modal */}
+      <SkyLanternModal
+        isOpen={isLanternModalOpen}
+        onClose={() => setIsLanternModalOpen(false)}
       />
     </div>
   );
