@@ -12,8 +12,8 @@ export const MusicBoxChapter: React.FC<MusicBoxChapterProps> = ({ onProceed }) =
   return (
     <ChapterLayout
       id="chapter-music-box"
-      chapterNumber={6}
-      eyebrow="CHAPTER 06 • THE CELESTIAL MUSIC BOX"
+      chapterNumber={7}
+      eyebrow="CHAPTER 07 • THE CELESTIAL MUSIC BOX"
       title="The Celestial Music Box"
       subtitle="Hand-turned brass cylinder • Tuned steel comb • Starlight chime"
     >

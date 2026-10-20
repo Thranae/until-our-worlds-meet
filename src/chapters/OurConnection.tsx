@@ -12,12 +12,12 @@ export const OurConnection: React.FC<OurConnectionProps> = ({ onProceed }) => {
   return (
     <ChapterLayout
       id="chapter-our-connection"
-      chapterNumber={3}
-      eyebrow="CHAPTER 03 • THE ARTIFACTS"
+      chapterNumber={4}
+      eyebrow="CHAPTER 04 • THE ARTIFACTS"
       title="Things that mean more than they look"
       subtitle={`Not every meaningful thing has to be a big moment. Sometimes, it's a conversation, a voice note, a silly little thing that makes you smile, or just hearing from the person you wanted to hear from.\n\nThese are the little things I want to keep close.`}
       primaryAction={{
-        label: 'A little closer',
+        label: 'Late night frequencies',
         onClick: onProceed,
         icon: <ArrowRight size={17} />,
       }}

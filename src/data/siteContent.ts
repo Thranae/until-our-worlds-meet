@@ -174,6 +174,17 @@ export const siteContent: SiteConfiguration = {
       accent: "#A78BFA",
     },
     {
+      id: "mem-bgmi",
+      type: "joke",
+      title: "Dropping into the Zone",
+      subtitle: "Where our story started",
+      imagePath: null,
+      snippet: "Two random players in a BGMI lobby who became each other's favorite person.",
+      revealedNote:
+        "Out of all the matches, all the maps, and all the chaos, meeting you in BGMI was the luckiest drop I ever made. You with your AMR, me watching your six — best duo partner in the world.",
+      accent: "#EF4444",
+    },
+    {
       id: "mem-msg",
       type: "message",
       title: "A Genuine Message",

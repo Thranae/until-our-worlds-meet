@@ -17,7 +17,7 @@ export const TwoWorlds: React.FC<TwoWorldsProps> = ({ onProceed }) => {
       title="Different places, same little universe"
       subtitle={`We're in different cities, under different skies. And somehow, you've become such a special part of my everyday life.\n\nIt's strange and beautiful how someone can feel close even when they're far away.`}
       primaryAction={{
-        label: 'Discover the little things',
+        label: 'Where we first dropped ✦',
         onClick: onProceed,
         icon: <ArrowRight size={17} />,
       }}
