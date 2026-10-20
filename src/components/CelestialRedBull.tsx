@@ -430,6 +430,30 @@ export const CelestialRedBull: React.FC = () => {
                 position: 'relative',
               }}
             >
+              {/* Cold condensation vapor mist plume when popped */}
+              {isOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: 0, scale: 0.8 }}
+                  animate={{
+                    opacity: [0.5, 0.2, 0],
+                    y: [-4, -30],
+                    scale: [0.8, 1.5],
+                  }}
+                  transition={{ duration: 1.8, repeat: Infinity, ease: 'easeOut' }}
+                  style={{
+                    position: 'absolute',
+                    top: '-6px',
+                    width: '32px',
+                    height: '16px',
+                    borderRadius: '50%',
+                    background: 'radial-gradient(circle, rgba(255,255,255,0.75) 0%, rgba(200,230,255,0.3) 60%, transparent 100%)',
+                    filter: 'blur(3px)',
+                    pointerEvents: 'none',
+                    zIndex: 10,
+                  }}
+                />
+              )}
+
               {/* Stay-on Pull Tab with Teardrop Ring */}
               <motion.div
                 animate={{

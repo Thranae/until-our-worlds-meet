@@ -225,6 +225,10 @@ export const SkyLanternFlight: React.FC<SkyLanternFlightProps> = ({ onProceedToL
       }
 
       // 2. Volumetric drifting clouds (drifting horizontally with soft moonlight shading)
+      // Occasional soft ambient lightning pulse inside cloud deck
+      const isLightning = flightState === 'clouds' && (frame % 160 > 148);
+      const lightningAlpha = isLightning ? (Math.sin(frame * 0.8) * 0.18 + 0.15) : 0;
+
       for (let i = 0; i < clouds.length; i++) {
         const c = clouds[i];
         c.x -= c.speed;
@@ -237,8 +241,9 @@ export const SkyLanternFlight: React.FC<SkyLanternFlightProps> = ({ onProceedToL
         // If lantern is ascending through clouds, illuminate the clouds with warm candle rim-light!
         const isWarmCloud = flightState === 'clouds' || flightState === 'ascending';
         if (isWarmCloud) {
-          cloudGrad.addColorStop(0, `rgba(254, 240, 138, ${c.opacity * 0.6})`);
-          cloudGrad.addColorStop(0.5, `rgba(167, 139, 250, ${c.opacity * 0.4})`);
+          const warmAlpha = Math.min(1, c.opacity * 0.65 + lightningAlpha);
+          cloudGrad.addColorStop(0, `rgba(254, 240, 138, ${warmAlpha})`);
+          cloudGrad.addColorStop(0.5, `rgba(167, 139, 250, ${c.opacity * 0.45 + lightningAlpha * 0.5})`);
           cloudGrad.addColorStop(1, 'transparent');
         } else {
           cloudGrad.addColorStop(0, `rgba(216, 204, 255, ${c.opacity * 0.5})`);
@@ -257,14 +262,14 @@ export const SkyLanternFlight: React.FC<SkyLanternFlightProps> = ({ onProceedToL
         const lanternScreenX = w / 2 + lanternX;
         const lanternScreenY = flightState === 'ascending' ? h * 0.55 : h * 0.35;
 
-        if (Math.random() > 0.4) {
+        if (Math.random() > 0.3) {
           embers.push({
-            x: lanternScreenX + (Math.random() - 0.5) * 20,
+            x: lanternScreenX + (Math.random() - 0.5) * 24,
             y: lanternScreenY + 40,
-            vx: (Math.random() - 0.5) * 1.2,
-            vy: Math.random() * 2 + 1,
-            alpha: 0.9,
-            size: Math.random() * 3 + 1.5,
+            vx: (Math.random() - 0.5) * 1.5,
+            vy: Math.random() * 2.2 + 1,
+            alpha: 0.95,
+            size: Math.random() * 3.5 + 1.5,
           });
         }
       }
@@ -374,7 +379,7 @@ export const SkyLanternFlight: React.FC<SkyLanternFlightProps> = ({ onProceedToL
           }}
         >
           <Flame size={13} color="#F59E0B" fill="#F59E0B" />
-          <span>CHAPTER 07 • THE ASCENT THROUGH THE CLOUDS</span>
+          <span>CHAPTER 09 • THE ASCENT THROUGH THE CLOUDS</span>
         </div>
 
         <h2

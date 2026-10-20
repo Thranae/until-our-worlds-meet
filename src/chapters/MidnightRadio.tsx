@@ -16,7 +16,7 @@ export const MidnightRadio: React.FC<MidnightRadioProps> = ({ onProceed }) => {
       title="Signals travelling through the dark"
       subtitle={`Late at night, when the rest of the world is quiet, it's our thoughts and conversations traveling across the miles.\n\nSlide the tuning dial to explore our shared late-night frequencies — from soothing rain to your special birthday channel.`}
       primaryAction={{
-        label: 'A voice for you',
+        label: 'Look through the window',
         onClick: onProceed,
         icon: <ArrowRight size={17} />,
       }}
