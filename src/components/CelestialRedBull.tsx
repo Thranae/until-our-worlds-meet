@@ -17,14 +17,14 @@ export const CelestialRedBull: React.FC = () => {
   const bubbleCounterRef = useRef(0);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
-  // 3D Interactive Tilt on Mobile Touch / Mouse
+  // 3D Interactive Spring Physics on Touch / Drag
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
-  const springConfig = { damping: 25, stiffness: 220 };
-  const rotateX = useSpring(useTransform(mouseY, [-100, 100], [12, -12]), springConfig);
-  const rotateY = useSpring(useTransform(mouseX, [-100, 100], [-15, 15]), springConfig);
-  const glintX = useSpring(useTransform(mouseX, [-100, 100], [-30, 30]), springConfig);
+  const springConfig = { damping: 20, stiffness: 200 };
+  const rotateX = useSpring(useTransform(mouseY, [-120, 120], [14, -14]), springConfig);
+  const rotateY = useSpring(useTransform(mouseX, [-120, 120], [-18, 18]), springConfig);
+  const specularX = useSpring(useTransform(mouseX, [-120, 120], [-25, 25]), springConfig);
 
   const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
     if (!containerRef.current) return;
@@ -49,20 +49,20 @@ export const CelestialRedBull: React.FC = () => {
       const ctx = new AudioCtx();
       const now = ctx.currentTime;
 
-      // 1. Mechanical aluminum tab snap
-      const osc = ctx.createOscillator();
-      const clickGain = ctx.createGain();
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(520, now);
-      osc.frequency.exponentialRampToValueAtTime(80, now + 0.05);
-      clickGain.gain.setValueAtTime(0.35, now);
-      clickGain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
-      osc.connect(clickGain);
-      clickGain.connect(ctx.destination);
-      osc.start(now);
-      osc.stop(now + 0.07);
+      // 1. Mechanical aluminum stay-on tab snap
+      const snapOsc = ctx.createOscillator();
+      const snapGain = ctx.createGain();
+      snapOsc.type = 'triangle';
+      snapOsc.frequency.setValueAtTime(540, now);
+      snapOsc.frequency.exponentialRampToValueAtTime(75, now + 0.05);
+      snapGain.gain.setValueAtTime(0.4, now);
+      snapGain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+      snapOsc.connect(snapGain);
+      snapGain.connect(ctx.destination);
+      snapOsc.start(now);
+      snapOsc.stop(now + 0.07);
 
-      // 2. High-pressure carbonation fizz (white noise through bandpass filter)
+      // 2. High-pressure carbonation fizz (filtered white noise burst)
       const bufferSize = Math.floor(ctx.sampleRate * 0.65);
       const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
       const output = noiseBuffer.getChannelData(0);
@@ -75,12 +75,12 @@ export const CelestialRedBull: React.FC = () => {
 
       const filter = ctx.createBiquadFilter();
       filter.type = 'bandpass';
-      filter.frequency.setValueAtTime(4800, now);
-      filter.Q.setValueAtTime(1.5, now);
+      filter.frequency.setValueAtTime(5000, now);
+      filter.Q.setValueAtTime(1.6, now);
 
       const fizzGain = ctx.createGain();
       fizzGain.gain.setValueAtTime(0.001, now);
-      fizzGain.gain.linearRampToValueAtTime(0.26, now + 0.02);
+      fizzGain.gain.linearRampToValueAtTime(0.28, now + 0.02);
       fizzGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.6);
 
       whiteNoise.connect(filter);
@@ -90,18 +90,18 @@ export const CelestialRedBull: React.FC = () => {
       whiteNoise.start(now + 0.01);
       whiteNoise.stop(now + 0.65);
 
-      // 3. Delicate starry chime note upon opening
-      const chimeOsc = ctx.createOscillator();
-      const chimeGain = ctx.createGain();
-      chimeOsc.type = 'sine';
-      chimeOsc.frequency.setValueAtTime(880, now + 0.08); // A5
-      chimeGain.gain.setValueAtTime(0.001, now + 0.08);
-      chimeGain.gain.linearRampToValueAtTime(0.12, now + 0.1);
-      chimeGain.gain.exponentialRampToValueAtTime(0.0001, now + 1.2);
-      chimeOsc.connect(chimeGain);
-      chimeGain.connect(ctx.destination);
-      chimeOsc.start(now + 0.08);
-      chimeOsc.stop(now + 1.3);
+      // 3. Delicate crystal bell chime upon opening
+      const bellOsc = ctx.createOscillator();
+      const bellGain = ctx.createGain();
+      bellOsc.type = 'sine';
+      bellOsc.frequency.setValueAtTime(880, now + 0.06);
+      bellGain.gain.setValueAtTime(0.001, now + 0.06);
+      bellGain.gain.linearRampToValueAtTime(0.14, now + 0.09);
+      bellGain.gain.exponentialRampToValueAtTime(0.0001, now + 1.4);
+      bellOsc.connect(bellGain);
+      bellGain.connect(ctx.destination);
+      bellOsc.start(now + 0.06);
+      bellOsc.stop(now + 1.5);
     } catch {
       // Audio context fallback if muted
     }
@@ -127,13 +127,13 @@ export const CelestialRedBull: React.FC = () => {
     }
 
     // Spawn fizzy bubbles
-    const newBubbles: Bubble[] = Array.from({ length: 22 }, () => {
+    const newBubbles: Bubble[] = Array.from({ length: 24 }, () => {
       bubbleCounterRef.current += 1;
       return {
         id: bubbleCounterRef.current,
-        x: Math.random() * 48 - 24,
+        x: Math.random() * 46 - 23,
         size: Math.random() * 5 + 3,
-        speed: Math.random() * 1.3 + 0.7,
+        speed: Math.random() * 1.2 + 0.8,
         delay: Math.random() * 0.4,
       };
     });
@@ -155,24 +155,37 @@ export const CelestialRedBull: React.FC = () => {
 
   useEffect(() => {
     if (!isOpen) return;
-    // Keep a gentle bubbling stream active while open
     const interval = setInterval(() => {
       setBubbles((prev) => {
         bubbleCounterRef.current += 1;
         const fresh: Bubble = {
           id: bubbleCounterRef.current,
-          x: Math.random() * 40 - 20,
+          x: Math.random() * 38 - 19,
           size: Math.random() * 4 + 2,
-          speed: Math.random() * 1.4 + 0.9,
+          speed: Math.random() * 1.3 + 0.9,
           delay: 0,
         };
         const updated = [...prev.slice(-18), fresh];
         return updated;
       });
-    }, 400);
+    }, 380);
 
     return () => clearInterval(interval);
   }, [isOpen]);
+
+  // Condensation water droplet positions (x%, y%, size)
+  const droplets = [
+    { x: 22, y: 35, s: 3.5 },
+    { x: 30, y: 48, s: 4.5 },
+    { x: 26, y: 72, s: 3 },
+    { x: 74, y: 40, s: 4 },
+    { x: 80, y: 65, s: 3.5 },
+    { x: 68, y: 82, s: 5 },
+    { x: 45, y: 28, s: 3 },
+    { x: 55, y: 78, s: 4 },
+    { x: 18, y: 60, s: 3.5 },
+    { x: 85, y: 25, s: 3 },
+  ];
 
   return (
     <div
@@ -181,7 +194,7 @@ export const CelestialRedBull: React.FC = () => {
       onPointerLeave={handlePointerLeave}
       style={{
         width: '100%',
-        maxWidth: '580px',
+        maxWidth: '560px',
         margin: '2rem auto 1.5rem',
         display: 'flex',
         flexDirection: 'column',
@@ -235,7 +248,7 @@ export const CelestialRedBull: React.FC = () => {
           lineHeight: 1.55,
         }}
       >
-        For the days you work so hard, the late-night study sessions, and every call across our timezones. Tap the cold can to pop the tab.
+        Because you love Red Bull, and because you work so hard. Tap the cold can to pop the tab.
       </p>
 
       {/* 3D CAN & WINGS STAGE */}
@@ -243,8 +256,8 @@ export const CelestialRedBull: React.FC = () => {
         style={{
           position: 'relative',
           width: '100%',
-          maxWidth: '360px',
-          height: '350px',
+          maxWidth: '380px',
+          height: '370px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -263,14 +276,14 @@ export const CelestialRedBull: React.FC = () => {
                 top: '46%',
                 left: '50%',
                 transform: 'translate(-50%, -50%)',
-                width: '360px',
+                width: '380px',
                 height: '240px',
                 pointerEvents: 'none',
                 zIndex: 1,
               }}
             >
               <svg
-                viewBox="0 0 360 240"
+                viewBox="0 0 380 240"
                 style={{
                   width: '100%',
                   height: '100%',
@@ -307,7 +320,7 @@ export const CelestialRedBull: React.FC = () => {
 
                 {/* Right Feather Wing */}
                 <motion.path
-                  d="M220,130 C255,70 300,35 355,60 C320,95 285,130 225,148 C270,148 315,135 345,118 C310,150 265,168 220,162 Z"
+                  d="M240,130 C275,70 320,35 375,60 C340,95 305,130 245,148 C290,148 335,135 365,118 C330,150 285,168 240,162 Z"
                   fill="url(#wingGradRightReal)"
                   animate={{
                     rotate: [3, -4, 3],
@@ -317,7 +330,7 @@ export const CelestialRedBull: React.FC = () => {
                     repeat: Infinity,
                     ease: 'easeInOut',
                   }}
-                  style={{ transformOrigin: '220px 140px' }}
+                  style={{ transformOrigin: '240px 140px' }}
                 />
               </svg>
             </motion.div>
@@ -329,13 +342,13 @@ export const CelestialRedBull: React.FC = () => {
           <div
             style={{
               position: 'absolute',
-              top: '10px',
+              top: '12px',
               left: '50%',
               transform: 'translateX(-50%)',
               width: '50px',
               height: '90px',
               pointerEvents: 'none',
-              zIndex: 10,
+              zIndex: 12,
             }}
           >
             {bubbles.map((b) => (
@@ -361,13 +374,15 @@ export const CelestialRedBull: React.FC = () => {
           </div>
         )}
 
-        {/* REALISTIC 3D RED BULL CAN WITH TOUCH TILT */}
+        {/* ========================================================================= */}
+        {/* STANDALONE REALISTIC 3D BEVERAGE CAN OBJECT (Physically Shaped Cylinder)   */}
+        {/* ========================================================================= */}
         <motion.div
           onClick={handleOpenCan}
-          whileHover={{ scale: 1.05 }}
+          whileHover={{ scale: 1.04 }}
           whileTap={{ scale: 0.96 }}
           style={{
-            width: '140px',
+            width: '126px',
             height: '290px',
             position: 'relative',
             zIndex: 4,
@@ -375,81 +390,403 @@ export const CelestialRedBull: React.FC = () => {
             rotateX,
             rotateY,
             transformStyle: 'preserve-3d',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
             filter: isOpen
-              ? 'drop-shadow(0 20px 35px rgba(0, 0, 0, 0.75)) drop-shadow(0 0 35px rgba(253, 230, 138, 0.6))'
-              : 'drop-shadow(0 18px 30px rgba(0, 0, 0, 0.7)) drop-shadow(0 0 20px rgba(37, 99, 235, 0.4))',
+              ? 'drop-shadow(0 22px 35px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 35px rgba(253, 230, 138, 0.6))'
+              : 'drop-shadow(0 20px 30px rgba(0, 0, 0, 0.75)) drop-shadow(0 0 25px rgba(37, 99, 235, 0.45))',
           }}
           aria-label={isOpen ? "Red Bull can opened" : "Tap to pop Bot's Red Bull can"}
         >
-          {/* Photorealistic Rendered Can Image */}
-          <img
-            src="/images/redbull-bot-can.jpg"
-            alt="Bot's Custom Red Bull Energy Drink Can"
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'contain',
-              borderRadius: '24px',
-              display: 'block',
-              pointerEvents: 'none',
-              userSelect: 'none',
-            }}
-          />
-
-          {/* Dynamic Light Specular Sheen (glides across condensation droplets on tilt) */}
-          <motion.div
-            style={{
-              position: 'absolute',
-              top: '6%',
-              bottom: '6%',
-              left: '12%',
-              right: '12%',
-              borderRadius: '20px',
-              background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.28) 45%, rgba(255,255,255,0.45) 50%, rgba(255,255,255,0.15) 55%, transparent 100%)',
-              mixBlendMode: 'overlay',
-              pointerEvents: 'none',
-              x: glintX,
-            }}
-          />
-
-          {/* Frost / Cold Vapor Aura */}
+          {/* 1. TOP RIM & CHINE (Curved Inward Beveled Aluminum Top) */}
           <div
             style={{
-              position: 'absolute',
-              inset: '-8px',
-              borderRadius: '30px',
-              background: 'radial-gradient(ellipse at 50% 50%, rgba(147, 197, 253, 0.15) 0%, transparent 70%)',
-              filter: 'blur(10px)',
-              pointerEvents: 'none',
+              width: '104px',
+              height: '26px',
+              borderRadius: '50% 50% 0 0 / 14px 14px 0 0',
+              background: 'linear-gradient(90deg, #64748B 0%, #CBD5E1 20%, #F8FAFC 45%, #94A3B8 75%, #475569 100%)',
+              border: '1.5px solid rgba(255, 255, 255, 0.6)',
+              borderBottom: 'none',
+              boxShadow: 'inset 0 3px 6px rgba(255, 255, 255, 0.8), inset 0 -3px 6px rgba(0, 0, 0, 0.4)',
+              position: 'relative',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              overflow: 'hidden',
+            }}
+          >
+            {/* Recessed Lid Basin */}
+            <div
+              style={{
+                width: '88px',
+                height: '18px',
+                borderRadius: '50%',
+                background: 'radial-gradient(ellipse at 50% 40%, #E2E8F0 0%, #94A3B8 70%, #475569 100%)',
+                boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.6), 0 1px 2px rgba(255, 255, 255, 0.5)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                position: 'relative',
+              }}
+            >
+              {/* Stay-on Pull Tab with Teardrop Ring */}
+              <motion.div
+                animate={{
+                  rotateX: isOpen ? -55 : 0,
+                  y: isOpen ? -3 : 0,
+                }}
+                transition={{ duration: 0.35, ease: 'easeOut' }}
+                style={{
+                  width: '32px',
+                  height: '15px',
+                  borderRadius: '6px 6px 4px 4px',
+                  background: 'linear-gradient(180deg, #F8FAFC 0%, #CBD5E1 50%, #64748B 100%)',
+                  border: '1px solid #475569',
+                  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.8)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  padding: '0 4px',
+                  transformOrigin: 'bottom center',
+                  zIndex: 2,
+                }}
+              >
+                {/* Teardrop finger pull hole */}
+                <div
+                  style={{
+                    width: '9px',
+                    height: '9px',
+                    borderRadius: '50%',
+                    backgroundColor: '#1E293B',
+                    boxShadow: 'inset 0 1px 2px rgba(0, 0, 0, 0.9)',
+                  }}
+                />
+                {/* Stay-on center rivet */}
+                <div
+                  style={{
+                    width: '5px',
+                    height: '5px',
+                    borderRadius: '50%',
+                    backgroundColor: '#E2E8F0',
+                    border: '1px solid #475569',
+                    boxShadow: '0 1px 2px rgba(0,0,0,0.4)',
+                  }}
+                />
+              </motion.div>
+            </div>
+          </div>
+
+          {/* 2. TAPERED SLOPED NECK (Transitions from narrow rim to main body) */}
+          <div
+            style={{
+              width: '100%',
+              height: '14px',
+              background: 'linear-gradient(90deg, #475569 0%, #94A3B8 22%, #F8FAFC 45%, #64748B 75%, #334155 100%)',
+              clipPath: 'polygon(9% 0%, 91% 0%, 100% 100%, 0% 100%)',
+              boxShadow: 'inset 0 2px 3px rgba(255, 255, 255, 0.5)',
             }}
           />
 
-          {/* Interactive Tap Hint Badge when unopened */}
+          {/* 3. MAIN CYLINDRICAL CAN BODY (Brushed Aluminum Cylinder with Vector Graphics) */}
+          <div
+            style={{
+              width: '126px',
+              height: '232px',
+              position: 'relative',
+              overflow: 'hidden',
+              background: 'linear-gradient(135deg, #001B54 0%, #001B54 48%, #CBD5E1 48%, #E2E8F0 100%)',
+              borderLeft: '1px solid rgba(255, 255, 255, 0.2)',
+              borderRight: '1px solid rgba(0, 0, 0, 0.4)',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '0.65rem 0.4rem',
+            }}
+          >
+            {/* Top Can Text */}
+            <div style={{ textAlign: 'center', width: '100%', zIndex: 2 }}>
+              <span
+                style={{
+                  display: 'block',
+                  fontSize: '0.48rem',
+                  fontFamily: 'var(--font-sans)',
+                  fontWeight: 800,
+                  color: '#CBD5E1',
+                  letterSpacing: '0.12em',
+                  textTransform: 'uppercase',
+                  textShadow: '0 1px 2px rgba(0,0,0,0.8)',
+                }}
+              >
+                ORIGINAL FORMULA
+              </span>
+            </div>
+
+            {/* Radiant Golden Sun Disk with Twin Charging Red Bulls */}
+            <div
+              style={{
+                position: 'relative',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                zIndex: 2,
+                margin: 'auto 0',
+              }}
+            >
+              {/* Sun Disk */}
+              <div
+                style={{
+                  width: '56px',
+                  height: '56px',
+                  borderRadius: '50%',
+                  background: 'radial-gradient(circle, #FDE047 0%, #EAB308 60%, #CA8A04 100%)',
+                  boxShadow: '0 0 16px rgba(234, 179, 8, 0.75), inset 0 2px 4px rgba(255, 255, 255, 0.6)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  position: 'relative',
+                }}
+              >
+                {/* Twin Charging Red Bulls Silhouette with horns locking */}
+                <svg viewBox="0 0 60 30" style={{ width: '50px', height: '26px' }}>
+                  {/* Left Bull */}
+                  <path
+                    d="M26,16 C23,12 18,10 13,11 C11,9 7,8 3,11 C2,13 4,14 6,14 C8,14 9,16 11,18 C14,21 18,22 22,20 C24,19 25,17 26,16 Z"
+                    fill="#DC2626"
+                    stroke="#FFFFFF"
+                    strokeWidth="0.8"
+                  />
+                  {/* Right Bull */}
+                  <path
+                    d="M34,16 C37,12 42,10 47,11 C49,9 53,8 57,11 C58,13 56,14 54,14 C52,14 51,16 49,18 C46,21 42,22 38,20 C36,19 35,17 34,16 Z"
+                    fill="#DC2626"
+                    stroke="#FFFFFF"
+                    strokeWidth="0.8"
+                  />
+                  {/* Locked Horns Sparkle */}
+                  <circle cx="30" cy="14" r="1.8" fill="#FFFFFF" />
+                </svg>
+              </div>
+
+              {/* Bold Brand Typography */}
+              <div style={{ textAlign: 'center', marginTop: '6px' }}>
+                <span
+                  style={{
+                    display: 'block',
+                    fontSize: '1.25rem',
+                    fontFamily: 'var(--font-sans)',
+                    fontWeight: 900,
+                    fontStyle: 'italic',
+                    color: '#DC2626',
+                    letterSpacing: '-0.02em',
+                    lineHeight: 0.95,
+                    textShadow: '0 1px 0 #FFFFFF, 0 2px 4px rgba(0, 0, 0, 0.9)',
+                  }}
+                >
+                  Red Bull
+                </span>
+                <span
+                  style={{
+                    display: 'block',
+                    fontSize: '0.52rem',
+                    fontFamily: 'var(--font-sans)',
+                    fontWeight: 900,
+                    letterSpacing: '0.14em',
+                    color: '#001B54',
+                    textTransform: 'uppercase',
+                    marginTop: '3px',
+                    textShadow: '0 0.5px 0 #FFFFFF',
+                  }}
+                >
+                  ENERGY DRINK
+                </span>
+
+                {/* Custom BOT EDITION Badge */}
+                <div
+                  style={{
+                    display: 'inline-block',
+                    marginTop: '4px',
+                    padding: '2px 8px',
+                    borderRadius: '3px',
+                    background: '#DC2626',
+                    boxShadow: '0 2px 6px rgba(220, 38, 38, 0.6)',
+                  }}
+                >
+                  <span
+                    style={{
+                      fontSize: '0.55rem',
+                      fontFamily: 'var(--font-sans)',
+                      fontWeight: 900,
+                      color: '#FFFFFF',
+                      letterSpacing: '0.08em',
+                      textTransform: 'uppercase',
+                    }}
+                  >
+                    BOT EDITION
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom Tagline */}
+            <div style={{ textAlign: 'center', width: '100%', zIndex: 2 }}>
+              <span
+                style={{
+                  display: 'block',
+                  fontSize: '0.46rem',
+                  fontFamily: 'var(--font-sans)',
+                  fontWeight: 600,
+                  color: 'rgba(255, 255, 255, 0.9)',
+                  letterSpacing: '0.04em',
+                  textShadow: '0 1px 2px rgba(0,0,0,0.8)',
+                }}
+              >
+                Vitalizes body and mind
+              </span>
+              <span
+                style={{
+                  display: 'block',
+                  fontSize: '0.5rem',
+                  fontFamily: 'var(--font-sans)',
+                  fontWeight: 800,
+                  color: '#FEF08A',
+                  letterSpacing: '0.06em',
+                  marginTop: '1px',
+                }}
+              >
+                250 ml ✦ Infinite Love
+              </span>
+            </div>
+
+            {/* ======================================================= */}
+            {/* CYLINDRICAL SPECULAR METALLIC SHADING OVERLAYS         */}
+            {/* ======================================================= */}
+            {/* Left Edge Curve Shadow */}
+            <div
+              style={{
+                position: 'absolute',
+                top: 0,
+                bottom: 0,
+                left: 0,
+                width: '18px',
+                background: 'linear-gradient(90deg, rgba(0,0,0,0.65) 0%, transparent 100%)',
+                pointerEvents: 'none',
+                zIndex: 3,
+              }}
+            />
+
+            {/* Dynamic Moving Specular Highlight (Glides with 3D tilt) */}
+            <motion.div
+              style={{
+                position: 'absolute',
+                top: 0,
+                bottom: 0,
+                left: '20px',
+                width: '32px',
+                background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 30%, rgba(255,255,255,0.7) 50%, rgba(255,255,255,0.2) 70%, transparent 100%)',
+                mixBlendMode: 'screen',
+                pointerEvents: 'none',
+                zIndex: 3,
+                x: specularX,
+              }}
+            />
+
+            {/* Right Rim Rim-Light Reflection */}
+            <div
+              style={{
+                position: 'absolute',
+                top: 0,
+                bottom: 0,
+                right: 0,
+                width: '16px',
+                background: 'linear-gradient(270deg, rgba(255,255,255,0.35) 0%, rgba(0,0,0,0.55) 100%)',
+                pointerEvents: 'none',
+                zIndex: 3,
+              }}
+            />
+
+            {/* Fine Brushed Metal Lines */}
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background: 'repeating-linear-gradient(180deg, transparent, transparent 3px, rgba(0,0,0,0.06) 3px, rgba(0,0,0,0.06) 4px)',
+                pointerEvents: 'none',
+                zIndex: 3,
+              }}
+            />
+
+            {/* Realistic Condensation Water Droplets */}
+            {droplets.map((d, idx) => (
+              <div
+                key={idx}
+                style={{
+                  position: 'absolute',
+                  top: `${d.y}%`,
+                  left: `${d.x}%`,
+                  width: `${d.s}px`,
+                  height: `${d.s * 1.3}px`,
+                  borderRadius: '50% 50% 45% 45%',
+                  background: 'radial-gradient(circle at 35% 30%, rgba(255,255,255,0.95) 0%, rgba(200,225,255,0.6) 50%, rgba(0,0,0,0.35) 100%)',
+                  boxShadow: '0 1px 2px rgba(0,0,0,0.4)',
+                  pointerEvents: 'none',
+                  zIndex: 4,
+                }}
+              />
+            ))}
+          </div>
+
+          {/* 4. TAPERED BOTTOM BASE (Curved inward aluminum bottom chime) */}
+          <div
+            style={{
+              width: '100%',
+              height: '18px',
+              background: 'linear-gradient(90deg, #334155 0%, #64748B 20%, #E2E8F0 50%, #64748B 80%, #1E293B 100%)',
+              clipPath: 'polygon(0% 0%, 100% 0%, 88% 100%, 12% 100%)',
+              boxShadow: 'inset 0 -2px 4px rgba(0,0,0,0.7)',
+            }}
+          />
+
+          {/* Bottom Rim */}
+          <div
+            style={{
+              width: '94px',
+              height: '6px',
+              borderRadius: '0 0 50% 50% / 0 0 6px 6px',
+              background: 'linear-gradient(90deg, #475569 0%, #CBD5E1 50%, #334155 100%)',
+              boxShadow: '0 6px 12px rgba(0, 0, 0, 0.6)',
+            }}
+          />
+
+          {/* Tap hint badge on can when unopened */}
           {!isOpen && (
             <motion.div
               animate={{
                 y: [0, -5, 0],
-                opacity: [0.85, 1, 0.85],
+                opacity: [0.9, 1, 0.9],
               }}
               transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
               style={{
                 position: 'absolute',
-                top: '-15px',
+                top: '-20px',
                 left: '50%',
                 transform: 'translateX(-50%)',
                 background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
-                boxShadow: '0 4px 15px rgba(217, 119, 6, 0.5)',
+                boxShadow: '0 4px 15px rgba(217, 119, 6, 0.55)',
                 color: '#FEF3C7',
-                padding: '0.2rem 0.65rem',
+                padding: '0.22rem 0.75rem',
                 borderRadius: 'var(--radius-full)',
-                fontSize: '0.66rem',
-                fontWeight: 700,
-                letterSpacing: '0.04em',
+                fontSize: '0.68rem',
+                fontWeight: 800,
+                letterSpacing: '0.06em',
                 whiteSpace: 'nowrap',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.3rem',
+                gap: '0.35rem',
                 pointerEvents: 'none',
+                zIndex: 10,
               }}
             >
               <Sparkles size={11} />

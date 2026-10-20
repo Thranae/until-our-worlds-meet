@@ -12,14 +12,44 @@ export const Constellation: React.FC = () => {
   const handleStarClick = (star: ConstellationStar) => {
     if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
       try {
-        navigator.vibrate(15);
+        navigator.vibrate(18);
       } catch {
         // Safe fallback
       }
     }
     setActiveStarId(star.id);
     if (!discoveredStars.includes(star.id)) {
-      setDiscoveredStars((prev) => [...prev, star.id]);
+      const nextDiscovered = [...discoveredStars, star.id];
+      setDiscoveredStars(nextDiscovered);
+
+      // If all 4 stars are now discovered, trigger celestial alignment celebration!
+      if (nextDiscovered.length === stars.length) {
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('trigger-celestial-wish'));
+        }
+        try {
+          const AudioCtx =
+            window.AudioContext ||
+            (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+          const ctx = new AudioCtx();
+          const now = ctx.currentTime;
+          const notes = [440.0, 554.37, 659.25, 880.0]; // A major alignment chord
+          notes.forEach((freq, idx) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.frequency.setValueAtTime(freq, now + idx * 0.12);
+            gain.gain.setValueAtTime(0.001, now + idx * 0.12);
+            gain.gain.linearRampToValueAtTime(0.18, now + idx * 0.12 + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.12 + 1.8);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now + idx * 0.12);
+            osc.stop(now + idx * 0.12 + 1.9);
+          });
+        } catch {
+          // fallback
+        }
+      }
     }
   };
 

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Moon, Clock } from 'lucide-react';
+import { Moon, Clock, Heart } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export const CelestialSkyClock: React.FC = () => {
   const [time, setTime] = useState(new Date());
+  const [pulseSent, setPulseSent] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -35,6 +36,56 @@ export const CelestialSkyClock: React.FC = () => {
 
   const formatHoursMins = (d: Date) => {
     return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  };
+
+  const sendHeartbeatPulse = () => {
+    try {
+      const AudioCtx =
+        window.AudioContext ||
+        (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      const ctx = new AudioCtx();
+      const now = ctx.currentTime;
+
+      // Heartbeat thump 1
+      const osc1 = ctx.createOscillator();
+      const g1 = ctx.createGain();
+      osc1.frequency.setValueAtTime(65, now);
+      osc1.frequency.exponentialRampToValueAtTime(35, now + 0.08);
+      g1.gain.setValueAtTime(0.35, now);
+      g1.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+      osc1.connect(g1);
+      g1.connect(ctx.destination);
+      osc1.start(now);
+      osc1.stop(now + 0.11);
+
+      // Heartbeat thump 2
+      const osc2 = ctx.createOscillator();
+      const g2 = ctx.createGain();
+      osc2.frequency.setValueAtTime(75, now + 0.14);
+      osc2.frequency.exponentialRampToValueAtTime(35, now + 0.22);
+      g2.gain.setValueAtTime(0.28, now + 0.14);
+      g2.gain.exponentialRampToValueAtTime(0.001, now + 0.24);
+      osc2.connect(g2);
+      g2.connect(ctx.destination);
+      osc2.start(now + 0.14);
+      osc2.stop(now + 0.25);
+    } catch {
+      // safe fallback
+    }
+
+    if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
+      try {
+        navigator.vibrate([25, 60, 25]);
+      } catch {
+        // safe fallback
+      }
+    }
+
+    setPulseSent(true);
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('trigger-celestial-wish'));
+    }
+    setTimeout(() => setPulseSent(false), 3500);
   };
 
   return (
@@ -127,6 +178,53 @@ export const CelestialSkyClock: React.FC = () => {
         </div>
       </div>
 
+      {/* Interactive Heartbeat Pulse Button */}
+      <div
+        style={{
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '0.4rem',
+          padding: '0.4rem 0',
+        }}
+      >
+        <motion.button
+          type="button"
+          onClick={sendHeartbeatPulse}
+          whileHover={{ scale: 1.04 }}
+          whileTap={{ scale: 0.94 }}
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.45rem',
+            padding: '0.4rem 0.95rem',
+            borderRadius: 'var(--radius-full)',
+            background: pulseSent ? 'rgba(239, 68, 68, 0.22)' : 'rgba(255, 255, 255, 0.06)',
+            border: pulseSent ? '1px solid rgba(239, 68, 68, 0.5)' : '1px solid rgba(216, 204, 255, 0.22)',
+            color: pulseSent ? '#FCA5A5' : 'var(--color-ivory)',
+            fontSize: '0.78rem',
+            fontWeight: 600,
+            cursor: 'pointer',
+            boxShadow: pulseSent ? '0 0 15px rgba(239, 68, 68, 0.4)' : 'none',
+            transition: 'all 0.25s ease',
+          }}
+          aria-label="Send a heartbeat pulse signal across the distance"
+        >
+          <Heart size={13} color={pulseSent ? "#F87171" : "#A78BFA"} fill={pulseSent ? "#F87171" : "none"} />
+          <span>{pulseSent ? 'Heartbeat Signal Sent Across the Distance ✦' : 'Send a Heartbeat Signal ✦'}</span>
+        </motion.button>
+        {pulseSent && (
+          <motion.span
+            initial={{ opacity: 0, y: 3 }}
+            animate={{ opacity: 1, y: 0 }}
+            style={{ fontSize: '0.72rem', color: '#FDE68A', fontStyle: 'italic', textAlign: 'center' }}
+          >
+            Signal arrived at her world • 0ms latency • Orbiting as one
+          </motion.span>
+        )}
+      </div>
+
       {/* Poetic Subtitle */}
       <div
         style={{
@@ -150,3 +248,4 @@ export const CelestialSkyClock: React.FC = () => {
     </motion.div>
   );
 };
+
