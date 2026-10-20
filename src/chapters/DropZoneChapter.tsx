@@ -12,8 +12,8 @@ export const DropZoneChapter: React.FC<DropZoneChapterProps> = ({ onProceed }) =
   return (
     <ChapterLayout
       id="chapter-drop-zone"
-      chapterNumber={3}
-      eyebrow="CHAPTER 03 • THE ORIGIN IN THE ZONE"
+      chapterNumber={4}
+      eyebrow="CHAPTER 04 • THE ORIGIN IN THE ZONE"
       title="Where Our Worlds First Dropped"
       subtitle="Before everything else, there was a match, an airdrop, and the best teammate in the world."
     >

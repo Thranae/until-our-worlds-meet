@@ -7,6 +7,7 @@ import { ProgressIndicator } from './components/ProgressIndicator';
 import { SkyLanternModal } from './components/SkyLanternModal';
 import { Invitation } from './chapters/Invitation';
 import { TwoWorlds } from './chapters/TwoWorlds';
+import { AstrolabeChapter } from './chapters/AstrolabeChapter';
 import { DropZoneChapter } from './chapters/DropZoneChapter';
 import { OurConnection } from './chapters/OurConnection';
 import { MidnightRadio } from './chapters/MidnightRadio';
@@ -25,6 +26,7 @@ export const App: React.FC = () => {
   const chapterNames = [
     'Invitation',
     'Two Worlds',
+    'The Dual Horizon',
     'The Drop Zone',
     'The Little Things',
     'Midnight Radio',
@@ -185,7 +187,7 @@ export const App: React.FC = () => {
                   // Safe fallback
                 }
               }
-              setCurrentChapter(9); // Jump straight to Chapter 10: Sea of Lanterns
+              setCurrentChapter(10); // Jump straight to Chapter 11: Sea of Lanterns
             }}
             title="Release a midnight sky lantern for Bot"
             aria-label="Release a sky lantern"
@@ -195,7 +197,7 @@ export const App: React.FC = () => {
               gap: '0.3rem',
               padding: '0.35rem 0.65rem',
               borderRadius: 'var(--radius-full)',
-              background: currentChapter === 9 ? 'rgba(245, 158, 11, 0.35)' : 'rgba(245, 158, 11, 0.15)',
+              background: currentChapter === 10 ? 'rgba(245, 158, 11, 0.35)' : 'rgba(245, 158, 11, 0.15)',
               border: '1px solid rgba(251, 191, 36, 0.45)',
               color: '#FDE68A',
               fontSize: '0.74rem',
@@ -224,42 +226,46 @@ export const App: React.FC = () => {
           )}
 
           {currentChapter === 2 && (
-            <DropZoneChapter key="ch-2" onProceed={() => setCurrentChapter(3)} />
+            <AstrolabeChapter key="ch-2" onProceed={() => setCurrentChapter(3)} />
           )}
 
           {currentChapter === 3 && (
-            <OurConnection key="ch-3" onProceed={() => setCurrentChapter(4)} />
+            <DropZoneChapter key="ch-3" onProceed={() => setCurrentChapter(4)} />
           )}
 
           {currentChapter === 4 && (
-            <MidnightRadio key="ch-4" onProceed={() => setCurrentChapter(5)} />
+            <OurConnection key="ch-4" onProceed={() => setCurrentChapter(5)} />
           )}
 
           {currentChapter === 5 && (
-            <MistyWindowChapter key="ch-5" onProceed={() => setCurrentChapter(6)} />
+            <MidnightRadio key="ch-5" onProceed={() => setCurrentChapter(6)} />
           )}
 
           {currentChapter === 6 && (
-            <MusicBoxChapter key="ch-6" onProceed={() => setCurrentChapter(7)} />
+            <MistyWindowChapter key="ch-6" onProceed={() => setCurrentChapter(7)} />
           )}
 
           {currentChapter === 7 && (
-            <VoiceMessage key="ch-7" onProceed={() => setCurrentChapter(8)} />
+            <MusicBoxChapter key="ch-7" onProceed={() => setCurrentChapter(8)} />
           )}
 
           {currentChapter === 8 && (
-            <FutureTogether key="ch-8" onProceed={() => setCurrentChapter(9)} />
+            <VoiceMessage key="ch-8" onProceed={() => setCurrentChapter(9)} />
           )}
 
           {currentChapter === 9 && (
-            <LanternSky key="ch-9" onProceedToLetter={() => setCurrentChapter(10)} />
+            <FutureTogether key="ch-9" onProceed={() => setCurrentChapter(10)} />
           )}
 
           {currentChapter === 10 && (
+            <LanternSky key="ch-10" onProceedToLetter={() => setCurrentChapter(11)} />
+          )}
+
+          {currentChapter === 11 && (
             <BirthdayLetter
-              key="ch-10"
-              onReturnToVoice={() => setCurrentChapter(7)}
-              onOpenLantern={() => setCurrentChapter(9)}
+              key="ch-11"
+              onReturnToVoice={() => setCurrentChapter(8)}
+              onOpenLantern={() => setCurrentChapter(10)}
             />
           )}
         </AnimatePresence>

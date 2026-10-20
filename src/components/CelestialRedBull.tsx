@@ -11,7 +11,114 @@ interface Bubble {
   delay: number;
 }
 
+type RedBullEdition = 'classic' | 'airdrop' | 'zaalima' | 'frost';
+
+const REDBULL_EDITIONS: Record<
+  RedBullEdition,
+  {
+    id: RedBullEdition;
+    name: string;
+    label: string;
+    icon: string;
+    badge: string;
+    topFormula: string;
+    brandText: string;
+    subText: string;
+    canBackground: string;
+    sunGradient: string;
+    bullColor: string;
+    boostTitle: string;
+    boostValue: string;
+    wingsTitle: string;
+    wingsValue: string;
+    netContent: string;
+    description: string;
+  }
+> = {
+  classic: {
+    id: 'classic',
+    name: 'Classic Azure & Silver',
+    label: 'Classic ✦',
+    icon: '⚡',
+    badge: 'BOT EDITION #1108',
+    topFormula: 'ORIGINAL FORMULA',
+    brandText: 'Red Bull',
+    subText: 'ENERGY DRINK',
+    canBackground: 'linear-gradient(135deg, #001B54 0%, #001B54 48%, #CBD5E1 48%, #E2E8F0 100%)',
+    sunGradient: 'radial-gradient(circle, #FDE047 0%, #EAB308 60%, #CA8A04 100%)',
+    bullColor: '#DC2626',
+    boostTitle: 'ENERGY BOOST',
+    boostValue: '+100% Starlight',
+    wingsTitle: 'WINGS STATUS',
+    wingsValue: 'Flying to You 🪽',
+    netContent: 'Infinite Love',
+    description:
+      "They always say Red Bull gives you wings — but if it really did, I would have flown across every mile to see you by now.\n\nFor all the late nights you study, work, or stay up talking with me: here’s your unlimited celestial can. Whenever you crack open a cold one in real life, know that I’m cheering for you, proud of you, and always right here.",
+  },
+  airdrop: {
+    id: 'airdrop',
+    name: 'Erangel Airdrop Flare',
+    label: 'BGMI Airdrop 📦',
+    icon: '🎯',
+    badge: 'AIRDROP SPECIAL #1',
+    topFormula: 'MIL-SPEC FORMULA',
+    brandText: 'Red Bull',
+    subText: 'AIRDROP FUEL',
+    canBackground: 'linear-gradient(135deg, #0F172A 0%, #0F172A 48%, #DC2626 48%, #991B1B 100%)',
+    sunGradient: 'radial-gradient(circle, #EF4444 0%, #B91C1C 60%, #7F1D1D 100%)',
+    bullColor: '#FEF08A',
+    boostTitle: 'SNIPER ACCURACY',
+    boostValue: '+500% AMR Damage',
+    wingsTitle: 'SQUAD STATUS',
+    wingsValue: 'Winner Winner #1 🍗',
+    netContent: 'Squad Revive',
+    description:
+      "Forged in the crimson flare smoke of an Erangel crate drop. This can gives instant reaction time for .50 caliber AMR precision and zero recoil on late-night gaming sessions. You'll always have my cover from the high ground.",
+  },
+  zaalima: {
+    id: 'zaalima',
+    name: 'Zaalima Acoustic Night',
+    label: 'Zaalima 🎶',
+    icon: '✨',
+    badge: 'ZAALIMA MELODY',
+    topFormula: 'ACOUSTIC ESSENCE',
+    brandText: 'Red Bull',
+    subText: 'MIDNIGHT MELODY',
+    canBackground: 'linear-gradient(135deg, #3B0764 0%, #3B0764 48%, #D97706 48%, #B45309 100%)',
+    sunGradient: 'radial-gradient(circle, #F43F5E 0%, #BE123C 60%, #881337 100%)',
+    bullColor: '#FEF08A',
+    boostTitle: 'HEARTBEAT FREQ',
+    boostValue: 'Slow & Peaceful 🎶',
+    wingsTitle: 'MELODY VIBE',
+    wingsValue: 'Zaalima 5% BGM',
+    netContent: 'Warmth Across Miles',
+    description:
+      "Infused with the gentle notes of Zaalima playing softly at 5% volume in the background. A calming, sweet midnight brew for when you wrap yourself in a blanket and just want to listen to gentle music and talk about everything.",
+  },
+  frost: {
+    id: 'frost',
+    name: 'Starlight Frost Zero',
+    label: 'Frost Zero ❄️',
+    icon: '❄️',
+    badge: 'ZERO SUGAR • 100% BOT',
+    topFormula: 'CRYSTAL FROST',
+    brandText: 'Red Bull',
+    subText: 'SUGAR FREE',
+    canBackground: 'linear-gradient(135deg, #0891B2 0%, #0891B2 48%, #F1F5F9 48%, #CBD5E1 100%)',
+    sunGradient: 'radial-gradient(circle, #38BDF8 0%, #0284C7 60%, #0369A1 100%)',
+    bullColor: '#0284C7',
+    boostTitle: 'SUGAR CONTENT',
+    boostValue: '0g • 100% Care',
+    wingsTitle: 'REFRESH LEVEL',
+    wingsValue: 'Glacial Chill ❄️',
+    netContent: 'Endless Smile',
+    description:
+      "Zero artificial sweetness — only genuine pride and care for everything you do. Extra crisp, ice cold, with sparkling starlight condensation. Drink up and take on the world, birthday girl.",
+  },
+};
+
 export const CelestialRedBull: React.FC = () => {
+  const [selectedEdition, setSelectedEdition] = useState<RedBullEdition>('classic');
   const [isOpen, setIsOpen] = useState(false);
   const [bubbles, setBubbles] = useState<Bubble[]>([]);
   const bubbleCounterRef = useRef(0);
@@ -106,6 +213,30 @@ export const CelestialRedBull: React.FC = () => {
       // Audio context fallback if muted
     }
   };
+
+  const playIceClinkAudio = () => {
+    try {
+      const AudioCtx =
+        window.AudioContext ||
+        (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      const ctx = new AudioCtx();
+      const now = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(2600 + Math.random() * 400, now);
+      osc.frequency.exponentialRampToValueAtTime(1400, now + 0.08);
+      gain.gain.setValueAtTime(0.001, now);
+      gain.gain.linearRampToValueAtTime(0.12, now + 0.004);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.18);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.2);
+    } catch {}
+  };
+
+  const edition = REDBULL_EDITIONS[selectedEdition];
 
   const handleOpenCan = () => {
     if (isOpen) return;
@@ -244,12 +375,64 @@ export const CelestialRedBull: React.FC = () => {
           color: 'var(--color-muted)',
           textAlign: 'center',
           maxWidth: '400px',
-          marginBottom: '1.75rem',
+          marginBottom: '1rem',
           lineHeight: 1.55,
         }}
       >
-        Because you love Red Bull, and because you work so hard. Tap the cold can to pop the tab.
+        Because you love Red Bull, and because you work so hard. Select an edition and tap the cold can to pop the tab.
       </p>
+
+      {/* Interactive Edition / Mixology Selector */}
+      <div
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '0.45rem',
+          justifyContent: 'center',
+          maxWidth: '460px',
+          marginBottom: '1.5rem',
+          zIndex: 5,
+        }}
+      >
+        {(Object.keys(REDBULL_EDITIONS) as RedBullEdition[]).map((key) => {
+          const item = REDBULL_EDITIONS[key];
+          const isSelected = selectedEdition === key;
+          return (
+            <button
+              key={key}
+              type="button"
+              onClick={() => {
+                if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
+                  try {
+                    navigator.vibrate(12);
+                  } catch {}
+                }
+                setSelectedEdition(key);
+                playIceClinkAudio();
+              }}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.35rem',
+                padding: '0.4rem 0.85rem',
+                borderRadius: 'var(--radius-full)',
+                fontSize: '0.74rem',
+                fontFamily: 'var(--font-sans)',
+                fontWeight: isSelected ? 700 : 500,
+                background: isSelected ? 'rgba(253, 230, 138, 0.22)' : 'rgba(255, 255, 255, 0.05)',
+                border: isSelected ? '1px solid rgba(253, 230, 138, 0.65)' : '1px solid rgba(255, 255, 255, 0.1)',
+                color: isSelected ? '#FEF3C7' : 'var(--color-muted)',
+                cursor: 'pointer',
+                touchAction: 'manipulation',
+                transition: 'all 0.25s ease',
+              }}
+            >
+              <span>{item.icon}</span>
+              <span>{item.label}</span>
+            </button>
+          );
+        })}
+      </div>
 
       {/* 3D CAN & WINGS STAGE */}
       <div
@@ -519,7 +702,7 @@ export const CelestialRedBull: React.FC = () => {
               height: '232px',
               position: 'relative',
               overflow: 'hidden',
-              background: 'linear-gradient(135deg, #001B54 0%, #001B54 48%, #CBD5E1 48%, #E2E8F0 100%)',
+              background: edition.canBackground,
               borderLeft: '1px solid rgba(255, 255, 255, 0.2)',
               borderRight: '1px solid rgba(0, 0, 0, 0.4)',
               display: 'flex',
@@ -543,7 +726,7 @@ export const CelestialRedBull: React.FC = () => {
                   textShadow: '0 1px 2px rgba(0,0,0,0.8)',
                 }}
               >
-                ORIGINAL FORMULA
+                {edition.topFormula}
               </span>
             </div>
 
@@ -565,7 +748,7 @@ export const CelestialRedBull: React.FC = () => {
                   width: '56px',
                   height: '56px',
                   borderRadius: '50%',
-                  background: 'radial-gradient(circle, #FDE047 0%, #EAB308 60%, #CA8A04 100%)',
+                  background: edition.sunGradient,
                   boxShadow: '0 0 16px rgba(234, 179, 8, 0.75), inset 0 2px 4px rgba(255, 255, 255, 0.6)',
                   display: 'flex',
                   alignItems: 'center',
@@ -578,14 +761,14 @@ export const CelestialRedBull: React.FC = () => {
                   {/* Left Bull */}
                   <path
                     d="M26,16 C23,12 18,10 13,11 C11,9 7,8 3,11 C2,13 4,14 6,14 C8,14 9,16 11,18 C14,21 18,22 22,20 C24,19 25,17 26,16 Z"
-                    fill="#DC2626"
+                    fill={edition.bullColor}
                     stroke="#FFFFFF"
                     strokeWidth="0.8"
                   />
                   {/* Right Bull */}
                   <path
                     d="M34,16 C37,12 42,10 47,11 C49,9 53,8 57,11 C58,13 56,14 54,14 C52,14 51,16 49,18 C46,21 42,22 38,20 C36,19 35,17 34,16 Z"
-                    fill="#DC2626"
+                    fill={edition.bullColor}
                     stroke="#FFFFFF"
                     strokeWidth="0.8"
                   />
@@ -603,13 +786,13 @@ export const CelestialRedBull: React.FC = () => {
                     fontFamily: 'var(--font-sans)',
                     fontWeight: 900,
                     fontStyle: 'italic',
-                    color: '#DC2626',
+                    color: edition.bullColor,
                     letterSpacing: '-0.02em',
                     lineHeight: 0.95,
                     textShadow: '0 1px 0 #FFFFFF, 0 2px 4px rgba(0, 0, 0, 0.9)',
                   }}
                 >
-                  Red Bull
+                  {edition.brandText}
                 </span>
                 <span
                   style={{
@@ -624,7 +807,7 @@ export const CelestialRedBull: React.FC = () => {
                     textShadow: '0 0.5px 0 #FFFFFF',
                   }}
                 >
-                  ENERGY DRINK
+                  {edition.subText}
                 </span>
 
                 {/* Custom BOT EDITION Badge */}
@@ -634,21 +817,21 @@ export const CelestialRedBull: React.FC = () => {
                     marginTop: '4px',
                     padding: '2px 8px',
                     borderRadius: '3px',
-                    background: '#DC2626',
-                    boxShadow: '0 2px 6px rgba(220, 38, 38, 0.6)',
+                    background: edition.bullColor,
+                    boxShadow: '0 2px 6px rgba(0, 0, 0, 0.6)',
                   }}
                 >
                   <span
                     style={{
-                      fontSize: '0.55rem',
+                      fontSize: '0.52rem',
                       fontFamily: 'var(--font-sans)',
                       fontWeight: 900,
-                      color: '#FFFFFF',
+                      color: edition.bullColor === '#FEF08A' ? '#000000' : '#FFFFFF',
                       letterSpacing: '0.08em',
                       textTransform: 'uppercase',
                     }}
                   >
-                    BOT EDITION
+                    {edition.badge}
                   </span>
                 </div>
               </div>
@@ -880,32 +1063,31 @@ export const CelestialRedBull: React.FC = () => {
             }}
           >
             <div>
-              <span style={{ display: 'block', color: 'var(--color-muted)', fontSize: '0.66rem' }}>ENERGY BOOST</span>
-              <span style={{ fontWeight: 700, color: '#FDE68A' }}>+100% Starlight</span>
+              <span style={{ display: 'block', color: 'var(--color-muted)', fontSize: '0.66rem' }}>{edition.boostTitle}</span>
+              <span style={{ fontWeight: 700, color: '#FDE68A' }}>{edition.boostValue}</span>
             </div>
             <div>
-              <span style={{ display: 'block', color: 'var(--color-muted)', fontSize: '0.66rem' }}>WINGS STATUS</span>
-              <span style={{ fontWeight: 700, color: '#A78BFA' }}>Flying to You 🪽</span>
+              <span style={{ display: 'block', color: 'var(--color-muted)', fontSize: '0.66rem' }}>{edition.wingsTitle}</span>
+              <span style={{ fontWeight: 700, color: '#A78BFA' }}>{edition.wingsValue}</span>
             </div>
             <div>
               <span style={{ display: 'block', color: 'var(--color-muted)', fontSize: '0.66rem' }}>NET CONTENT</span>
-              <span style={{ fontWeight: 700, color: '#93C5FD' }}>Infinite Love</span>
+              <span style={{ fontWeight: 700, color: '#93C5FD' }}>{edition.netContent}</span>
             </div>
           </div>
 
           <p
             style={{
               fontFamily: 'var(--font-serif)',
-              fontSize: '1.08rem',
-              lineHeight: 1.75,
+              fontSize: '1.04rem',
+              lineHeight: 1.7,
               color: 'var(--color-ivory)',
               marginBottom: '1.4rem',
               fontStyle: 'italic',
+              whiteSpace: 'pre-line',
             }}
           >
-            "They always say Red Bull gives you wings — but if it really did, I would have flown across every mile to see you by now.
-            <br /><br />
-            For all the late nights you study, work, or stay up talking with me: here’s your unlimited celestial can. Whenever you crack open a cold one in real life, know that I’m cheering for you, proud of you, and always right here."
+            {edition.description}
           </p>
 
           <div

@@ -9,7 +9,62 @@ export const CelestialAMR: React.FC = () => {
   const [isFiring, setIsFiring] = useState(false);
   const [hasFired, setHasFired] = useState(false);
   const [scopeOffset, setScopeOffset] = useState({ x: 0, y: 0 });
+  const [currentTargetIndex, setCurrentTargetIndex] = useState(0);
+  const [targetHits, setTargetHits] = useState(0);
+  const [lastShotResult, setLastShotResult] = useState<'hit' | 'miss' | null>(null);
   const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+
+  const targets = [
+    { id: 1, name: `320m Balloon for ${siteContent.recipient.nickname}`, distance: '320 M', targetX: -15, targetY: -10, icon: '🎈' },
+    { id: 2, name: '540m Golden Erangel Crate', distance: '540 M', targetX: 25, targetY: 15, icon: '📦' },
+    { id: 3, name: '850m Starlight Drone', distance: '850 M', targetX: -30, targetY: 20, icon: '✦' },
+  ];
+
+  const currentTarget = targets[currentTargetIndex];
+
+  // Metallic Gong Hit Sound Synthesizer
+  const playTargetHitSound = useCallback(() => {
+    try {
+      const AudioCtx =
+        window.AudioContext ||
+        (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      const ctx = new AudioCtx();
+      const now = ctx.currentTime;
+
+      // Heavy steel armor plate chime
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(1480, now);
+      osc.frequency.exponentialRampToValueAtTime(320, now + 0.45);
+
+      gain.gain.setValueAtTime(0.4, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.52);
+
+      // Starry celebration shimmer
+      const notes = [659.25, 880.0, 1046.5];
+      notes.forEach((freq, idx) => {
+        const cOsc = ctx.createOscillator();
+        const cGain = ctx.createGain();
+        cOsc.type = 'sine';
+        cOsc.frequency.setValueAtTime(freq, now + 0.08 + idx * 0.06);
+        cGain.gain.setValueAtTime(0.001, now + 0.08 + idx * 0.06);
+        cGain.gain.linearRampToValueAtTime(0.12, now + 0.1 + idx * 0.06);
+        cGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.8 + idx * 0.06);
+        cOsc.connect(cGain);
+        cGain.connect(ctx.destination);
+        cOsc.start(now + 0.08 + idx * 0.06);
+        cOsc.stop(now + 0.85 + idx * 0.06);
+      });
+    } catch {
+      // safe fallback
+    }
+  }, []);
 
   // Web Audio Synthesizer for Heavy .50 Cal AMR Shot & Bolt Action
   const playAMRFiringSound = useCallback(() => {
@@ -175,6 +230,35 @@ export const CelestialAMR: React.FC = () => {
     setIsFiring(true);
     setHasFired(true);
     playAMRFiringSound();
+
+    // Check ballistic hit if scoped
+    const isLocked =
+      Math.abs(scopeOffset.x - currentTarget.targetX) <= 18 &&
+      Math.abs(scopeOffset.y - currentTarget.targetY) <= 18;
+
+    if (isScoped) {
+      setTimeout(() => {
+        if (isLocked) {
+          playTargetHitSound();
+          setLastShotResult('hit');
+          setTargetHits((prev) => prev + 1);
+          if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
+            try {
+              navigator.vibrate([40, 100, 50, 150]);
+            } catch {}
+          }
+          setTimeout(() => {
+            setCurrentTargetIndex((prev) => (prev + 1) % targets.length);
+            setLastShotResult(null);
+          }, 1600);
+        } else {
+          setLastShotResult('miss');
+          setTimeout(() => {
+            setLastShotResult(null);
+          }, 1400);
+        }
+      }, 350); // 0.35s supersonic bullet travel time
+    }
 
     if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
       try {
@@ -707,7 +791,7 @@ export const CelestialAMR: React.FC = () => {
           </div>
 
           {/* ========================================================================= */}
-          {/* OPTICAL 8X MIL-DOT SNIPER SCOPE OVERLAY                                   */}
+          {/* OPTICAL 8X MIL-DOT SNIPER SCOPE & TARGET RANGE                              */}
           {/* ========================================================================= */}
           <AnimatePresence>
             {isScoped && (
@@ -716,118 +800,319 @@ export const CelestialAMR: React.FC = () => {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ duration: 0.25 }}
-                onTouchStart={handleScopeTouchStart}
-                onTouchMove={handleScopeTouchMove}
-                onTouchEnd={handleScopeTouchEnd}
                 style={{
-                  position: 'relative',
                   width: '100%',
-                  aspectRatio: '1 / 1',
-                  maxHeight: '340px',
-                  borderRadius: '50%',
-                  background: 'radial-gradient(circle at 50% 50%, rgba(8, 15, 30, 0.85) 0%, rgba(3, 7, 18, 0.98) 75%, #000000 100%)',
-                  border: '6px solid #1E293B',
-                  boxShadow: 'inset 0 0 50px rgba(0, 0, 0, 0.95), 0 0 30px rgba(96, 165, 250, 0.25)',
-                  margin: '0 auto 1.25rem auto',
-                  overflow: 'hidden',
                   display: 'flex',
+                  flexDirection: 'column',
                   alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: 'crosshair',
-                  touchAction: 'none',
+                  marginBottom: '1.25rem',
                 }}
               >
-                {/* Simulated Night Sky View in Scope Reticle */}
+                {/* Target Range Control & Score HUD */}
                 <div
                   style={{
-                    position: 'absolute',
-                    transform: `translate(${scopeOffset.x}px, ${scopeOffset.y}px)`,
-                    textAlign: 'center',
-                    padding: '1rem',
-                  }}
-                >
-                  <span
-                    style={{
-                      display: 'block',
-                      color: '#60A5FA',
-                      fontSize: '0.68rem',
-                      fontFamily: 'monospace',
-                      letterSpacing: '0.12em',
-                      marginBottom: '0.35rem',
-                    }}
-                  >
-                    TARGET LOCKED: {siteContent.recipient.nickname.toUpperCase()}
-                  </span>
-                  <p
-                    style={{
-                      fontFamily: 'var(--font-serif)',
-                      fontSize: '0.98rem',
-                      color: '#FEF3C7',
-                      fontStyle: 'italic',
-                      lineHeight: 1.45,
-                      margin: 0,
-                      textShadow: '0 0 10px rgba(254, 240, 138, 0.6)',
-                    }}
-                  >
-                    "The best drop I ever made was landing in your squad."
-                  </p>
-                  <span
-                    style={{
-                      display: 'block',
-                      color: 'rgba(253, 230, 138, 0.75)',
-                      fontSize: '0.64rem',
-                      fontFamily: 'monospace',
-                      marginTop: '0.4rem',
-                    }}
-                  >
-                    RANGE: 1,740 KM • KNOCKOUT IMMUNITY: 100%
-                  </span>
-                </div>
-
-                {/* Scope Reticle Crosshairs (SVG) */}
-                <svg
-                  style={{
-                    position: 'absolute',
-                    inset: 0,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
                     width: '100%',
-                    height: '100%',
-                    pointerEvents: 'none',
-                  }}
-                >
-                  {/* Outer Range Rings */}
-                  <circle cx="50%" cy="50%" r="42%" fill="none" stroke="rgba(255, 255, 255, 0.15)" strokeWidth="1" />
-                  <circle cx="50%" cy="50%" r="28%" fill="none" stroke="rgba(255, 255, 255, 0.2)" strokeWidth="1" />
-                  <circle cx="50%" cy="50%" r="14%" fill="none" stroke="rgba(255, 255, 255, 0.25)" strokeWidth="1" />
-
-                  {/* Crosshair Lines */}
-                  <line x1="0%" y1="50%" x2="44%" y2="50%" stroke="#EF4444" strokeWidth="1.5" />
-                  <line x1="56%" y1="50%" x2="100%" y2="50%" stroke="#EF4444" strokeWidth="1.5" />
-                  <line x1="50%" y1="0%" x2="50%" y2="44%" stroke="#EF4444" strokeWidth="1.5" />
-                  <line x1="50%" y1="56%" x2="50%" y2="100%" stroke="#EF4444" strokeWidth="1.5" />
-
-                  {/* Center Aiming Dot */}
-                  <circle cx="50%" cy="50%" r="2" fill="#EF4444" />
-
-                  {/* Mil-dot Tick Marks */}
-                  {[-30, -20, -10, 10, 20, 30].map((offset, i) => (
-                    <circle key={`mx-${i}`} cx={`calc(50% + ${offset}px)`} cy="50%" r="1.2" fill="#EF4444" />
-                  ))}
-                  {[-30, -20, -10, 10, 20, 30].map((offset, i) => (
-                    <circle key={`my-${i}`} cx="50%" cy={`calc(50% + ${offset}px)`} r="1.2" fill="#EF4444" />
-                  ))}
-                </svg>
-
-                {/* Scope Hint */}
-                <div
-                  style={{
-                    position: 'absolute',
-                    bottom: '12px',
-                    fontSize: '0.64rem',
-                    color: 'rgba(255, 255, 255, 0.5)',
+                    maxWidth: '340px',
+                    padding: '0.4rem 0.8rem',
+                    marginBottom: '0.5rem',
+                    borderRadius: 'var(--radius-sm)',
+                    background: 'rgba(15, 23, 42, 0.75)',
+                    border: '1px solid rgba(239, 68, 68, 0.3)',
+                    fontSize: '0.72rem',
                     fontFamily: 'monospace',
                   }}
                 >
-                  DRAG RETICLE TO SCAN SKY
+                  <span style={{ color: '#F87171' }}>
+                    TARGET: {currentTarget.name}
+                  </span>
+                  <span style={{ color: '#FDE68A', fontWeight: 'bold' }}>
+                    HITS: {targetHits} ✦
+                  </span>
+                </div>
+
+                {/* Target Selector Tabs */}
+                <div
+                  style={{
+                    display: 'flex',
+                    gap: '0.4rem',
+                    marginBottom: '0.65rem',
+                    width: '100%',
+                    maxWidth: '340px',
+                    justifyContent: 'center',
+                  }}
+                >
+                  {targets.map((tgt, idx) => (
+                    <button
+                      key={tgt.id}
+                      type="button"
+                      onClick={() => {
+                        setCurrentTargetIndex(idx);
+                        setLastShotResult(null);
+                      }}
+                      style={{
+                        padding: '0.25rem 0.55rem',
+                        borderRadius: 'var(--radius-full)',
+                        fontSize: '0.68rem',
+                        fontFamily: 'var(--font-sans)',
+                        background: currentTargetIndex === idx ? 'rgba(239, 68, 68, 0.35)' : 'rgba(255, 255, 255, 0.05)',
+                        border: currentTargetIndex === idx ? '1px solid #EF4444' : '1px solid rgba(255, 255, 255, 0.1)',
+                        color: currentTargetIndex === idx ? '#FEE2E2' : 'var(--color-muted)',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      {tgt.icon} {tgt.distance}
+                    </button>
+                  ))}
+                </div>
+
+                {/* The Circular 8X Scope Housing */}
+                <div
+                  onTouchStart={handleScopeTouchStart}
+                  onTouchMove={handleScopeTouchMove}
+                  onTouchEnd={handleScopeTouchEnd}
+                  style={{
+                    position: 'relative',
+                    width: '100%',
+                    aspectRatio: '1 / 1',
+                    maxHeight: '340px',
+                    borderRadius: '50%',
+                    background: 'radial-gradient(circle at 50% 50%, rgba(8, 15, 30, 0.88) 0%, rgba(3, 7, 18, 0.98) 75%, #000000 100%)',
+                    border: '6px solid #1E293B',
+                    boxShadow: 'inset 0 0 50px rgba(0, 0, 0, 0.95), 0 0 30px rgba(239, 68, 68, 0.3)',
+                    overflow: 'hidden',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'crosshair',
+                    touchAction: 'none',
+                  }}
+                >
+                  {/* Sky Background Star Layer with Parallax */}
+                  <div
+                    style={{
+                      position: 'absolute',
+                      inset: -40,
+                      transform: `translate(${scopeOffset.x * 0.4}px, ${scopeOffset.y * 0.4}px)`,
+                      backgroundImage: 'radial-gradient(1px 1px at 20px 30px, #ffffff, transparent), radial-gradient(1.5px 1.5px at 150px 80px, #fde68a, transparent), radial-gradient(1px 1px at 260px 190px, #ffffff, transparent), radial-gradient(1.5px 1.5px at 80px 220px, #a78bfa, transparent)',
+                      backgroundSize: '300px 300px',
+                      opacity: 0.65,
+                      pointerEvents: 'none',
+                    }}
+                  />
+
+                  {/* The Ballistic Target Object Floating in Space */}
+                  <motion.div
+                    animate={{
+                      y: [0, -6, 0],
+                      scale: [1, 1.04, 1],
+                    }}
+                    transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+                    style={{
+                      position: 'absolute',
+                      transform: `translate(${currentTarget.targetX - scopeOffset.x}px, ${currentTarget.targetY - scopeOffset.y}px)`,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      pointerEvents: 'none',
+                      transition: 'transform 0.05s linear',
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontSize: '2rem',
+                        filter: 'drop-shadow(0 0 12px rgba(239, 68, 68, 0.8))',
+                      }}
+                    >
+                      {currentTarget.icon}
+                    </div>
+
+                    <span
+                      style={{
+                        fontSize: '0.64rem',
+                        fontFamily: 'monospace',
+                        color: '#FEF08A',
+                        background: 'rgba(0, 0, 0, 0.7)',
+                        padding: '1px 5px',
+                        borderRadius: '4px',
+                        marginTop: '2px',
+                        letterSpacing: '0.05em',
+                        border: '1px solid rgba(251, 191, 36, 0.4)',
+                      }}
+                    >
+                      {currentTarget.distance}
+                    </span>
+                  </motion.div>
+
+                  {/* Target Lock Detection Status Box */}
+                  {(() => {
+                    const isLocked =
+                      Math.abs(scopeOffset.x - currentTarget.targetX) <= 18 &&
+                      Math.abs(scopeOffset.y - currentTarget.targetY) <= 18;
+
+                    return (
+                      <div
+                        style={{
+                          position: 'absolute',
+                          top: '18px',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                          gap: '2px',
+                          zIndex: 10,
+                          pointerEvents: 'none',
+                        }}
+                      >
+                        <span
+                          style={{
+                            fontFamily: 'monospace',
+                            fontSize: '0.72rem',
+                            fontWeight: 'bold',
+                            letterSpacing: '0.12em',
+                            color: isLocked ? '#22C55E' : '#EF4444',
+                            background: isLocked ? 'rgba(34, 197, 94, 0.2)' : 'rgba(239, 68, 68, 0.2)',
+                            border: `1px solid ${isLocked ? '#22C55E' : '#EF4444'}`,
+                            padding: '2px 8px',
+                            borderRadius: '4px',
+                            animation: isLocked ? 'pulse 1s infinite' : 'none',
+                          }}
+                        >
+                          {isLocked ? '🎯 TARGET LOCKED [FIRE NOW]' : 'DRAG TO CENTER TARGET'}
+                        </span>
+                        <span
+                          style={{
+                            fontFamily: 'monospace',
+                            fontSize: '0.62rem',
+                            color: 'rgba(255, 255, 255, 0.6)',
+                          }}
+                        >
+                          WIND: 2.1 M/S EAST • ELEV: +1.2 MIL
+                        </span>
+                      </div>
+                    );
+                  })()}
+
+                  {/* Hit Confirmation / Miss Toast */}
+                  <AnimatePresence>
+                    {lastShotResult === 'hit' && (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.5 }}
+                        animate={{ opacity: 1, scale: 1.15 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        style={{
+                          position: 'absolute',
+                          zIndex: 25,
+                          textAlign: 'center',
+                          pointerEvents: 'none',
+                        }}
+                      >
+                        <div
+                          style={{
+                            fontSize: '3rem',
+                            color: '#EF4444',
+                            fontWeight: 'bold',
+                            filter: 'drop-shadow(0 0 18px #EF4444)',
+                            lineHeight: 1,
+                          }}
+                        >
+                          ✕
+                        </div>
+                        <span
+                          style={{
+                            display: 'inline-block',
+                            background: '#EF4444',
+                            color: '#FFFFFF',
+                            fontFamily: 'monospace',
+                            fontSize: '0.74rem',
+                            fontWeight: 'bold',
+                            padding: '2px 8px',
+                            borderRadius: '4px',
+                            marginTop: '4px',
+                            boxShadow: '0 0 15px rgba(239, 68, 68, 0.8)',
+                          }}
+                        >
+                          BULLSEYE! 100% ACCURACY
+                        </span>
+                      </motion.div>
+                    )}
+
+                    {lastShotResult === 'miss' && (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        style={{
+                          position: 'absolute',
+                          zIndex: 25,
+                          textAlign: 'center',
+                          pointerEvents: 'none',
+                          background: 'rgba(0, 0, 0, 0.8)',
+                          padding: '4px 10px',
+                          borderRadius: '6px',
+                          border: '1px solid rgba(255, 255, 255, 0.2)',
+                        }}
+                      >
+                        <span
+                          style={{
+                            color: '#F87171',
+                            fontFamily: 'monospace',
+                            fontSize: '0.68rem',
+                          }}
+                        >
+                          CLOSE SHOT! Re-align center crosshair.
+                        </span>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Tactical Reticle Crosshairs (SVG) */}
+                  <svg
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      width: '100%',
+                      height: '100%',
+                      pointerEvents: 'none',
+                    }}
+                  >
+                    {/* Outer Range Rings */}
+                    <circle cx="50%" cy="50%" r="42%" fill="none" stroke="rgba(255, 255, 255, 0.15)" strokeWidth="1" />
+                    <circle cx="50%" cy="50%" r="28%" fill="none" stroke="rgba(255, 255, 255, 0.2)" strokeWidth="1" />
+                    <circle cx="50%" cy="50%" r="14%" fill="none" stroke="rgba(255, 255, 255, 0.25)" strokeWidth="1" />
+
+                    {/* Crosshair Lines */}
+                    <line x1="0%" y1="50%" x2="44%" y2="50%" stroke="#EF4444" strokeWidth="1.5" />
+                    <line x1="56%" y1="50%" x2="100%" y2="50%" stroke="#EF4444" strokeWidth="1.5" />
+                    <line x1="50%" y1="0%" x2="50%" y2="44%" stroke="#EF4444" strokeWidth="1.5" />
+                    <line x1="50%" y1="56%" x2="50%" y2="100%" stroke="#EF4444" strokeWidth="1.5" />
+
+                    {/* Center Aiming Dot */}
+                    <circle cx="50%" cy="50%" r="2" fill="#EF4444" />
+
+                    {/* Mil-dot Tick Marks */}
+                    {[-30, -20, -10, 10, 20, 30].map((offset, i) => (
+                      <circle key={`mx-${i}`} cx={`calc(50% + ${offset}px)`} cy="50%" r="1.2" fill="#EF4444" />
+                    ))}
+                    {[-30, -20, -10, 10, 20, 30].map((offset, i) => (
+                      <circle key={`my-${i}`} cx="50%" cy={`calc(50% + ${offset}px)`} r="1.2" fill="#EF4444" />
+                    ))}
+                  </svg>
+
+                  {/* Scope Bottom Hint */}
+                  <div
+                    style={{
+                      position: 'absolute',
+                      bottom: '12px',
+                      fontSize: '0.62rem',
+                      color: 'rgba(255, 255, 255, 0.55)',
+                      fontFamily: 'monospace',
+                      letterSpacing: '0.08em',
+                    }}
+                  >
+                    DRAG TO AIM • TAP 'FIRE AMR'
+                  </div>
                 </div>
               </motion.div>
             )}
