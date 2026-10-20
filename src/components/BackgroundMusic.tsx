@@ -142,18 +142,31 @@ export const BackgroundMusic: React.FC<BackgroundMusicProps> = ({
     audio.volume = 0;
     audioRef.current = audio;
 
-    // Listen for first interaction anywhere on page to trigger autoplay
+    // 1. Attempt immediate autoplay on mount
+    startBGM();
+
+    // 2. Listen for earliest user interaction to guarantee playback if initial autoplay was blocked
     const handleFirstInteraction = () => {
       startBGM();
       window.removeEventListener('pointerdown', handleFirstInteraction);
+      window.removeEventListener('pointerup', handleFirstInteraction);
+      window.removeEventListener('pointermove', handleFirstInteraction);
       window.removeEventListener('touchstart', handleFirstInteraction);
+      window.removeEventListener('touchend', handleFirstInteraction);
       window.removeEventListener('click', handleFirstInteraction);
+      window.removeEventListener('scroll', handleFirstInteraction);
+      window.removeEventListener('wheel', handleFirstInteraction);
       window.removeEventListener('keydown', handleFirstInteraction);
     };
 
     window.addEventListener('pointerdown', handleFirstInteraction, { passive: true });
+    window.addEventListener('pointerup', handleFirstInteraction, { passive: true });
+    window.addEventListener('pointermove', handleFirstInteraction, { passive: true });
     window.addEventListener('touchstart', handleFirstInteraction, { passive: true });
+    window.addEventListener('touchend', handleFirstInteraction, { passive: true });
     window.addEventListener('click', handleFirstInteraction, { passive: true });
+    window.addEventListener('scroll', handleFirstInteraction, { passive: true });
+    window.addEventListener('wheel', handleFirstInteraction, { passive: true });
     window.addEventListener('keydown', handleFirstInteraction, { passive: true });
 
     // Custom events from foreground components (Voice note, Radio, Music box)
@@ -163,8 +176,13 @@ export const BackgroundMusic: React.FC<BackgroundMusicProps> = ({
 
     return () => {
       window.removeEventListener('pointerdown', handleFirstInteraction);
+      window.removeEventListener('pointerup', handleFirstInteraction);
+      window.removeEventListener('pointermove', handleFirstInteraction);
       window.removeEventListener('touchstart', handleFirstInteraction);
+      window.removeEventListener('touchend', handleFirstInteraction);
       window.removeEventListener('click', handleFirstInteraction);
+      window.removeEventListener('scroll', handleFirstInteraction);
+      window.removeEventListener('wheel', handleFirstInteraction);
       window.removeEventListener('keydown', handleFirstInteraction);
       window.removeEventListener('celestial-foreground-audio-start', handleForegroundStart);
       window.removeEventListener('celestial-foreground-audio-stop', handleForegroundStop);

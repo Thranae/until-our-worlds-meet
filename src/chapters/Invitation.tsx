@@ -18,7 +18,12 @@ export const Invitation: React.FC<InvitationProps> = ({ onProceed }) => {
       subtitle={`Hey, ${siteContent.recipient.nickname}. Birthday girl, this one's for you.\n\nI've been making a little piece of my world for you — something you can open whenever you want a reminder of how much you mean to me.`}
       primaryAction={{
         label: 'Receive your message',
-        onClick: onProceed,
+        onClick: () => {
+          if (typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent('start-bgm'));
+          }
+          onProceed();
+        },
         icon: <ArrowRight size={17} />,
       }}
     >

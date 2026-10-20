@@ -33,6 +33,18 @@ export const ChapterLayout: React.FC<ChapterLayoutProps> = ({
   align = 'center',
   maxWidth = '760px',
 }) => {
+  React.useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' as ScrollBehavior });
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+    const rafId = requestAnimationFrame(() => {
+      window.scrollTo(0, 0);
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    });
+    return () => cancelAnimationFrame(rafId);
+  }, [id]);
+
   return (
     <motion.section
       key={id}
@@ -47,7 +59,7 @@ export const ChapterLayout: React.FC<ChapterLayoutProps> = ({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         paddingTop: 'max(4.8rem, calc(env(safe-area-inset-top) + 2.5rem))',
         paddingBottom: 'max(7.5rem, calc(env(safe-area-inset-bottom) + 6.5rem))',
         paddingLeft: 'max(1.25rem, env(safe-area-inset-left))',

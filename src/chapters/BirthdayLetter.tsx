@@ -69,6 +69,12 @@ export const BirthdayLetter: React.FC<BirthdayLetterProps> = ({ onReturnToVoice,
   const letter = siteContent.letter;
   const contact = siteContent.contact;
 
+  React.useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' as ScrollBehavior });
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  }, []);
+
   return (
     <motion.section
       id="chapter-birthday-letter"
@@ -82,7 +88,7 @@ export const BirthdayLetter: React.FC<BirthdayLetterProps> = ({ onReturnToVoice,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         paddingTop: 'max(4rem, env(safe-area-inset-top))',
         paddingBottom: 'max(7rem, calc(env(safe-area-inset-bottom) + 5rem))',
         paddingLeft: 'max(1.25rem, env(safe-area-inset-left))',

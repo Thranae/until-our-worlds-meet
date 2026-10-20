@@ -40,6 +40,12 @@ export const SkyLanternFlight: React.FC<SkyLanternFlightProps> = ({ onProceedToL
   const [customInput, setCustomInput] = useState("");
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' as ScrollBehavior });
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  }, []);
+
   // Audio synthesizer for celestial singing bells during ascent
   const playAscentSoundscape = () => {
     try {
@@ -319,7 +325,8 @@ export const SkyLanternFlight: React.FC<SkyLanternFlightProps> = ({ onProceedToL
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'space-between',
+        justifyContent: 'flex-start',
+        gap: '1.25rem',
         paddingTop: 'max(4.5rem, env(safe-area-inset-top))',
         paddingBottom: 'max(6.5rem, calc(env(safe-area-inset-bottom) + 5rem))',
         paddingLeft: 'max(1.25rem, env(safe-area-inset-left))',

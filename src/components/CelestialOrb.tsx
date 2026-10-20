@@ -86,7 +86,9 @@ export const CelestialOrb: React.FC = () => {
       lastMouseX = clientX;
       lastMouseY = clientY;
       velX = 0;
-      velY = 0;
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('start-bgm'));
+      }
       if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
         try { navigator.vibrate(10); } catch {}
       }

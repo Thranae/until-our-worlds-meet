@@ -36,9 +36,17 @@ export const App: React.FC = () => {
     'Birthday Letter',
   ];
 
-  // Scroll to top whenever chapter changes
+  // Scroll to top instantly and reliably whenever chapter changes
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' as ScrollBehavior });
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+    const rafId = requestAnimationFrame(() => {
+      window.scrollTo(0, 0);
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    });
+    return () => cancelAnimationFrame(rafId);
   }, [currentChapter]);
 
   // Keyboard navigation for accessible traversal
