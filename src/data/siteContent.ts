@@ -196,6 +196,17 @@ export const siteContent: SiteConfiguration = {
       accent: "#FDE68A",
     },
     {
+      id: "mem-redbull",
+      type: "joke",
+      title: "Bot's Starlight Fuel",
+      subtitle: "The holy grail: Red Bull",
+      imagePath: null,
+      snippet: "How a cold silver-and-blue can became our sweetest late-night staple.",
+      revealedNote:
+        "Every time I see a can of Red Bull, I instantly think of you. Whether you're working hard, studying late, or talking with me, you are my favorite person in the whole universe to cheer for.",
+      accent: "#38BDF8",
+    },
+    {
       id: "mem-note",
       type: "note",
       title: "A Quiet Thought",

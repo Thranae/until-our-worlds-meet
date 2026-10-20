@@ -2,6 +2,7 @@ import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import { ChapterLayout } from '../components/ChapterLayout';
 import { MemoryGallery } from '../components/MemoryGallery';
+import { CelestialRedBull } from '../components/CelestialRedBull';
 
 interface OurConnectionProps {
   onProceed: () => void;
@@ -22,7 +23,11 @@ export const OurConnection: React.FC<OurConnectionProps> = ({ onProceed }) => {
       }}
       maxWidth="860px"
     >
-      <MemoryGallery />
+      <div style={{ display: 'flex', flexDirection: 'column', width: '100%', gap: '1.5rem' }}>
+        <MemoryGallery />
+        <CelestialRedBull />
+      </div>
     </ChapterLayout>
   );
 };
+
