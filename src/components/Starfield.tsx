@@ -80,6 +80,7 @@ export const Starfield: React.FC = () => {
 
     let animationFrameId: number;
     let stars: Star[] = [];
+    let auroraPhase = 0;
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     let reducedMotion = mediaQuery.matches;
 
@@ -168,6 +169,28 @@ export const Starfield: React.FC = () => {
       const height = canvas.height / (Math.min(window.devicePixelRatio || 1, 2));
 
       ctx.clearRect(0, 0, width, height);
+
+      // 0. Cosmic Aurora Borealis Ribbon across upper night sky
+      if (!reducedMotion) {
+        auroraPhase += 0.006;
+      }
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(0, height * 0.2);
+      for (let x = 0; x <= width; x += 25) {
+        const y = height * 0.18 + Math.sin(x * 0.003 + auroraPhase) * 25 + Math.cos(x * 0.006 - auroraPhase * 0.5) * 16;
+        ctx.lineTo(x, y);
+      }
+      ctx.lineTo(width, 0);
+      ctx.lineTo(0, 0);
+      ctx.closePath();
+      const auroraGrad = ctx.createLinearGradient(0, 0, width * 0.5, height * 0.25);
+      auroraGrad.addColorStop(0, 'rgba(167, 139, 250, 0.05)');
+      auroraGrad.addColorStop(0.5, 'rgba(147, 197, 253, 0.04)');
+      auroraGrad.addColorStop(1, 'rgba(253, 230, 138, 0.03)');
+      ctx.fillStyle = auroraGrad;
+      ctx.fill();
+      ctx.restore();
 
       // Deep celestial ambient aura
       const grad = ctx.createRadialGradient(

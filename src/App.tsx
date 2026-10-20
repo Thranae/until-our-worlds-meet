@@ -8,8 +8,10 @@ import { SkyLanternModal } from './components/SkyLanternModal';
 import { Invitation } from './chapters/Invitation';
 import { TwoWorlds } from './chapters/TwoWorlds';
 import { OurConnection } from './chapters/OurConnection';
+import { MidnightRadio } from './chapters/MidnightRadio';
 import { VoiceMessage } from './chapters/VoiceMessage';
 import { FutureTogether } from './chapters/FutureTogether';
+import { LanternSky } from './chapters/LanternSky';
 import { BirthdayLetter } from './chapters/BirthdayLetter';
 import { siteContent } from './data/siteContent';
 
@@ -21,8 +23,10 @@ export const App: React.FC = () => {
     'Invitation',
     'Two Worlds',
     'The Little Things',
+    'Midnight Radio',
     'Voice Message',
     'Someday',
+    'Sea of Lanterns',
     'Birthday Letter',
   ];
 
@@ -167,7 +171,7 @@ export const App: React.FC = () => {
                   // Safe fallback
                 }
               }
-              setIsLanternModalOpen(true);
+              setCurrentChapter(6); // Jump straight to Chapter 7: Sea of Lanterns
             }}
             title="Release a midnight sky lantern for Bot"
             aria-label="Release a sky lantern"
@@ -177,8 +181,8 @@ export const App: React.FC = () => {
               gap: '0.3rem',
               padding: '0.35rem 0.65rem',
               borderRadius: 'var(--radius-full)',
-              background: 'rgba(245, 158, 11, 0.15)',
-              border: '1px solid rgba(251, 191, 36, 0.35)',
+              background: currentChapter === 6 ? 'rgba(245, 158, 11, 0.35)' : 'rgba(245, 158, 11, 0.15)',
+              border: '1px solid rgba(251, 191, 36, 0.45)',
               color: '#FDE68A',
               fontSize: '0.74rem',
               fontFamily: 'var(--font-sans)',
@@ -187,7 +191,7 @@ export const App: React.FC = () => {
             }}
           >
             <Flame size={12} color="#F59E0B" fill="#F59E0B" />
-            <span>Lantern</span>
+            <span>Lanterns</span>
           </button>
 
           <AmbientSoundscape />
@@ -210,18 +214,26 @@ export const App: React.FC = () => {
           )}
 
           {currentChapter === 3 && (
-            <VoiceMessage key="ch-3" onProceed={() => setCurrentChapter(4)} />
+            <MidnightRadio key="ch-3" onProceed={() => setCurrentChapter(4)} />
           )}
 
           {currentChapter === 4 && (
-            <FutureTogether key="ch-4" onProceed={() => setCurrentChapter(5)} />
+            <VoiceMessage key="ch-4" onProceed={() => setCurrentChapter(5)} />
           )}
 
           {currentChapter === 5 && (
+            <FutureTogether key="ch-5" onProceed={() => setCurrentChapter(6)} />
+          )}
+
+          {currentChapter === 6 && (
+            <LanternSky key="ch-6" onProceedToLetter={() => setCurrentChapter(7)} />
+          )}
+
+          {currentChapter === 7 && (
             <BirthdayLetter
-              key="ch-5"
-              onReturnToVoice={() => setCurrentChapter(3)}
-              onOpenLantern={() => setIsLanternModalOpen(true)}
+              key="ch-7"
+              onReturnToVoice={() => setCurrentChapter(4)}
+              onOpenLantern={() => setCurrentChapter(6)}
             />
           )}
         </AnimatePresence>
