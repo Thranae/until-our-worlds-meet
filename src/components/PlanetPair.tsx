@@ -6,6 +6,17 @@ import { siteContent } from '../data/siteContent';
 export const PlanetPair: React.FC = () => {
   const [activePlanet, setActivePlanet] = useState<'her' | 'my' | null>(null);
 
+  const handleOpenPlanet = (planet: 'her' | 'my') => {
+    if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
+      try {
+        navigator.vibrate(15);
+      } catch {
+        // Safe fallback
+      }
+    }
+    setActivePlanet(planet);
+  };
+
   const herWorld = siteContent.planets.herWorld;
   const myWorld = siteContent.planets.myWorld;
 
@@ -93,7 +104,7 @@ export const PlanetPair: React.FC = () => {
         <div style={{ position: 'relative', zIndex: 2 }}>
           <motion.button
             type="button"
-            onClick={() => setActivePlanet('her')}
+            onClick={() => handleOpenPlanet('her')}
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.95 }}
             aria-label={`Open details for ${herWorld.label}`}
@@ -158,7 +169,7 @@ export const PlanetPair: React.FC = () => {
         <div style={{ position: 'relative', zIndex: 2 }}>
           <motion.button
             type="button"
-            onClick={() => setActivePlanet('my')}
+            onClick={() => handleOpenPlanet('my')}
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.95 }}
             aria-label={`Open details for ${myWorld.label}`}
@@ -264,15 +275,25 @@ export const PlanetPair: React.FC = () => {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.94, y: 15 }}
               transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-              className="glass-panel"
+              className="glass-panel mobile-sheet-content"
               style={{
                 width: '100%',
-                maxWidth: '420px',
-                padding: '2rem 1.75rem',
+                maxWidth: '440px',
+                padding: '1.75rem 1.5rem',
                 position: 'relative',
                 zIndex: 2,
               }}
             >
+              {/* Mobile grab handle */}
+              <div
+                style={{
+                  width: '38px',
+                  height: '4px',
+                  borderRadius: '2px',
+                  background: 'rgba(255, 255, 255, 0.22)',
+                  margin: '0 auto 1.25rem',
+                }}
+              />
               {/* Close Button */}
               <button
                 type="button"

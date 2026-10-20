@@ -57,6 +57,9 @@ body {
   font-family: var(--font-sans);
   line-height: 1.6;
   text-rendering: optimizeLegibility;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: none;
+  touch-action: pan-y;
 }
 
 #root {
@@ -65,6 +68,7 @@ body {
   flex-direction: column;
   position: relative;
   background: radial-gradient(circle at 50% 20%, #11152C 0%, #080B18 70%);
+  overflow-x: hidden;
 }
 
 /* ==========================================================================
@@ -242,3 +246,49 @@ a:focus-visible {
     scroll-behavior: auto !important;
   }
 }
+
+/* ==========================================================================
+   Mobile Ergonomics & Responsive Adjustments
+   ========================================================================== */
+
+@media (max-width: 640px) {
+  .btn-primary {
+    width: 100%;
+    min-height: 50px;
+    padding: 0.95rem 1.5rem;
+    font-size: 1rem;
+  }
+
+  .btn-secondary {
+    width: 100%;
+    min-height: 48px;
+    padding: 0.85rem 1.35rem;
+  }
+
+  .glass-panel {
+    border-radius: var(--radius-md);
+    padding: 1.35rem !important;
+  }
+
+  .body-lead {
+    font-size: 1.05rem;
+    line-height: 1.7;
+  }
+
+  /* Bottom sheet on mobile */
+  .mobile-sheet-content {
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    max-height: 85svh;
+    overflow-y: auto;
+  }
+}
+
+@media (max-width: 380px) {
+  .btn-primary,
+  .btn-secondary {
+    font-size: 0.9rem;
+    padding: 0.8rem 1rem;
+  }
+}
+

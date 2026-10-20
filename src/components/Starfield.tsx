@@ -271,6 +271,11 @@ export const Starfield: React.FC = () => {
       animationFrameId = requestAnimationFrame(render);
     };
 
+    const handleWishEvent = () => {
+      makeWish();
+    };
+    window.addEventListener('trigger-celestial-wish', handleWishEvent);
+
     animationFrameId = requestAnimationFrame(render);
 
     return () => {
@@ -279,6 +284,7 @@ export const Starfield: React.FC = () => {
       window.removeEventListener('resize', resize);
       window.removeEventListener('mousemove', handlePointerMove);
       window.removeEventListener('touchmove', handlePointerMove);
+      window.removeEventListener('trigger-celestial-wish', handleWishEvent);
       document.removeEventListener('visibilitychange', handleVisibility);
       mediaQuery.removeEventListener('change', handleMotionChange);
     };
@@ -299,35 +305,6 @@ export const Starfield: React.FC = () => {
         }}
         aria-hidden="true"
       />
-
-      {/* Floating Wishmaker Button */}
-      <div
-        style={{
-          position: 'fixed',
-          top: 'max(4.5rem, calc(env(safe-area-inset-top) + 3.2rem))',
-          right: 'max(1.5rem, env(safe-area-inset-right))',
-          zIndex: 40,
-        }}
-      >
-        <button
-          type="button"
-          onClick={makeWish}
-          title="Send a shooting star wish across the universe"
-          aria-label="Send a shooting star wish"
-          className="btn-secondary"
-          style={{
-            fontSize: '0.74rem',
-            padding: '0.35rem 0.8rem',
-            minHeight: '34px',
-            borderColor: 'rgba(253, 230, 138, 0.25)',
-            color: 'var(--color-gold-soft)',
-            background: 'rgba(17, 21, 44, 0.65)',
-            backdropFilter: 'blur(10px)',
-          }}
-        >
-          <span>✦ Send a wish</span>
-        </button>
-      </div>
 
       {/* Wish Sent Notification Toast */}
       <AnimatePresence>

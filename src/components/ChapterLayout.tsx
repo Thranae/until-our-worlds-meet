@@ -48,8 +48,8 @@ export const ChapterLayout: React.FC<ChapterLayoutProps> = ({
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        paddingTop: 'max(4.5rem, env(safe-area-inset-top))',
-        paddingBottom: 'max(6rem, calc(env(safe-area-inset-bottom) + 4.5rem))',
+        paddingTop: 'max(4.8rem, calc(env(safe-area-inset-top) + 2.5rem))',
+        paddingBottom: 'max(7.5rem, calc(env(safe-area-inset-bottom) + 6.5rem))',
         paddingLeft: 'max(1.25rem, env(safe-area-inset-left))',
         paddingRight: 'max(1.25rem, env(safe-area-inset-right))',
         position: 'relative',
@@ -126,11 +126,15 @@ export const ChapterLayout: React.FC<ChapterLayoutProps> = ({
             transition={{ delay: 0.6, duration: 0.5 }}
             style={{
               display: 'flex',
-              flexWrap: 'wrap',
-              gap: '1rem',
+              flexDirection: 'column',
+              width: '100%',
+              maxWidth: '380px',
+              gap: '0.85rem',
               alignItems: 'center',
-              justifyContent: align === 'center' ? 'center' : 'flex-start',
-              marginTop: '2.8rem',
+              justifyContent: 'center',
+              marginTop: '2.5rem',
+              marginRight: 'auto',
+              marginLeft: 'auto',
             }}
           >
             {primaryAction && (

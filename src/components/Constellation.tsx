@@ -10,6 +10,13 @@ export const Constellation: React.FC = () => {
   const stars = siteContent.constellation.stars;
 
   const handleStarClick = (star: ConstellationStar) => {
+    if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
+      try {
+        navigator.vibrate(15);
+      } catch {
+        // Safe fallback
+      }
+    }
     setActiveStarId(star.id);
     if (!discoveredStars.includes(star.id)) {
       setDiscoveredStars((prev) => [...prev, star.id]);

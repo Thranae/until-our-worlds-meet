@@ -45,8 +45,38 @@ export const App: React.FC = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [chapterNames.length]);
 
+  // Touch swipe navigation for mobile
+  const touchStartX = React.useRef<number | null>(null);
+  const touchStartY = React.useRef<number | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null || touchStartY.current === null) return;
+    const deltaX = e.changedTouches[0].clientX - touchStartX.current;
+    const deltaY = e.changedTouches[0].clientY - touchStartY.current;
+
+    // Detect predominantly horizontal swipe (distance >= 55px)
+    if (Math.abs(deltaX) > 55 && Math.abs(deltaX) > Math.abs(deltaY) * 1.5) {
+      if (deltaX < 0) {
+        // Swiped left -> advance to next chapter
+        setCurrentChapter((prev) => Math.min(prev + 1, chapterNames.length - 1));
+      } else {
+        // Swiped right -> return to previous chapter
+        setCurrentChapter((prev) => Math.max(prev - 1, 0));
+      }
+    }
+    touchStartX.current = null;
+    touchStartY.current = null;
+  };
+
   return (
     <div
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
       style={{
         position: 'relative',
         width: '100%',
@@ -91,18 +121,40 @@ export const App: React.FC = () => {
           </span>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', pointerEvents: 'auto' }}>
-          <AmbientSoundscape />
-          <div
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem', pointerEvents: 'auto' }}>
+          <button
+            type="button"
+            onClick={() => {
+              if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
+                try {
+                  navigator.vibrate(12);
+                } catch {
+                  // Safe fallback
+                }
+              }
+              window.dispatchEvent(new CustomEvent('trigger-celestial-wish'));
+            }}
+            title="Send a shooting star wish across the universe"
+            aria-label="Send a shooting star wish"
             style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.35rem',
+              padding: '0.35rem 0.75rem',
+              borderRadius: 'var(--radius-full)',
+              background: 'rgba(253, 230, 138, 0.1)',
+              border: '1px solid rgba(253, 230, 138, 0.3)',
+              color: 'var(--color-gold-soft)',
               fontSize: '0.74rem',
-              color: 'var(--color-muted)',
               fontFamily: 'var(--font-sans)',
-              letterSpacing: '0.05em',
+              cursor: 'pointer',
+              touchAction: 'manipulation',
             }}
           >
-            {siteContent.recipient.birthdayDate}
-          </div>
+            <span>✦ Wish</span>
+          </button>
+
+          <AmbientSoundscape />
         </div>
       </header>
 

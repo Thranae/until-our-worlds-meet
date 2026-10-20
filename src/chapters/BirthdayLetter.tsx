@@ -11,8 +11,19 @@ export const BirthdayLetter: React.FC<BirthdayLetterProps> = ({ onReturnToVoice 
   const [isUnsealed, setIsUnsealed] = useState(false);
   const letterRef = useRef<HTMLDivElement | null>(null);
 
-  const handleReadAgain = () => {
+  const handleUnseal = () => {
+    if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
+      try {
+        navigator.vibrate([15, 30, 20]);
+      } catch {
+        // Safe fallback
+      }
+    }
     setIsUnsealed(true);
+  };
+
+  const handleReadAgain = () => {
+    handleUnseal();
     if (letterRef.current) {
       letterRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
@@ -106,7 +117,7 @@ export const BirthdayLetter: React.FC<BirthdayLetterProps> = ({ onReturnToVoice 
               boxShadow: '0 20px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(167, 139, 250, 0.15)',
               position: 'relative',
             }}
-            onClick={() => setIsUnsealed(true)}
+            onClick={handleUnseal}
           >
             {/* Ambient Gold Glow */}
             <div
@@ -194,7 +205,7 @@ export const BirthdayLetter: React.FC<BirthdayLetterProps> = ({ onReturnToVoice 
               className="btn-primary"
               onClick={(e) => {
                 e.stopPropagation();
-                setIsUnsealed(true);
+                handleUnseal();
               }}
               style={{
                 fontSize: '0.9rem',
