@@ -240,9 +240,24 @@ export const CelestialMusicBox: React.FC = () => {
   };
 
   useEffect(() => {
+    if (isPlaying) {
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('celestial-foreground-audio-start'));
+      }
+    } else {
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('celestial-foreground-audio-stop'));
+      }
+    }
+  }, [isPlaying]);
+
+  useEffect(() => {
     return () => {
       timeoutsRef.current.forEach((t) => clearTimeout(t));
       if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('celestial-foreground-audio-stop'));
+      }
     };
   }, []);
 

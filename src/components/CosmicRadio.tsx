@@ -243,8 +243,23 @@ export const CosmicRadio: React.FC = () => {
   };
 
   useEffect(() => {
+    if (isPlaying) {
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('celestial-foreground-audio-start'));
+      }
+    } else {
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('celestial-foreground-audio-stop'));
+      }
+    }
+  }, [isPlaying]);
+
+  useEffect(() => {
     return () => {
       stopAudio();
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('celestial-foreground-audio-stop'));
+      }
     };
   }, []);
 

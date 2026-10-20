@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { Flame } from 'lucide-react';
 import { Starfield } from './components/Starfield';
-import { AmbientSoundscape } from './components/AmbientSoundscape';
+import { BackgroundMusic } from './components/BackgroundMusic';
 import { ProgressIndicator } from './components/ProgressIndicator';
 import { SkyLanternModal } from './components/SkyLanternModal';
 import { Invitation } from './chapters/Invitation';
@@ -200,7 +200,7 @@ export const App: React.FC = () => {
             <span>Lanterns</span>
           </button>
 
-          <AmbientSoundscape />
+          <BackgroundMusic src="/sounds/zaalima.mp3" targetVolume={0.05} />
         </div>
       </header>
 

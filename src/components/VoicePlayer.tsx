@@ -50,10 +50,25 @@ export const VoicePlayer: React.FC = () => {
     };
   }, [audioSrc]);
 
-  // Clean up synthetic audio on unmount
+  // Clean up synthetic audio on unmount & notify BGM
+  useEffect(() => {
+    if (isPlaying) {
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('celestial-foreground-audio-start'));
+      }
+    } else {
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('celestial-foreground-audio-stop'));
+      }
+    }
+  }, [isPlaying]);
+
   useEffect(() => {
     return () => {
       stopSyntheticMelody();
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('celestial-foreground-audio-stop'));
+      }
     };
   }, []);
 
