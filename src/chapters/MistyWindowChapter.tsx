@@ -15,7 +15,7 @@ export const MistyWindowChapter: React.FC<MistyWindowChapterProps> = ({ onProcee
       chapterNumber={13}
       eyebrow="CHAPTER 13 • THE MIDNIGHT WINDOW"
       title="The Misty Midnight Window"
-      subtitle="02:00 AM • Wipe the dew off the glass to look into the night"
+      subtitle="02:00 AM • Swipe across the misty glass to reveal the secret words"
     >
       <div
         style={{
@@ -40,8 +40,8 @@ export const MistyWindowChapter: React.FC<MistyWindowChapterProps> = ({ onProcee
             margin: '0 auto',
           }}
         >
-          Whenever the quiet hours arrive and sleep feels far away, the glass gathers cold mist from the night.
-          Wipe a circle with your finger to look through to the horizon.
+          Whenever the quiet hours arrive and sleep feels far away, the glass gathers cold midnight mist.
+          Swipe across the glass with your finger to reveal the secret words hidden in the night.
         </motion.p>
 
         {/* The Interactive Fogged Window Component */}

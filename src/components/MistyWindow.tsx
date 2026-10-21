@@ -13,10 +13,12 @@ interface Droplet {
 export const MistyWindow: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [isWiping, setIsWiping] = useState(false);
+  const [hasSwiped, setHasSwiped] = useState(false);
   const [wipedPercentage, setWipedPercentage] = useState(0);
   const [isBreathing, setIsBreathing] = useState(false);
   const dropletsRef = useRef<Droplet[]>([]);
   const isPointerDownRef = useRef(false);
+  const hasSwipedRef = useRef(false);
   const lastPointRef = useRef<{ x: number; y: number } | null>(null);
 
   // Web Audio synthesizer for glass squeak and breath mist
@@ -63,7 +65,7 @@ export const MistyWindow: React.FC = () => {
       const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
       const data = buffer.getChannelData(0);
 
-      // Pinkish filtered breath noise
+      // Filtered breath noise
       let b0 = 0, b1 = 0, b2 = 0;
       for (let i = 0; i < bufferSize; i++) {
         const white = Math.random() * 2 - 1;
@@ -99,35 +101,44 @@ export const MistyWindow: React.FC = () => {
   }, []);
 
   // Initialize and redraw frosted condensation layer on canvas
-  const applyFrostedMist = useCallback((ctx: CanvasRenderingContext2D, width: number, height: number, alpha: number = 0.88) => {
+  const applyFrostedMist = useCallback((ctx: CanvasRenderingContext2D, width: number, height: number, alpha: number = 0.985) => {
     ctx.save();
     ctx.globalCompositeOperation = 'source-over';
 
-    // Base translucent cold frost gradient
+    // Dense cold midnight condensation base gradient that fully conceals what's behind
     const grad = ctx.createLinearGradient(0, 0, 0, height);
-    grad.addColorStop(0, `rgba(180, 195, 220, ${alpha * 0.92})`);
-    grad.addColorStop(0.5, `rgba(150, 170, 205, ${alpha * 0.85})`);
-    grad.addColorStop(1, `rgba(130, 150, 190, ${alpha * 0.94})`);
+    grad.addColorStop(0, `rgba(22, 28, 50, ${alpha})`);
+    grad.addColorStop(0.3, `rgba(35, 46, 78, ${alpha})`);
+    grad.addColorStop(0.7, `rgba(42, 54, 88, ${alpha})`);
+    grad.addColorStop(1, `rgba(18, 24, 44, ${alpha})`);
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, width, height);
 
-    // Fine condensation stippling grain
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.08)';
-    for (let i = 0; i < 900; i++) {
+    // Frosted water vapor sheen
+    const sheen = ctx.createRadialGradient(width * 0.5, height * 0.45, 10, width * 0.5, height * 0.45, width * 0.7);
+    sheen.addColorStop(0, `rgba(165, 185, 220, ${alpha * 0.45})`);
+    sheen.addColorStop(0.6, `rgba(125, 150, 190, ${alpha * 0.32})`);
+    sheen.addColorStop(1, `rgba(80, 105, 150, ${alpha * 0.18})`);
+    ctx.fillStyle = sheen;
+    ctx.fillRect(0, 0, width, height);
+
+    // Fine condensation stippling grain (thousands of microscopic dew particles)
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.09)';
+    for (let i = 0; i < 1100; i++) {
       const rx = Math.random() * width;
       const ry = Math.random() * height;
-      const rr = Math.random() * 2.2 + 0.8;
+      const rr = Math.random() * 2.2 + 0.6;
       ctx.beginPath();
       ctx.arc(rx, ry, rr, 0, Math.PI * 2);
       ctx.fill();
     }
 
     // Dew droplets on glass
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.28)';
     for (let i = 0; i < 40; i++) {
       const rx = Math.random() * width;
       const ry = Math.random() * height;
-      const rr = Math.random() * 3 + 1.5;
+      const rr = Math.random() * 2.8 + 1.2;
       ctx.beginPath();
       ctx.arc(rx, ry, rr, 0, Math.PI * 2);
       ctx.fill();
@@ -154,11 +165,10 @@ export const MistyWindow: React.FC = () => {
 
     applyFrostedMist(ctx, w, h);
 
-    // Seed trickling water droplets
+    // Seed trickling water droplets on side margins (never across center text)
     dropletsRef.current = [
-      { x: w * 0.22, y: 10, vy: 1.2, radius: 2.2, length: 0 },
-      { x: w * 0.58, y: 35, vy: 1.5, radius: 2.8, length: 0 },
-      { x: w * 0.82, y: 5, vy: 1.1, radius: 2.0, length: 0 },
+      { x: w * 0.08, y: 15, vy: 0.9, radius: 1.8, length: 0 },
+      { x: w * 0.92, y: 35, vy: 1.0, radius: 1.8, length: 0 },
     ];
 
     let animId: number;
@@ -166,8 +176,8 @@ export const MistyWindow: React.FC = () => {
 
     const dropletLoop = () => {
       count++;
-      // Occasionally advance trickling droplets that carve clear trails through mist
-      if (count % 3 === 0) {
+      // Only advance trickling droplets after user has interacted
+      if (hasSwipedRef.current && count % 3 === 0) {
         ctx.save();
         ctx.globalCompositeOperation = 'destination-out';
 
@@ -185,8 +195,8 @@ export const MistyWindow: React.FC = () => {
           // Reset droplet when it runs off bottom
           if (d.y > h + 10) {
             d.y = -10;
-            d.x = Math.random() * w;
-            d.vy = Math.random() * 0.8 + 0.9;
+            d.x = Math.random() < 0.5 ? w * (0.05 + Math.random() * 0.1) : w * (0.85 + Math.random() * 0.1);
+            d.vy = Math.random() * 0.6 + 0.8;
           }
         }
         ctx.restore();
@@ -203,11 +213,16 @@ export const MistyWindow: React.FC = () => {
   }, [applyFrostedMist]);
 
   // Wipe action using soft radial gradient eraser
-  const wipeAt = useCallback((x: number, y: number, radius = 28) => {
+  const wipeAt = useCallback((x: number, y: number, radius = 32) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
+
+    if (!hasSwipedRef.current) {
+      hasSwipedRef.current = true;
+      setHasSwiped(true);
+    }
 
     ctx.save();
     ctx.globalCompositeOperation = 'destination-out';
@@ -215,7 +230,7 @@ export const MistyWindow: React.FC = () => {
     // Soft feathered circular brush matching fingertip
     const brush = ctx.createRadialGradient(x, y, radius * 0.25, x, y, radius);
     brush.addColorStop(0, 'rgba(0, 0, 0, 1)');
-    brush.addColorStop(0.7, 'rgba(0, 0, 0, 0.85)');
+    brush.addColorStop(0.7, 'rgba(0, 0, 0, 0.88)');
     brush.addColorStop(1, 'rgba(0, 0, 0, 0)');
 
     ctx.fillStyle = brush;
@@ -248,7 +263,7 @@ export const MistyWindow: React.FC = () => {
     lastPointRef.current = { x, y };
 
     // Update wiped percentage estimate
-    setWipedPercentage((prev) => Math.min(100, prev + 0.8));
+    setWipedPercentage((prev) => Math.min(100, prev + 0.9));
   }, []);
 
   // Touch and pointer handlers
@@ -258,6 +273,8 @@ export const MistyWindow: React.FC = () => {
     canvas.setPointerCapture(e.pointerId);
     isPointerDownRef.current = true;
     setIsWiping(true);
+    hasSwipedRef.current = true;
+    setHasSwiped(true);
 
     const rect = canvas.getBoundingClientRect();
     const x = e.clientX - rect.left;
@@ -268,7 +285,7 @@ export const MistyWindow: React.FC = () => {
 
     if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
       try {
-        navigator.vibrate(12);
+        navigator.vibrate(14);
       } catch {
         // safe fallback
       }
@@ -280,13 +297,18 @@ export const MistyWindow: React.FC = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
+    if (!hasSwipedRef.current) {
+      hasSwipedRef.current = true;
+      setHasSwiped(true);
+    }
+
     const rect = canvas.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
     wipeAt(x, y);
 
     // Audio squeak feedback throttle
-    if (Math.random() < 0.12) {
+    if (Math.random() < 0.14) {
       playGlassSqueak();
     }
   };
@@ -315,10 +337,12 @@ export const MistyWindow: React.FC = () => {
       const ctx = canvas.getContext('2d');
       if (ctx) {
         const rect = canvas.getBoundingClientRect();
-        // Softly fade in mist over 600ms
+        // Re-fog window and hide text again
         setTimeout(() => {
-          applyFrostedMist(ctx, rect.width, rect.height, 0.7);
+          applyFrostedMist(ctx, rect.width, rect.height, 0.985);
           setWipedPercentage(0);
+          setHasSwiped(false);
+          hasSwipedRef.current = false;
         }, 300);
       }
     }
@@ -336,6 +360,9 @@ export const MistyWindow: React.FC = () => {
     const cx = rect.width / 2;
     const cy = rect.height / 2 - 10;
     const scale = Math.min(rect.width, rect.height) * 0.009;
+
+    hasSwipedRef.current = true;
+    setHasSwiped(true);
 
     playGlassSqueak();
     if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
@@ -356,7 +383,7 @@ export const MistyWindow: React.FC = () => {
       // Parametric heart formula
       const x = cx + 16 * Math.pow(Math.sin(t), 3) * scale;
       const y = cy - (13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t)) * scale;
-      wipeAt(x, y, 16);
+      wipeAt(x, y, 18);
       t += step;
     }, 16);
   };
@@ -368,6 +395,9 @@ export const MistyWindow: React.FC = () => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
     const rect = canvas.getBoundingClientRect();
+
+    hasSwipedRef.current = true;
+    setHasSwiped(true);
 
     ctx.save();
     ctx.globalCompositeOperation = 'destination-out';
@@ -384,6 +414,9 @@ export const MistyWindow: React.FC = () => {
       }
     }
   };
+
+  // Text is revealed ONLY while swiping or after swiping
+  const isRevealed = hasSwiped || isWiping || wipedPercentage > 4;
 
   return (
     <div
@@ -412,7 +445,7 @@ export const MistyWindow: React.FC = () => {
           touchAction: 'none',
         }}
       >
-        {/* UNDERLYING VIEW: The Nocturnal Skyline & Starlight Skyline */}
+        {/* UNDERLYING VIEW: Nocturnal Sky & Distant Horizon */}
         <div
           style={{
             position: 'absolute',
@@ -456,7 +489,7 @@ export const MistyWindow: React.FC = () => {
             }}
           />
 
-          {/* Golden Handwritten Secret Message that appears through wiped glass */}
+          {/* Golden Secret Message: REVEALED ONLY WHILE SWIPING OR AFTER SWIPING */}
           <div
             style={{
               position: 'relative',
@@ -464,13 +497,17 @@ export const MistyWindow: React.FC = () => {
               textAlign: 'center',
               marginTop: 'auto',
               marginBottom: 'auto',
-              padding: '1rem',
+              padding: '1.25rem 1rem',
+              opacity: isRevealed ? (isWiping ? Math.max(0.75, Math.min(1, wipedPercentage / 10)) : 1) : 0,
+              transform: isRevealed ? 'translateY(0) scale(1)' : 'translateY(12px) scale(0.94)',
+              filter: isRevealed ? 'blur(0px)' : 'blur(8px)',
+              transition: 'opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), filter 0.5s ease-out',
+              pointerEvents: 'none',
             }}
           >
             <motion.div
-              initial={{ opacity: 0.4, scale: 0.96 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1.5, repeat: Infinity, repeatType: 'reverse' }}
+              animate={isRevealed ? { opacity: [0.94, 1, 0.94] } : {}}
+              transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
             >
               <span
                 style={{
@@ -512,6 +549,23 @@ export const MistyWindow: React.FC = () => {
               >
                 Happy Birthday, Bot. I’m thinking of you.
               </p>
+              {wipedPercentage > 25 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  style={{
+                    marginTop: '0.8rem',
+                    fontSize: '0.74rem',
+                    color: 'var(--color-gold-soft)',
+                    letterSpacing: '0.14em',
+                    textTransform: 'uppercase',
+                    opacity: 0.88,
+                    textShadow: '0 0 8px rgba(253, 230, 138, 0.4)',
+                  }}
+                >
+                  ✦ 2 cities • 1 moon • Infinite memories ✦
+                </motion.div>
+              )}
             </motion.div>
           </div>
 
@@ -574,23 +628,79 @@ export const MistyWindow: React.FC = () => {
             height: '100%',
             cursor: 'crosshair',
             touchAction: 'none',
+            zIndex: 4,
           }}
         />
+
+        {/* Subtle center gesture prompt shown only before first swipe */}
+        {!isRevealed && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.92 }}
+            animate={{ opacity: [0.4, 0.9, 0.4], scale: [0.98, 1.02, 0.98] }}
+            transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '0.6rem',
+              pointerEvents: 'none',
+              zIndex: 6,
+            }}
+          >
+            <div
+              style={{
+                width: '46px',
+                height: '46px',
+                borderRadius: '50%',
+                background: 'rgba(255, 255, 255, 0.12)',
+                backdropFilter: 'blur(8px)',
+                border: '1px solid rgba(255, 255, 255, 0.28)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: '0 4px 16px rgba(0, 0, 0, 0.5)',
+              }}
+            >
+              <Sparkles size={20} color="#FDE68A" />
+            </div>
+            <span
+              style={{
+                fontFamily: 'var(--font-sans)',
+                fontSize: '0.8rem',
+                color: 'rgba(255, 255, 255, 0.92)',
+                letterSpacing: '0.04em',
+                background: 'rgba(10, 14, 28, 0.75)',
+                padding: '0.3rem 0.8rem',
+                borderRadius: '999px',
+                backdropFilter: 'blur(10px)',
+                border: '1px solid rgba(255, 255, 255, 0.14)',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              Swipe with finger to reveal words
+            </span>
+          </motion.div>
+        )}
 
         {/* Breath Condensation Fog Overlay Animation */}
         <AnimatePresence>
           {isBreathing && (
             <motion.div
               initial={{ opacity: 0, scale: 0.92 }}
-              animate={{ opacity: 0.85, scale: 1 }}
+              animate={{ opacity: 0.92, scale: 1 }}
               exit={{ opacity: 0, scale: 1.05 }}
               transition={{ duration: 0.8 }}
               style={{
                 position: 'absolute',
                 inset: 0,
-                background: 'radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.9) 0%, rgba(200, 215, 235, 0.75) 60%, transparent 100%)',
-                backdropFilter: 'blur(8px)',
+                background: 'radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.95) 0%, rgba(200, 215, 235, 0.85) 60%, transparent 100%)',
+                backdropFilter: 'blur(10px)',
                 pointerEvents: 'none',
+                zIndex: 8,
               }}
             />
           )}
@@ -605,6 +715,7 @@ export const MistyWindow: React.FC = () => {
             border: '2px solid rgba(255, 255, 255, 0.18)',
             boxShadow: 'inset 0 2px 4px rgba(255, 255, 255, 0.3), inset 0 -2px 4px rgba(0, 0, 0, 0.5)',
             pointerEvents: 'none',
+            zIndex: 9,
           }}
         />
 
@@ -615,11 +726,11 @@ export const MistyWindow: React.FC = () => {
             top: '1rem',
             left: '50%',
             transform: 'translateX(-50%)',
-            padding: '0.4rem 0.9rem',
+            padding: '0.42rem 0.95rem',
             borderRadius: 'var(--radius-full)',
-            background: 'rgba(15, 23, 42, 0.75)',
-            backdropFilter: 'blur(10px)',
-            border: '1px solid rgba(255, 255, 255, 0.15)',
+            background: 'rgba(11, 15, 30, 0.82)',
+            backdropFilter: 'blur(12px)',
+            border: '1px solid rgba(255, 255, 255, 0.18)',
             color: 'var(--color-ivory)',
             fontSize: '0.74rem',
             display: 'flex',
@@ -627,15 +738,17 @@ export const MistyWindow: React.FC = () => {
             gap: '0.45rem',
             pointerEvents: 'none',
             whiteSpace: 'nowrap',
+            zIndex: 10,
+            boxShadow: '0 4px 16px rgba(0, 0, 0, 0.4)',
           }}
         >
           <Sparkles size={12} color="#FDE68A" />
           <span>
             {isWiping
-              ? 'Wiping the cold mist... ✦'
-              : wipedPercentage > 40
-              ? 'Our shared sky revealed ✦'
-              : 'Touch & drag your finger to wipe the mist'}
+              ? 'Wiping the mist... secret words appearing ✦'
+              : hasSwiped || wipedPercentage > 5
+              ? 'Message revealed through the clear glass ✦'
+              : 'Swipe with your finger to wipe the mist'}
           </span>
         </div>
       </div>
