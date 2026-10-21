@@ -11,8 +11,8 @@ export const CoffeeChapter: React.FC<CoffeeChapterProps> = ({ onProceed }) => {
   return (
     <ChapterLayout
       id="chapter-coffee-together"
-      chapterNumber={20}
-      eyebrow="CHAPTER 20 • TWO CUPS OF COFFEE"
+      chapterNumber={21}
+      eyebrow="CHAPTER 21 • TWO CUPS OF COFFEE"
       title="The warmth of sitting next to you"
       subtitle="Freshly brewed coffee on a quiet morning • Warm porcelain mugs, rich roasted aroma, and no more screens between us."
       primaryAction={{

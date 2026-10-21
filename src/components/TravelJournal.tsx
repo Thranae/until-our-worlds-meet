@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Stamp, ChevronLeft, ChevronRight, Bell, Snowflake } from 'lucide-react';
+import { Stamp, ChevronLeft, ChevronRight, Bell, Sparkles } from 'lucide-react';
 
 interface Destination {
   title: string;
@@ -12,45 +12,45 @@ interface Destination {
   stamped: boolean;
 }
 
-interface SnowflakeParticle {
+interface EmberParticle {
   x: number;
   y: number;
   radius: number;
   speed: number;
-  wind: number;
+  sway: number;
   alpha: number;
 }
 
 export const TravelJournal: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const snowCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  const aartiCanvasRef = useRef<HTMLCanvasElement | null>(null);
 
   const [destinations, setDestinations] = useState<Destination[]>([
     {
-      title: 'Ujjain Shivan Temple • Himalayan Snow Sanctuary',
-      location: 'Himalayan Ridge • 4,800m • Pure White Snow',
-      tagline: 'High Atop the Snow-Covered Mountains with Mahadeva',
-      desc: 'Standing side by side at the summit of the snow-clad Himalayas, wrapped in warm woollen shawls while gentle snowflakes settle on our hair. The ancient stone temple of Lord Shiva stands perched among the clouds, its golden spire shining against the blue glaciers, as holy bells echo across the freezing mountain air.',
-      accent: '#93C5FD',
-      emoji: '🏔️',
-      stamped: true,
-    },
-    {
-      title: 'The Snowfall Mountain Pass at Dawn',
-      location: 'Himalayan High Pass • Silent Winter Wonderland',
-      tagline: 'Hot Coffee & Fresh Snowflakes',
-      desc: 'Winding through towering snow-walled mountain roads together in the early dawn, holding warm cups of coffee while heavy snowflakes drift softly around us. Breath turning into white mist, smiling and watching the morning sun illuminate the snow-covered peaks like liquid gold.',
-      accent: '#FDE68A',
-      emoji: '❄️',
+      title: 'Sri Mahakaleshwar Jyotirlinga • Holy Ujjain, MP',
+      location: 'Ujjain • Banks of Sacred Shipra River, Madhya Pradesh',
+      tagline: 'Sacred Bhasma Aarti & The Ancient Jyotirlinga of Mahakal',
+      desc: 'Stepping together into the ancient sandstone courtyards of Mahakaleshwar in Ujjain, Madhya Pradesh. Before the consecrated south-facing Shiva Lingam draped in holy Bhasma ash, silver snake canopy, and fresh bilva garlands, Vedic priests in saffron dhotis chant ancient mantras as conch shells and temple bells resonate at dawn. Devout pilgrims and families fold their hands in deep devotion, as warm brass aarti flames illuminate our prayers.',
+      accent: '#F59E0B',
+      emoji: '🕉️',
       stamped: false,
     },
     {
-      title: 'The Sanctum Lamp & Sacred Aarti in the Snow',
-      location: 'Temple Sanctum • Holy Chants & Warm Camphor',
-      tagline: 'Warm Flame Against the Freezing Blizzard',
-      desc: 'Stepping into the warmth of the sanctum while blizzards whisper softly outside. Hearing the holy conch shells resonate through the snow-capped valley, feeling the golden warmth of the oil lamps, and bowing our heads together in eternal gratitude and peace.',
-      accent: '#F472B6',
+      title: 'Holy Shipra River Ghats & Ram Ghat at Dusk',
+      location: 'Ram Ghat • Shipra River, Ujjain, Madhya Pradesh',
+      tagline: 'Evening Deep Daan & Sacred River Whispers',
+      desc: 'Walking along the historic stone ghats of the Shipra River in Ujjain as thousands of brass oil lamps float like stars upon the water. Temple priests perform the holy evening Shipra Aarti while the temple bells toll across the river breeze, blessing our shared journey with peace and eternal togetherness.',
+      accent: '#FDE68A',
       emoji: '🪔',
+      stamped: false,
+    },
+    {
+      title: 'Harsiddhi & Kal Bhairav • Ancient City of Avantika',
+      location: 'Ancient Ujjain (Avantika) • Madhya Pradesh',
+      tagline: 'Golden Lamp Pillars & The Eternal City',
+      desc: 'Exploring the ancient spiritual heart of Malwa where centuries of devotion and Vedic astronomy meet. Gazing up at the towering 51-foot deepastambhas (lamp pillars) glowing with hundreds of oil flames in the twilight, whispering our heartfelt prayers for each other under the blessings of Mahadeva.',
+      accent: '#F472B6',
+      emoji: '✨',
       stamped: false,
     },
   ]);
@@ -116,9 +116,9 @@ export const TravelJournal: React.FC = () => {
     );
   };
 
-  // Falling Snow Simulation on the Photo Stage Canvas
+  // Floating Golden Camphor Aarti Embers Simulation on the Photo Stage Canvas
   useEffect(() => {
-    const canvas = snowCanvasRef.current;
+    const canvas = aartiCanvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
@@ -130,15 +130,15 @@ export const TravelJournal: React.FC = () => {
     canvas.height = rect.height * dpr;
     ctx.scale(dpr, dpr);
 
-    const flakes: SnowflakeParticle[] = [];
-    for (let i = 0; i < 45; i++) {
-      flakes.push({
+    const embers: EmberParticle[] = [];
+    for (let i = 0; i < 32; i++) {
+      embers.push({
         x: Math.random() * rect.width,
         y: Math.random() * rect.height,
-        radius: Math.random() * 2.2 + 0.8,
-        speed: Math.random() * 0.9 + 0.4,
-        wind: (Math.random() - 0.5) * 0.5,
-        alpha: Math.random() * 0.7 + 0.3,
+        radius: Math.random() * 1.8 + 0.6,
+        speed: Math.random() * 0.6 + 0.3,
+        sway: (Math.random() - 0.5) * 0.4,
+        alpha: Math.random() * 0.6 + 0.25,
       });
     }
 
@@ -147,22 +147,22 @@ export const TravelJournal: React.FC = () => {
       time += 0.02;
       ctx.clearRect(0, 0, rect.width, rect.height);
 
-      flakes.forEach((f) => {
-        f.y += f.speed;
-        f.x += Math.sin(time + f.y * 0.02) * 0.5 + f.wind;
+      embers.forEach((e) => {
+        e.y -= e.speed;
+        e.x += Math.sin(time + e.y * 0.03) * 0.4 + e.sway;
 
-        if (f.y > rect.height) {
-          f.y = -5;
-          f.x = Math.random() * rect.width;
+        if (e.y < -5) {
+          e.y = rect.height + 5;
+          e.x = Math.random() * rect.width;
         }
-        if (f.x < -10) f.x = rect.width + 10;
-        if (f.x > rect.width + 10) f.x = -10;
+        if (e.x < -10) e.x = rect.width + 10;
+        if (e.x > rect.width + 10) e.x = -10;
 
         ctx.beginPath();
-        ctx.arc(f.x, f.y, f.radius, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(248, 250, 252, ${f.alpha})`;
-        ctx.shadowColor = '#FFFFFF';
-        ctx.shadowBlur = 4;
+        ctx.arc(e.x, e.y, e.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(253, 230, 138, ${e.alpha})`;
+        ctx.shadowColor = '#F59E0B';
+        ctx.shadowBlur = 6;
         ctx.fill();
         ctx.shadowBlur = 0;
       });
@@ -224,7 +224,7 @@ export const TravelJournal: React.FC = () => {
           }}
         />
 
-        {/* High-Mountain Snowy Temple Photo Stage Area */}
+        {/* Authentic Mahakaleshwar Temple Photo Stage Area • Holy Ujjain, Madhya Pradesh */}
         <div
           onClick={() => {
             playTempleBellSound();
@@ -234,143 +234,53 @@ export const TravelJournal: React.FC = () => {
               } catch {}
             }
           }}
-          title="Tap to ring the holy temple bell in the snow"
+          title="Tap to ring the sacred temple bell of Mahakaleshwar • Ujjain, MP"
           style={{
             position: 'relative',
             width: '100%',
-            height: '225px',
+            height: '240px',
             borderRadius: 'var(--radius-md)',
-            background: 'linear-gradient(180deg, #0A1128 0%, #152238 60%, #1E3A5F 100%)',
-            border: '1px solid rgba(147, 197, 253, 0.3)',
+            background: 'linear-gradient(180deg, #1A130A 0%, #2A1C0E 60%, #150E06 100%)',
+            border: '1.5px solid rgba(251, 191, 36, 0.45)',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
             overflow: 'hidden',
             cursor: 'pointer',
+            boxShadow: 'inset 0 0 25px rgba(0,0,0,0.7)',
           }}
         >
-          {/* Snowy Himalayan Summit & Shivan Temple Illustration */}
-          <svg
-            viewBox="0 0 380 225"
-            width="100%"
-            height="100%"
-            preserveAspectRatio="xMidYMid slice"
-            style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}
-          >
-            <defs>
-              {/* Distant Mountain Peak Gradient */}
-              <linearGradient id="backHimalaya" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#1E293B" />
-                <stop offset="100%" stopColor="#0F172A" />
-              </linearGradient>
+          {/* Authentic Photograph of Sri Mahakaleshwar Temple, Ujjain, Madhya Pradesh */}
+          <img
+            src="/images/mahakaleshwar_ujjain_temple.jpg"
+            alt="Sri Mahakaleshwar Jyotirlinga Temple, Ujjain, Madhya Pradesh"
+            style={{
+              position: 'absolute',
+              inset: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              objectPosition: 'center 45%',
+              filter: 'brightness(0.92) contrast(1.06)',
+            }}
+          />
 
-              {/* Foreground Snowy Summit Gradient */}
-              <linearGradient id="snowPeakGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#F8FAFC" />
-                <stop offset="35%" stopColor="#CBD5E1" />
-                <stop offset="70%" stopColor="#475569" />
-                <stop offset="100%" stopColor="#1E293B" />
-              </linearGradient>
+          {/* Warm Temple Sanctum Ambient Vignette */}
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background:
+                'linear-gradient(to top, rgba(14, 10, 4, 0.82) 0%, rgba(20, 15, 8, 0.25) 50%, rgba(10, 7, 2, 0.45) 100%)',
+              pointerEvents: 'none',
+              zIndex: 5,
+            }}
+          />
 
-              {/* Warm Temple Sanctum Light */}
-              <radialGradient id="templeGlow" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stopColor="#FEF3C7" stopOpacity="0.95" />
-                <stop offset="50%" stopColor="#F59E0B" stopOpacity="0.65" />
-                <stop offset="100%" stopColor="transparent" />
-              </radialGradient>
-            </defs>
-
-            {/* Distant Majestic Mountain Peaks */}
-            <polygon points="40,140 120,65 200,140" fill="url(#backHimalaya)" opacity="0.75" />
-            <polygon points="180,140 270,55 350,140" fill="url(#backHimalaya)" opacity="0.75" />
-
-            {/* Snow Caps on Distant Mountains */}
-            <polygon points="120,65 105,95 120,90 135,95" fill="#E2E8F0" opacity="0.85" />
-            <polygon points="270,55 255,85 270,80 285,85" fill="#E2E8F0" opacity="0.85" />
-
-            {/* Main Foreground Snow-Covered Himalayan Ridge */}
-            <path
-              d="M0,225 L0,155 Q85,105 190,110 Q295,115 380,165 L380,225 Z"
-              fill="url(#snowPeakGrad)"
-            />
-
-            {/* Pure White Snow Drifts on Summit Ridge */}
-            <path
-              d="M0,155 Q85,105 190,110 Q295,115 380,165 L380,185 Q295,135 190,130 Q85,125 0,175 Z"
-              fill="#FFFFFF"
-              opacity="0.92"
-            />
-
-            {/* Shivan Temple Perched High on the Snowy Summit */}
-            <g transform="translate(190, 118)">
-              {/* Warm Sanctum Light Reflection on Snow */}
-              <ellipse cx="0" cy="8" rx="42" ry="16" fill="url(#templeGlow)" />
-
-              {/* Stone Temple Base Structure */}
-              <rect x="-26" y="-35" width="52" height="42" rx="2" fill="#334155" stroke="#64748B" strokeWidth="1.2" />
-
-              {/* Stone Pillars / Portico */}
-              <line x1="-20" y1="-35" x2="-20" y2="6" stroke="#475569" strokeWidth="2.5" />
-              <line x1="20" y1="-35" x2="20" y2="6" stroke="#475569" strokeWidth="2.5" />
-              <line x1="-8" y1="-35" x2="-8" y2="6" stroke="#475569" strokeWidth="2" />
-              <line x1="8" y1="-35" x2="8" y2="6" stroke="#475569" strokeWidth="2" />
-
-              {/* Sanctum Door with Glowing Warm Deepam Light */}
-              <rect x="-7" y="-22" width="14" height="28" rx="7" fill="#F59E0B" />
-              <ellipse cx="0" cy="-6" rx="4.5" ry="8" fill="#FFFBEB" filter="drop-shadow(0 0 8px #F59E0B)" />
-
-              {/* Temple Shikhara (Curved Stone Spire Covered in Snow) */}
-              <path
-                d="M-28,-35 Q-15,-68 0,-78 Q15,-68 28,-35 Z"
-                fill="#1E293B"
-                stroke="#64748B"
-                strokeWidth="1.2"
-              />
-              {/* Fresh Snow Blanket on Spire Roof */}
-              <path
-                d="M-28,-35 Q-15,-68 0,-78 Q15,-68 28,-35 Q15,-48 0,-56 Q-15,-48 -28,-35 Z"
-                fill="#FFFFFF"
-                opacity="0.95"
-              />
-
-              {/* Golden Kalasha Spire Peak */}
-              <polygon points="0,-86 4,-78 -4,-78" fill="#FDE68A" />
-              <circle cx="0" cy="-86" r="2.5" fill="#F59E0B" />
-
-              {/* Golden Trishula (Trident) on the Temple Roof */}
-              <line x1="14" y1="-50" x2="14" y2="-72" stroke="#FDE68A" strokeWidth="1.5" />
-              <path d="M14,-78 L16,-72 L12,-72 Z" fill="#FDE68A" />
-              <path d="M9,-74 C9,-70 12,-69 14,-69" fill="none" stroke="#FDE68A" strokeWidth="1.2" />
-              <path d="M19,-74 C19,-70 16,-69 14,-69" fill="none" stroke="#FDE68A" strokeWidth="1.2" />
-
-              {/* Temple Prayer Flags Fluttering in the Mountain Wind */}
-              <line x1="-28" y1="-35" x2="-65" y2="-22" stroke="#CBD5E1" strokeWidth="0.8" />
-              <polygon points="-36,-32 -44,-30 -40,-25" fill="#EF4444" />
-              <polygon points="-46,-29 -54,-27 -50,-22" fill="#F59E0B" />
-              <polygon points="-56,-26 -64,-24 -60,-19" fill="#3B82F6" />
-            </g>
-
-            {/* Two Travelers Standing Hand in Hand in the Snow (Us) */}
-            <g transform="translate(142, 130)">
-              {/* Boy Traveler (Thick winter coat & scarf) */}
-              <rect x="-8" y="-18" width="8" height="18" rx="3" fill="#1E3A8A" />
-              <circle cx="-4" cy="-22" r="3.5" fill="#F8FAFC" />
-              <rect x="-7" y="-26" width="6" height="3" rx="1.5" fill="#3B82F6" />
-
-              {/* Girl Traveler (Warm winter jacket & beanie) */}
-              <rect x="2" y="-17" width="8" height="17" rx="3" fill="#BE185D" />
-              <circle cx="6" cy="-21" r="3.5" fill="#F8FAFC" />
-              <circle cx="6" cy="-25" r="2" fill="#FDE68A" />
-
-              {/* Holding Hands in the Snow */}
-              <line x1="0" y1="-8" x2="2" y2="-8" stroke="#FDE68A" strokeWidth="1.8" strokeLinecap="round" />
-            </g>
-          </svg>
-
-          {/* Real Falling Snow Canvas Overlay */}
+          {/* Floating Camphor Aarti Golden Embers Overlay Canvas */}
           <canvas
-            ref={snowCanvasRef}
+            ref={aartiCanvasRef}
             style={{
               position: 'absolute',
               inset: 0,
@@ -390,46 +300,49 @@ export const TravelJournal: React.FC = () => {
               display: 'flex',
               alignItems: 'center',
               gap: '0.35rem',
-              background: 'rgba(8, 14, 30, 0.78)',
+              background: 'rgba(18, 12, 5, 0.85)',
               backdropFilter: 'blur(8px)',
-              padding: '0.25rem 0.6rem',
+              padding: '0.28rem 0.65rem',
               borderRadius: 'var(--radius-full)',
-              border: '1px solid rgba(147, 197, 253, 0.4)',
+              border: '1px solid rgba(251, 191, 36, 0.55)',
               color: '#FEF3C7',
               fontSize: '0.68rem',
               fontFamily: 'var(--font-sans)',
               zIndex: 15,
+              boxShadow: '0 2px 8px rgba(0,0,0,0.5)',
             }}
           >
             <Bell size={12} color="#FDE68A" />
-            <span>Tap temple to chime bell</span>
+            <span>Tap temple to chime Mahakal bell</span>
           </div>
 
-          {/* Red Passport Rubber Stamp (if stamped) */}
+          {/* Red Passport Rubber Stamp (revealed strictly upon clicking approval button) */}
           <AnimatePresence>
             {currentDest.stamped && (
               <motion.div
-                initial={{ scale: 2.2, opacity: 0, rotate: -25 }}
-                animate={{ scale: 1, opacity: 0.92, rotate: -14 }}
+                key="approved-stamp"
+                initial={{ scale: 2.4, opacity: 0, rotate: -25 }}
+                animate={{ scale: 1, opacity: 0.95, rotate: -14 }}
                 exit={{ scale: 0.8, opacity: 0 }}
                 transition={{ type: 'spring', stiffness: 350, damping: 20 }}
                 style={{
                   position: 'absolute',
-                  top: '20px',
+                  top: '18px',
                   right: '16px',
-                  padding: '0.4rem 0.75rem',
+                  padding: '0.45rem 0.85rem',
                   borderRadius: '6px',
                   border: '2.5px solid #EF4444',
                   color: '#EF4444',
                   fontFamily: 'monospace',
-                  fontSize: '0.76rem',
+                  fontSize: '0.82rem',
                   fontWeight: 900,
-                  letterSpacing: '0.12em',
+                  letterSpacing: '0.14em',
                   transform: 'rotate(-14deg)',
-                  boxShadow: '0 0 14px rgba(239, 68, 68, 0.45)',
+                  boxShadow: '0 0 18px rgba(239, 68, 68, 0.55)',
                   userSelect: 'none',
                   zIndex: 20,
-                  background: 'rgba(239, 68, 68, 0.1)',
+                  background: 'rgba(239, 68, 68, 0.16)',
+                  backdropFilter: 'blur(3px)',
                 }}
               >
                 APPROVED ✦ NOV 8
@@ -442,12 +355,12 @@ export const TravelJournal: React.FC = () => {
             style={{
               position: 'absolute',
               bottom: '10px',
-              background: 'rgba(10, 17, 40, 0.85)',
+              background: 'rgba(18, 12, 6, 0.9)',
               backdropFilter: 'blur(8px)',
-              padding: '0.25rem 0.75rem',
+              padding: '0.28rem 0.8rem',
               borderRadius: 'var(--radius-full)',
-              border: '1px solid rgba(147, 197, 253, 0.35)',
-              color: '#E0F2FE',
+              border: '1px solid rgba(251, 191, 36, 0.45)',
+              color: '#FEF3C7',
               fontSize: '0.7rem',
               fontFamily: 'monospace',
               letterSpacing: '0.06em',
@@ -457,7 +370,7 @@ export const TravelJournal: React.FC = () => {
               gap: '0.35rem',
             }}
           >
-            <Snowflake size={11} color="#93C5FD" />
+            <Sparkles size={11} color="#FDE68A" />
             <span>{currentDest.location}</span>
           </div>
         </div>
@@ -532,26 +445,32 @@ export const TravelJournal: React.FC = () => {
 
           <button
             type="button"
+            id="pilgrimage-approval-btn"
+            aria-label="Approve Pilgrimage Stamp"
             onClick={handleToggleStamp}
             style={{
               display: 'inline-flex',
               alignItems: 'center',
-              gap: '0.4rem',
-              padding: '0.6rem 1.15rem',
+              gap: '0.45rem',
+              padding: '0.65rem 1.25rem',
               borderRadius: 'var(--radius-full)',
               background: currentDest.stamped
                 ? 'rgba(239, 68, 68, 0.22)'
-                : 'linear-gradient(135deg, rgba(251, 191, 36, 0.28) 0%, rgba(245, 158, 11, 0.18) 100%)',
-              border: `1.5px solid ${currentDest.stamped ? '#EF4444' : 'rgba(251, 191, 36, 0.55)'}`,
+                : 'linear-gradient(135deg, rgba(251, 191, 36, 0.32) 0%, rgba(245, 158, 11, 0.2) 100%)',
+              border: `1.5px solid ${currentDest.stamped ? '#EF4444' : 'rgba(251, 191, 36, 0.65)'}`,
               color: currentDest.stamped ? '#FCA5A5' : '#FDE68A',
-              fontSize: '0.78rem',
-              fontWeight: 600,
+              fontSize: '0.8rem',
+              fontWeight: 700,
               cursor: 'pointer',
               touchAction: 'manipulation',
+              boxShadow: currentDest.stamped
+                ? '0 0 14px rgba(239, 68, 68, 0.35)'
+                : '0 0 16px rgba(251, 191, 36, 0.25)',
+              transition: 'all 0.2s ease',
             }}
           >
-            <Stamp size={14} />
-            <span>{currentDest.stamped ? 'Stamped: Approved ✦' : 'Stamp Bucket List'}</span>
+            <Stamp size={15} />
+            <span>{currentDest.stamped ? 'Approved ✦ Stamp Sealed' : 'Click to Approve Pilgrimage ✦'}</span>
           </button>
 
           <button

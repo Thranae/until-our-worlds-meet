@@ -11,8 +11,8 @@ export const MarinaBeachChapter: React.FC<MarinaBeachChapterProps> = ({ onProcee
   return (
     <ChapterLayout
       id="chapter-marina-beach"
-      chapterNumber={17}
-      eyebrow="CHAPTER 17 • THE STARLIT OCEAN & THE BLUE WHALE"
+      chapterNumber={18}
+      eyebrow="CHAPTER 18 • THE STARLIT OCEAN & THE BLUE WHALE"
       title="The Song of the Blue Whale Across the Tides"
       subtitle={`Marina Beach & the deep Bay of Bengal.\n\nBecause your favorite sea animal is the majestic Blue Whale — the gentle giant of the deep who sings songs that travel thousands of kilometers across the ocean to find the one it loves. No matter the distance across Tamil Nadu, every wave carries my heart straight to you.\n\n"Like the gentle song of the blue whale across the deep sea... my thoughts will always find their way to you ✦"`}
       primaryAction={{

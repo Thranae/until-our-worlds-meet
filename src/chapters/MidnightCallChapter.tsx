@@ -11,8 +11,8 @@ export const MidnightCallChapter: React.FC<MidnightCallChapterProps> = ({ onProc
   return (
     <ChapterLayout
       id="chapter-midnight-call"
-      chapterNumber={11}
-      eyebrow="CHAPTER 11 • THE 03:47 AM CALL"
+      chapterNumber={12}
+      eyebrow="CHAPTER 12 • THE 03:47 AM CALL"
       title="Falling asleep on call with you"
       subtitle="Those endless hours where nobody wants to say goodbye first, whispering until the sun comes up."
       primaryAction={{

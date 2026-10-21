@@ -12,8 +12,8 @@ export const MistyWindowChapter: React.FC<MistyWindowChapterProps> = ({ onProcee
   return (
     <ChapterLayout
       id="chapter-misty-window"
-      chapterNumber={13}
-      eyebrow="CHAPTER 13 • THE MIDNIGHT WINDOW"
+      chapterNumber={14}
+      eyebrow="CHAPTER 14 • THE MIDNIGHT WINDOW"
       title="The Misty Midnight Window"
       subtitle="02:00 AM • Swipe across the misty glass to reveal the secret words"
     >

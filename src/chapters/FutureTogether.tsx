@@ -12,8 +12,8 @@ export const FutureTogether: React.FC<FutureTogetherProps> = ({ onProceed }) => 
   return (
     <ChapterLayout
       id="chapter-future-together"
-      chapterNumber={26}
-      eyebrow="CHAPTER 26 • THE HORIZON"
+      chapterNumber={27}
+      eyebrow="CHAPTER 27 • THE HORIZON"
       title={siteContent.constellation.heading}
       subtitle={siteContent.constellation.subheading}
       primaryAction={{

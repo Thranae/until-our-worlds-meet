@@ -11,10 +11,10 @@ export const ShivaChapter: React.FC<ShivaChapterProps> = ({ onProceed }) => {
   return (
     <ChapterLayout
       id="chapter-lord-shiva"
-      chapterNumber={18}
-      eyebrow="CHAPTER 18 • THE SACRED SANCTUARY OF MAHADEVA"
-      title="From Adiyogi to Mahakaleshwar"
-      subtitle={`From the Velliangiri foothills in Coimbatore to the temple bell shores of Kapaleeshwarar in Chennai, and toward our cherished dream pilgrimage together to Ujjain Mahakaleshwar.\n\nBecause you love Lord Shiva with all your heart — here is a peaceful, sacred sanctuary under His crescent moon. Offer Bilva leaves, perform Ganga Jal abhishekam, light the deepam, and seek His eternal blessings for every step of your life.`}
+      chapterNumber={19}
+      eyebrow="CHAPTER 19 • THE SACRED SANCTUARY OF MAHADEVA"
+      title="Tungnath in the Snowy Himalayas & Sacred Darshan"
+      subtitle={`High at 3,680 meters in the snow-capped Garhwal Himalayas of Uttarakhand stands the ancient stone temple of Tungnath — the highest Shiva shrine in the world. Surrounded by majestic snow peaks, sacred dhuni fires warm the Aghori sadhus holding their trishuls, alongside devout pilgrims offering flowers before the authentic Shiva Lingam.\n\nFrom these Himalayan heights to the Velliangiri foothills of Coimbatore and Kapaleeshwarar — here is a peaceful sanctuary under Mahadeva’s eternal crescent moon. Offer Bilva leaves, perform Ganga Jal abhishekam, light the deepam, and seek His eternal blessings.`}
       primaryAction={{
         label: 'The airport terminal arrival next ✦',
         onClick: onProceed,

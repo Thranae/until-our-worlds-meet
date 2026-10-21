@@ -20,12 +20,14 @@ interface FloatingDroplet {
   delay: number;
 }
 
-type DarshanPlace = 'adiyogi' | 'kapaleeshwarar' | 'ujjain' | 'chandra';
+type DarshanPlace = 'tungnath' | 'adiyogi' | 'kapaleeshwarar' | 'ujjain' | 'chandra';
 
 export const ShivaSanctuary: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const tungnathSnowCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  const [sanctuaryView, setSanctuaryView] = useState<'tungnath' | 'sanctum'>('tungnath');
   const [isOmPlaying, setIsOmPlaying] = useState(false);
-  const [activeDarshan, setActiveDarshan] = useState<DarshanPlace>('adiyogi');
+  const [activeDarshan, setActiveDarshan] = useState<DarshanPlace>('tungnath');
   const [deepamLit, setDeepamLit] = useState(false);
   const [offeringCount, setOfferingCount] = useState(0);
   const [leaves, setLeaves] = useState<FloatingLeaf[]>([]);
@@ -217,8 +219,68 @@ export const ShivaSanctuary: React.FC = () => {
     } catch {}
   }, []);
 
+
+
+  // Falling Himalayan Snow Animation over Tungnath Temple
+  useEffect(() => {
+    if (sanctuaryView !== 'tungnath') return;
+    const canvas = tungnathSnowCanvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let animId: number;
+    const rect = canvas.getBoundingClientRect();
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+
+    const flakes: Array<{ x: number; y: number; r: number; s: number; sway: number; alpha: number }> = [];
+    for (let i = 0; i < 48; i++) {
+      flakes.push({
+        x: Math.random() * rect.width,
+        y: Math.random() * rect.height,
+        r: Math.random() * 2 + 0.8,
+        s: Math.random() * 1.2 + 0.6,
+        sway: (Math.random() - 0.5) * 0.6,
+        alpha: Math.random() * 0.7 + 0.3,
+      });
+    }
+
+    let time = 0;
+    const render = () => {
+      time += 0.02;
+      ctx.clearRect(0, 0, rect.width, rect.height);
+
+      flakes.forEach((f) => {
+        f.y += f.s;
+        f.x += Math.sin(time + f.y * 0.02) * 0.5 + f.sway;
+        if (f.y > rect.height + 5) {
+          f.y = -5;
+          f.x = Math.random() * rect.width;
+        }
+        if (f.x < -10) f.x = rect.width + 10;
+        if (f.x > rect.width + 10) f.x = -10;
+
+        ctx.beginPath();
+        ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${f.alpha})`;
+        ctx.fill();
+      });
+
+      animId = requestAnimationFrame(render);
+    };
+
+    render();
+    return () => {
+      cancelAnimationFrame(animId);
+    };
+  }, [sanctuaryView]);
+
   // Bilva Patra offering action
   const offerBilvaPatra = () => {
+    setSanctuaryView('sanctum');
     playTempleBell();
     setOfferingCount((c) => c + 1);
 
@@ -272,6 +334,7 @@ export const ShivaSanctuary: React.FC = () => {
 
   // Sacred Water (Abhishekam) action (Tap to start or stop, with 12s active flow)
   const offerGangaJal = () => {
+    setSanctuaryView('sanctum');
     playTempleBell();
     if (waterActive) {
       if (waterTimeoutRef.current) {
@@ -307,6 +370,7 @@ export const ShivaSanctuary: React.FC = () => {
 
   // Light Deepam action
   const handleToggleDeepam = () => {
+    setSanctuaryView('sanctum');
     playTempleBell();
     setDeepamLit((prev) => !prev);
     setOfferingCount((c) => c + 1);
@@ -467,6 +531,83 @@ export const ShivaSanctuary: React.FC = () => {
         margin: '0 auto',
       }}
     >
+      {/* Sanctuary View Switcher: Tungnath Himalayan Temple vs Sanctum Abhishekam Altar */}
+      <div
+        style={{
+          display: 'flex',
+          gap: '0.45rem',
+          width: '100%',
+          maxWidth: '420px',
+        }}
+      >
+        <button
+          type="button"
+          onClick={() => {
+            setSanctuaryView('tungnath');
+            setActiveDarshan('tungnath');
+          }}
+          style={{
+            flex: 1,
+            padding: '0.48rem 0.65rem',
+            borderRadius: 'var(--radius-full)',
+            background:
+              sanctuaryView === 'tungnath'
+                ? 'linear-gradient(135deg, rgba(56, 189, 248, 0.35), rgba(30, 58, 138, 0.45))'
+                : 'rgba(255, 255, 255, 0.05)',
+            border:
+              sanctuaryView === 'tungnath'
+                ? '1.5px solid rgba(147, 197, 253, 0.85)'
+                : '1px solid rgba(255, 255, 255, 0.12)',
+            color: sanctuaryView === 'tungnath' ? '#F0F9FF' : 'var(--color-muted)',
+            fontWeight: 700,
+            fontSize: '0.74rem',
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '0.35rem',
+            cursor: 'pointer',
+            boxShadow: sanctuaryView === 'tungnath' ? '0 0 16px rgba(56, 189, 248, 0.35)' : 'none',
+            touchAction: 'manipulation',
+            transition: 'all 0.2s ease',
+          }}
+        >
+          <span>🏔️</span>
+          <span>Tungnath • Himalayas</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setSanctuaryView('sanctum')}
+          style={{
+            flex: 1,
+            padding: '0.48rem 0.65rem',
+            borderRadius: 'var(--radius-full)',
+            background:
+              sanctuaryView === 'sanctum'
+                ? 'linear-gradient(135deg, rgba(245, 158, 11, 0.35), rgba(180, 83, 9, 0.45))'
+                : 'rgba(255, 255, 255, 0.05)',
+            border:
+              sanctuaryView === 'sanctum'
+                ? '1.5px solid rgba(253, 230, 138, 0.85)'
+                : '1px solid rgba(255, 255, 255, 0.12)',
+            color: sanctuaryView === 'sanctum' ? '#FEF3C7' : 'var(--color-muted)',
+            fontWeight: 700,
+            fontSize: '0.74rem',
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '0.35rem',
+            cursor: 'pointer',
+            boxShadow: sanctuaryView === 'sanctum' ? '0 0 16px rgba(245, 158, 11, 0.35)' : 'none',
+            touchAction: 'manipulation',
+            transition: 'all 0.2s ease',
+          }}
+        >
+          <span>🕉️</span>
+          <span>Sanctum & Abhishekam</span>
+        </button>
+      </div>
+
       {/* Visual Altar Stage */}
       <div
         style={{
@@ -476,24 +617,188 @@ export const ShivaSanctuary: React.FC = () => {
           height: '320px',
           borderRadius: 'var(--radius-lg)',
           overflow: 'hidden',
-          border: '1.5px solid rgba(253, 230, 138, 0.35)',
-          boxShadow: deepamLit
-            ? '0 16px 45px rgba(245, 158, 11, 0.28), 0 0 35px rgba(253, 230, 138, 0.3)'
-            : '0 16px 40px rgba(0, 0, 0, 0.7)',
+          border:
+            sanctuaryView === 'tungnath'
+              ? '1.5px solid rgba(147, 197, 253, 0.45)'
+              : '1.5px solid rgba(253, 230, 138, 0.35)',
+          boxShadow:
+            sanctuaryView === 'tungnath'
+              ? '0 16px 45px rgba(14, 165, 233, 0.22), 0 0 30px rgba(147, 197, 253, 0.25)'
+              : deepamLit
+              ? '0 16px 45px rgba(245, 158, 11, 0.28), 0 0 35px rgba(253, 230, 138, 0.3)'
+              : '0 16px 40px rgba(0, 0, 0, 0.7)',
           touchAction: 'none',
           userSelect: 'none',
           WebkitUserSelect: 'none',
-          transition: 'box-shadow 0.4s ease',
+          transition: 'all 0.4s ease',
         }}
       >
-        <canvas
-          ref={canvasRef}
-          style={{
-            width: '100%',
-            height: '100%',
-            display: 'block',
-          }}
-        />
+        {sanctuaryView === 'tungnath' ? (
+          <div
+            onClick={() => {
+              playTempleBell();
+              if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
+                try {
+                  navigator.vibrate(20);
+                } catch {}
+              }
+            }}
+            title="Tap anywhere to ring the holy Tungnath temple bell"
+            style={{
+              position: 'relative',
+              width: '100%',
+              height: '100%',
+              cursor: 'pointer',
+              overflow: 'hidden',
+            }}
+          >
+            {/* Photorealistic National Geographic Image of Tungnath Temple with Shiva Lingam, Aghoris, Sadhus & Devotees */}
+            <img
+              src="/images/tungnath_temple_himalayas.jpg"
+              alt="Tungnath Temple in Snowy Himalayas with Shiva Lingam, Aghoris with Trishuls, and Devotees"
+              style={{
+                position: 'absolute',
+                inset: 0,
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                objectPosition: 'center 40%',
+                filter: 'brightness(0.96) contrast(1.05)',
+              }}
+            />
+
+            {/* Himalayan Ambient Frost & Sacred Atmosphere Overlay */}
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background:
+                  'linear-gradient(to top, rgba(7, 16, 38, 0.88) 0%, rgba(15, 23, 42, 0.18) 50%, rgba(10, 15, 30, 0.45) 100%)',
+                pointerEvents: 'none',
+                zIndex: 5,
+              }}
+            />
+
+            {/* Falling Himalayan Snow Canvas */}
+            <canvas
+              ref={tungnathSnowCanvasRef}
+              style={{
+                position: 'absolute',
+                inset: 0,
+                width: '100%',
+                height: '100%',
+                pointerEvents: 'none',
+                zIndex: 10,
+              }}
+            />
+
+            {/* Top Bar Badges */}
+            <div
+              style={{
+                position: 'absolute',
+                top: '12px',
+                left: '12px',
+                right: '12px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                zIndex: 15,
+                pointerEvents: 'none',
+              }}
+            >
+              <div
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                  padding: '0.28rem 0.65rem',
+                  borderRadius: 'var(--radius-full)',
+                  background: 'rgba(8, 15, 36, 0.85)',
+                  border: '1px solid rgba(147, 197, 253, 0.45)',
+                  color: '#E0F2FE',
+                  fontSize: '0.68rem',
+                  fontFamily: 'monospace',
+                  backdropFilter: 'blur(8px)',
+                  boxShadow: '0 2px 10px rgba(0,0,0,0.5)',
+                }}
+              >
+                <span>🏔️</span>
+                <span>Tungnath • 3,680m Uttarakhand</span>
+              </div>
+
+              <div
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                  padding: '0.28rem 0.65rem',
+                  borderRadius: 'var(--radius-full)',
+                  background: 'rgba(8, 15, 36, 0.85)',
+                  border: '1px solid rgba(253, 230, 138, 0.45)',
+                  color: '#FEF3C7',
+                  fontSize: '0.68rem',
+                  backdropFilter: 'blur(8px)',
+                  boxShadow: '0 2px 10px rgba(0,0,0,0.5)',
+                }}
+              >
+                <Bell size={12} color="#FDE68A" />
+                <span>Tap to chime bell</span>
+              </div>
+            </div>
+
+            {/* Bottom Caption Pill: Katyuri Architecture, Swayambhu Lingam, Aghoris & Devotees */}
+            <div
+              style={{
+                position: 'absolute',
+                bottom: '10px',
+                left: '12px',
+                right: '12px',
+                background: 'rgba(8, 14, 32, 0.92)',
+                backdropFilter: 'blur(10px)',
+                padding: '0.45rem 0.75rem',
+                borderRadius: 'var(--radius-md)',
+                border: '1px solid rgba(147, 197, 253, 0.35)',
+                color: '#E0F2FE',
+                fontSize: '0.72rem',
+                lineHeight: 1.4,
+                zIndex: 15,
+                boxShadow: '0 4px 16px rgba(0,0,0,0.6)',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.15rem' }}>
+                <span style={{ color: '#FDE68A', fontWeight: 600, fontSize: '0.74rem' }}>
+                  🕉️ Tungnath Mahadev in Snowy Himalayas
+                </span>
+                <span
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSanctuaryView('sanctum');
+                  }}
+                  style={{
+                    color: '#93C5FD',
+                    fontSize: '0.66rem',
+                    textDecoration: 'underline',
+                    cursor: 'pointer',
+                  }}
+                >
+                  Enter Sanctum ✦
+                </span>
+              </div>
+              <div style={{ color: 'rgba(255, 255, 255, 0.82)', fontSize: '0.67rem' }}>
+                Katyuri slate architecture • Swayambhu Shiva Lingam • Aghoris with trishuls & sadhus by dhuni fire with devotees.
+              </div>
+            </div>
+          </div>
+        ) : (
+          <>
+            <canvas
+              ref={canvasRef}
+              style={{
+                width: '100%',
+                height: '100%',
+                display: 'block',
+              }}
+            />
 
         {/* Top Controls: OM Chant Audio & Damru Tap */}
         <div
@@ -720,29 +1025,86 @@ export const ShivaSanctuary: React.FC = () => {
               filter="url(#divineGlow)"
             />
 
-            {/* 2. Golden Trishula (Trident & Damru) standing behind the Lingam on the right */}
-            <g opacity="0.95">
-              {/* Trident Shaft */}
-              <line x1="184" y1="28" x2="184" y2="198" stroke="url(#sacredGoldGrad)" strokeWidth="3" strokeLinecap="round" />
-              <circle cx="184" cy="28" r="2.5" fill="#FEF08A" />
+            {/* 2. Complete Authentic Golden Maha Trishula (Trident, Damru, Grounded Base & Kalava) */}
+            <g opacity="0.98">
+              {/* Grounded Brass Base Plinth Mount resting on pedestal */}
+              <rect x="181" y="226" width="14" height="5" rx="1.5" fill="url(#sacredGoldGrad)" stroke="#B45309" strokeWidth="0.7" />
+              <ellipse cx="188" cy="226" rx="6" ry="2" fill="#FEF08A" />
+              <path d="M 183 226 L 185 220 L 191 220 L 193 226 Z" fill="url(#sacredGoldGrad)" stroke="#B45309" strokeWidth="0.6" />
 
-              {/* Trishula Center Spear */}
-              <path d="M 184 10 L 188 28 L 180 28 Z" fill="url(#sacredGoldGrad)" />
+              {/* Continuous Polished Golden Shaft anchored into base mount */}
+              <line x1="188" y1="28" x2="188" y2="222" stroke="url(#sacredGoldGrad)" strokeWidth="3.6" strokeLinecap="round" />
+              <line x1="187.3" y1="28" x2="187.3" y2="222" stroke="#FFFBEB" strokeWidth="0.9" opacity="0.85" />
 
-              {/* Trishula Left Curved Prong */}
-              <path d="M 174 18 C 174 29 181 33 184 33" fill="none" stroke="url(#sacredGoldGrad)" strokeWidth="2.4" strokeLinecap="round" />
-              <path d="M 174 13 L 177 22 L 171 22 Z" fill="url(#sacredGoldGrad)" />
+              {/* Ornamental Brass Node Rings along the shaft */}
+              <ellipse cx="188" cy="202" rx="3.6" ry="1.5" fill="#FDE68A" stroke="#B45309" strokeWidth="0.6" />
+              <ellipse cx="188" cy="162" rx="3.6" ry="1.5" fill="#FDE68A" stroke="#B45309" strokeWidth="0.6" />
+              <ellipse cx="188" cy="122" rx="3.6" ry="1.5" fill="#FDE68A" stroke="#B45309" strokeWidth="0.6" />
+              <ellipse cx="188" cy="82" rx="3.6" ry="1.5" fill="#FDE68A" stroke="#B45309" strokeWidth="0.6" />
+              <ellipse cx="188" cy="34" rx="4.5" ry="1.8" fill="#FDE68A" stroke="#B45309" strokeWidth="0.8" />
 
-              {/* Trishula Right Curved Prong */}
-              <path d="M 194 18 C 194 29 187 33 184 33" fill="none" stroke="url(#sacredGoldGrad)" strokeWidth="2.4" strokeLinecap="round" />
-              <path d="M 194 13 L 197 22 L 191 22 Z" fill="url(#sacredGoldGrad)" />
+              {/* Sculpted Crescent Collar Base supporting the Three Prongs */}
+              <path
+                d="M 172 28 Q 188 37 204 28 Q 188 32 172 28 Z"
+                fill="url(#sacredGoldGrad)"
+                stroke="#B45309"
+                strokeWidth="0.8"
+              />
 
-              {/* Sacred Damru (Hourglass Drum) bound to trident */}
-              <polygon points="178 52, 190 52, 181 60, 187 60, 178 68, 190 68, 184 60" fill="#D97706" stroke="#FEF08A" strokeWidth="1" />
-              <line x1="178" y1="52" x2="190" y2="68" stroke="#FEF08A" strokeWidth="0.8" opacity="0.7" />
-              <line x1="190" y1="52" x2="178" y2="68" stroke="#FEF08A" strokeWidth="0.8" opacity="0.7" />
-              {/* Red sacred binding cord */}
-              <circle cx="184" cy="60" r="2.2" fill="#DC2626" />
+              {/* Central Fluted Spearhead (Middle Prong) */}
+              <path
+                d="M 188 4 C 192 12 193 22 191 28 L 185 28 C 183 22 184 12 188 4 Z"
+                fill="url(#sacredGoldGrad)"
+                stroke="#B45309"
+                strokeWidth="0.8"
+              />
+              <line x1="188" y1="5" x2="188" y2="28" stroke="#FFFBEB" strokeWidth="0.9" />
+              <circle cx="188" cy="4" r="1.5" fill="#FFFBEB" filter="url(#waterSplashGlow)" />
+
+              {/* Left Swept Crescent Blade (Prong) */}
+              <path
+                d="M 174 27 C 169 22 169 13 173 7 C 174 13 176 22 180 27 Z"
+                fill="url(#sacredGoldGrad)"
+                stroke="#B45309"
+                strokeWidth="0.8"
+              />
+              <circle cx="173" cy="7" r="1.3" fill="#FFFBEB" filter="url(#waterSplashGlow)" />
+
+              {/* Right Swept Crescent Blade (Prong) */}
+              <path
+                d="M 196 27 C 201 22 201 13 197 7 C 196 13 194 22 190 27 Z"
+                fill="url(#sacredGoldGrad)"
+                stroke="#B45309"
+                strokeWidth="0.8"
+              />
+              <circle cx="197" cy="7" r="1.3" fill="#FFFBEB" filter="url(#waterSplashGlow)" />
+
+              {/* Sacred Hourglass Damru bound securely to trident */}
+              {/* Upper Drum Cone & Skin */}
+              <path d="M 178 52 L 198 52 L 191 59 L 185 59 Z" fill="url(#sacredGoldGrad)" stroke="#78350F" strokeWidth="0.8" />
+              <ellipse cx="188" cy="52" rx="10" ry="2.2" fill="#FEF3C7" stroke="#92400E" strokeWidth="0.8" />
+              {/* Lower Drum Cone & Skin */}
+              <path d="M 185 59 L 191 59 L 198 66 L 178 66 Z" fill="url(#sacredGoldGrad)" stroke="#78350F" strokeWidth="0.8" />
+              <ellipse cx="188" cy="66" rx="10" ry="2.2" fill="#FEF3C7" stroke="#92400E" strokeWidth="0.8" />
+              {/* Tension Ropes */}
+              <path
+                d="M 179 52 L 190 66 L 182 52 L 193 66 L 186 52 L 196 66 L 189 52 L 198 66"
+                fill="none"
+                stroke="#78350F"
+                strokeWidth="0.8"
+                opacity="0.85"
+              />
+              {/* Damru Central Waist Tie Ring */}
+              <ellipse cx="188" cy="59" rx="3.6" ry="1.4" fill="#DC2626" stroke="#FEF08A" strokeWidth="0.6" />
+              {/* Beater Beads hanging on cords */}
+              <path d="M 185 59 Q 179 64 180 70" fill="none" stroke="#FEF08A" strokeWidth="0.8" />
+              <circle cx="180" cy="70" r="1.8" fill="#F59E0B" stroke="#78350F" strokeWidth="0.5" />
+              <path d="M 191 59 Q 197 64 196 70" fill="none" stroke="#FEF08A" strokeWidth="0.8" />
+              <circle cx="196" cy="70" r="1.8" fill="#F59E0B" stroke="#78350F" strokeWidth="0.5" />
+
+              {/* Sacred Saffron & Crimson Kalava Ribbons fluttering down the shaft */}
+              <path d="M 188 60 Q 182 74 185 88 Q 187 96 184 106" fill="none" stroke="#EF4444" strokeWidth="1.6" strokeLinecap="round" opacity="0.9" />
+              <path d="M 188 60 Q 192 72 190 86 Q 188 98 191 108" fill="none" stroke="#F59E0B" strokeWidth="1.4" strokeLinecap="round" opacity="0.9" />
             </g>
 
             {/* 3. Authentic Dravidian Pedestal (Brahma-Vishnu Peedam) */}
@@ -1246,6 +1608,8 @@ export const ShivaSanctuary: React.FC = () => {
             <span>✦ BLESSINGS OFFERED: {offeringCount}</span>
           )}
         </div>
+          </>
+        )}
       </div>
 
       {/* Interactive Sacred Ritual Action Buttons (Pooja / Archana) */}
@@ -1388,11 +1752,34 @@ export const ShivaSanctuary: React.FC = () => {
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(2, 1fr)',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
             gap: '0.35rem',
             width: '100%',
           }}
         >
+          <button
+            type="button"
+            onClick={() => {
+              setActiveDarshan('tungnath');
+              setSanctuaryView('tungnath');
+            }}
+            style={{
+              padding: '0.45rem 0.3rem',
+              borderRadius: 'var(--radius-md)',
+              background: activeDarshan === 'tungnath' ? 'rgba(56, 189, 248, 0.28)' : 'rgba(255, 255, 255, 0.05)',
+              border: activeDarshan === 'tungnath' ? '1.5px solid rgba(147, 197, 253, 0.8)' : '1px solid rgba(255, 255, 255, 0.1)',
+              color: activeDarshan === 'tungnath' ? '#E0F2FE' : 'var(--color-muted)',
+              fontSize: '0.72rem',
+              fontWeight: 700,
+              cursor: 'pointer',
+              touchAction: 'manipulation',
+              transition: 'all 0.2s ease',
+              textAlign: 'center',
+            }}
+          >
+            🏔️ Tungnath • Himalayas ✦
+          </button>
+
           <button
             type="button"
             onClick={() => setActiveDarshan('adiyogi')}
@@ -1489,6 +1876,53 @@ export const ShivaSanctuary: React.FC = () => {
           }}
         >
           <AnimatePresence mode="wait">
+            {activeDarshan === 'tungnath' && (
+              <motion.div
+                key="tungnath"
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.2 }}
+              >
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.45rem',
+                    color: '#93C5FD',
+                    fontSize: '0.78rem',
+                    fontWeight: 600,
+                    marginBottom: '0.35rem',
+                  }}
+                >
+                  <Sparkles size={13} />
+                  <span>TUNGNATH ✦ HIGHEST SHIVA SHRINE IN THE WORLD • 3,680M HIMALAYAS</span>
+                </div>
+                <p
+                  style={{
+                    color: 'var(--color-ivory)',
+                    fontSize: '0.84rem',
+                    lineHeight: 1.6,
+                    margin: 0,
+                    fontStyle: 'italic',
+                  }}
+                >
+                  "Standing at 3,680 meters in the snow-clad Garhwal Himalayas of Uttarakhand, Tungnath is where ancient stone shikhara meets the skies. Around the sacred dhuni fire, Aghoris with trishuls sit in quiet tapasya, saffron sadhus chant Vedic hymns amidst swirling snowflakes, and pilgrims bow before the authentic Swayambhu Shiva Lingam adorned with chandan and mountain flowers. In this sacred silence, I send every prayer and blessing to you."
+                </p>
+                <div
+                  style={{
+                    marginTop: '0.45rem',
+                    fontSize: '0.72rem',
+                    color: '#93C5FD',
+                    fontFamily: 'var(--font-serif)',
+                    letterSpacing: '0.02em',
+                  }}
+                >
+                  Ancient Katyuri Architecture • Garhwal Snow Peaks • Eternal Blessings ✦
+                </div>
+              </motion.div>
+            )}
+
             {activeDarshan === 'adiyogi' && (
               <motion.div
                 key="adiyogi"
@@ -1581,7 +2015,7 @@ export const ShivaSanctuary: React.FC = () => {
                   }}
                 >
                   <Sparkles size={13} />
-                  <span>SRI MAHAKALESHWAR ✦ UJJAIN • OUR DREAM PILGRIMAGE</span>
+                  <span>SRI MAHAKALESHWAR ✦ UJJAIN, MADHYA PRADESH • SACRED JYOTIRLINGA</span>
                 </div>
                 <p
                   style={{
@@ -1592,7 +2026,7 @@ export const ShivaSanctuary: React.FC = () => {
                     fontStyle: 'italic',
                   }}
                 >
-                  "Located on the sacred banks of the Shipra river in Ujjain — the revered place you told me you want to travel to together with me. One day, we will make this dream pilgrimage to Ujjain side-by-side: attend the sacred dawn Bhasma Aarti together, hear the holy conch echo, and bow our heads to Mahadeva side-by-side with full devotion. A promise written in our stars."
+                  "Located on the sacred banks of the Shipra River in Ujjain, Madhya Pradesh — where the ancient South-facing Jyotirlinga resides. Vedic priests perform the holy dawn Bhasma Aarti amidst conch shells and sacred fires while pilgrims chant in deep devotion. One day, we will stand together in this holy courtyard, bow our heads to Mahadeva, and seal our prayers side-by-side. A promise written in our stars."
                 </p>
                 <div
                   style={{
@@ -1603,7 +2037,7 @@ export const ShivaSanctuary: React.FC = () => {
                     letterSpacing: '0.02em',
                   }}
                 >
-                  A Sacred Pilgrimage Awaiting Us in Ujjain ✦
+                  Ancient Avantika • Banks of Sacred Shipra River • Madhya Pradesh ✦
                 </div>
               </motion.div>
             )}

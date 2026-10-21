@@ -11,8 +11,8 @@ export const TulipGardenChapter: React.FC<TulipGardenChapterProps> = ({ onProcee
   return (
     <ChapterLayout
       id="chapter-tulip-garden"
-      chapterNumber={22}
-      eyebrow="CHAPTER 22 • OUR NETHERLANDS PROMISE"
+      chapterNumber={23}
+      eyebrow="CHAPTER 23 • OUR NETHERLANDS PROMISE"
       title="The Tulip Fields of Keukenhof"
       subtitle={`Endless rows of vibrant blooming tulips under the warm spring sky of Keukenhof • The dream trip you love most and want to experience with me, walking hand in hand through the flower fields of Holland.`}
       primaryAction={{

@@ -11,8 +11,8 @@ export const MidnightDriveChapter: React.FC<MidnightDriveChapterProps> = ({ onPr
   return (
     <ChapterLayout
       id="chapter-midnight-drive"
-      chapterNumber={16}
-      eyebrow="CHAPTER 16 • THE MIDNIGHT DRIVE"
+      chapterNumber={17}
+      eyebrow="CHAPTER 17 • THE MIDNIGHT DRIVE"
       title="The passenger seat under the stars"
       subtitle="02:15 AM • Cruising down the highway from Kovai to Chennai, cool night breeze through the windows, and nowhere we have to rush."
       primaryAction={{

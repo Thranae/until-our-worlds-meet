@@ -11,8 +11,8 @@ export const GalaxyProjectorChapter: React.FC<GalaxyProjectorChapterProps> = ({ 
   return (
     <ChapterLayout
       id="chapter-starlit-ceiling"
-      chapterNumber={14}
-      eyebrow="CHAPTER 14 • OUR STARLIT CEILING"
+      chapterNumber={15}
+      eyebrow="CHAPTER 15 • OUR STARLIT CEILING"
       title="A private galaxy on the ceiling"
       subtitle="02:30 AM • Lights off, projector on, and the distance between our rooms completely disappears."
       primaryAction={{

@@ -11,10 +11,10 @@ export const TravelJournalChapter: React.FC<TravelJournalChapterProps> = ({ onPr
   return (
     <ChapterLayout
       id="chapter-travel-journal"
-      chapterNumber={21}
-      eyebrow="CHAPTER 21 • THE SACRED HIMALAYAN PILGRIMAGE"
-      title="Ujjain Shivan Temple in the Snow-Covered Himalayas"
-      subtitle="Perched high atop the snow-covered peaks among the clouds • Standing side-by-side in the gentle snowfall, hearing holy temple bells ring across the frozen mountain air, and seeking Mahadeva’s blessings together."
+      chapterNumber={22}
+      eyebrow="CHAPTER 22 • THE SACRED PILGRIMAGE TO MAHAKALESHWAR"
+      title="Sri Mahakaleshwar Jyotirlinga • Ujjain, Madhya Pradesh"
+      subtitle="On the sacred banks of the Shipra River in Ujjain, Madhya Pradesh • Standing together before Mahadeva during the holy Bhasma Aarti, receiving blessings from Vedic priests among thousands of devotees, and marking our sacred dream pilgrimage approved."
       primaryAction={{
         label: 'Visit the Dutch tulip gardens ✦',
         onClick: onProceed,
