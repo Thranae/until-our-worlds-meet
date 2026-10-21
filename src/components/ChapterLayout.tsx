@@ -146,6 +146,7 @@ export const ChapterLayout: React.FC<ChapterLayoutProps> = ({
               alignItems: 'center',
               justifyContent: 'center',
               marginTop: '1.6rem',
+              marginBottom: '3.6rem',
               marginRight: 'auto',
               marginLeft: 'auto',
             }}
