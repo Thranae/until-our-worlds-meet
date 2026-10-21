@@ -11,12 +11,12 @@ export const HeartbeatChapter: React.FC<HeartbeatChapterProps> = ({ onProceed })
   return (
     <ChapterLayout
       id="chapter-heartbeat"
-      chapterNumber={6}
-      eyebrow="CHAPTER 06 • THE PULSE ACROSS MILES"
+      chapterNumber={9}
+      eyebrow="CHAPTER 09 • THE PULSE ACROSS MILES"
       title="Two Hearts, One Single Rhythm"
       subtitle={`Miles are only geographical coordinates on a map. Hold your thumb on the starlight biometric pad below to feel our synchronized heartbeat across the country.`}
       primaryAction={{
-        label: 'The little things ✦',
+        label: 'The Red Bull wings next ✦',
         onClick: onProceed,
         icon: <ArrowRight size={17} />,
       }}

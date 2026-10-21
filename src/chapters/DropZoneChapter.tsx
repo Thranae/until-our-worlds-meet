@@ -12,8 +12,8 @@ export const DropZoneChapter: React.FC<DropZoneChapterProps> = ({ onProceed }) =
   return (
     <ChapterLayout
       id="chapter-drop-zone"
-      chapterNumber={4}
-      eyebrow="CHAPTER 04 • THE ORIGIN IN THE ZONE"
+      chapterNumber={5}
+      eyebrow="CHAPTER 05 • THE ORIGIN IN THE ZONE"
       title="Where Our Worlds First Dropped"
       subtitle="Before everything else, there was a match, an airdrop, and the best teammate in the world."
     >
@@ -81,7 +81,7 @@ export const DropZoneChapter: React.FC<DropZoneChapterProps> = ({ onProceed }) =
             touchAction: 'manipulation',
           }}
         >
-          <span>Continue to The Little Things</span>
+          <span>Continue to The Safe Zone ✦</span>
           <ArrowRight size={16} />
         </motion.button>
       </div>

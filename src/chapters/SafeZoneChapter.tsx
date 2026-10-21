@@ -11,12 +11,12 @@ export const SafeZoneChapter: React.FC<SafeZoneChapterProps> = ({ onProceed }) =
   return (
     <ChapterLayout
       id="chapter-safe-zone"
-      chapterNumber={5}
-      eyebrow="CHAPTER 05 • THE FINAL CIRCLE"
+      chapterNumber={6}
+      eyebrow="CHAPTER 06 • THE FINAL CIRCLE"
       title="In a world of noise, you became my safe zone"
       subtitle="Out of 100 players in every lobby and billions in the world, the only circle that ever truly mattered was right beside you."
       primaryAction={{
-        label: 'Feel our heartbeat next ✦',
+        label: 'Look through the 8x scope ✦',
         onClick: onProceed,
         icon: <ArrowRight size={17} />,
       }}

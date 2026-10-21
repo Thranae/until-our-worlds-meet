@@ -11,12 +11,12 @@ export const AuroraChapter: React.FC<AuroraChapterProps> = ({ onProceed }) => {
   return (
     <ChapterLayout
       id="chapter-aurora-sky"
-      chapterNumber={10}
-      eyebrow="CHAPTER 10 • THE AURORA VEIL"
+      chapterNumber={15}
+      eyebrow="CHAPTER 15 • THE AURORA VEIL"
       title="Ribbons of light across the night sky"
       subtitle="Swipe across our midnight atmosphere to weave Northern Lights and cast shooting stars across the miles between us."
       primaryAction={{
-        label: 'Open our starlight bottle ✦',
+        label: 'The midnight drive next ✦',
         onClick: onProceed,
         icon: <ArrowRight size={17} />,
       }}

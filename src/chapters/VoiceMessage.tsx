@@ -11,12 +11,12 @@ export const VoiceMessage: React.FC<VoiceMessageProps> = ({ onProceed }) => {
   return (
     <ChapterLayout
       id="chapter-voice-message"
-      chapterNumber={13}
-      eyebrow="CHAPTER 13 • RESONANCE"
+      chapterNumber={21}
+      eyebrow="CHAPTER 21 • RESONANCE"
       title="This time, hear it from me"
       subtitle="You've read my words, and you've heard my voice. But for your birthday, I wanted to leave you something you could come back to whenever you feel like hearing me."
       primaryAction={{
-        label: 'Dream a little',
+        label: 'The Nov 8 Time Capsule next ✦',
         onClick: onProceed,
         icon: <ArrowRight size={17} />,
       }}
