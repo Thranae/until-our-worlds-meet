@@ -12,8 +12,8 @@ export const MistyWindowChapter: React.FC<MistyWindowChapterProps> = ({ onProcee
   return (
     <ChapterLayout
       id="chapter-misty-window"
-      chapterNumber={8}
-      eyebrow="CHAPTER 08 • THE MIDNIGHT WINDOW"
+      chapterNumber={9}
+      eyebrow="CHAPTER 09 • THE MIDNIGHT WINDOW"
       title="The Misty Midnight Window"
       subtitle="02:00 AM • Wipe the dew off the glass to look into the night"
     >
@@ -80,7 +80,7 @@ export const MistyWindowChapter: React.FC<MistyWindowChapterProps> = ({ onProcee
             touchAction: 'manipulation',
           }}
         >
-          <span>Continue to Celestial Music Box</span>
+          <span>Weave the Northern Lights ✦</span>
           <ArrowRight size={16} />
         </motion.button>
       </div>

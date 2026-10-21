@@ -11,8 +11,8 @@ export const StarlightJarChapter: React.FC<StarlightJarChapterProps> = ({ onProc
   return (
     <ChapterLayout
       id="chapter-starlight-jar"
-      chapterNumber={9}
-      eyebrow="CHAPTER 09 • THE STARLIGHT BOTTLE"
+      chapterNumber={11}
+      eyebrow="CHAPTER 11 • THE STARLIGHT BOTTLE"
       title="Catching Starlight for You"
       subtitle={`Every time you made me smile or laugh across the miles, I caught a little piece of light. Tap the glass to watch the fireflies dance, pop the wooden cork, and release our memories into the sky.`}
       primaryAction={{

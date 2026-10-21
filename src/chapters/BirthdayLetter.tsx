@@ -121,7 +121,7 @@ export const BirthdayLetter: React.FC<BirthdayLetterProps> = ({ onReturnToVoice,
           }}
         >
           <Sparkles size={13} />
-          <span>CHAPTER 15 • FOR {siteContent.recipient.nickname.toUpperCase()}, WITH LOVE</span>
+          <span>CHAPTER 16 • FOR {siteContent.recipient.nickname.toUpperCase()}, WITH LOVE</span>
         </motion.div>
 
         {/* Heading */}
