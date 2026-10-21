@@ -489,11 +489,11 @@ export const ShivaSanctuary: React.FC = () => {
           </motion.button>
         </div>
 
-        {/* Central Luminous Shivalinga Entity */}
+        {/* Central Luminous Shivalinga Entity - Authentic Polished Black Granite Krishnashila Lingam */}
         <div
           style={{
             position: 'absolute',
-            top: '48%',
+            top: '52%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
             display: 'flex',
@@ -503,135 +503,351 @@ export const ShivaSanctuary: React.FC = () => {
             zIndex: 10,
           }}
         >
-          {/* Trishula (Trident) rising behind Shivalinga */}
-          <div
+          <svg
+            viewBox="0 0 240 250"
             style={{
-              position: 'absolute',
-              top: '-55px',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              width: '40px',
-              height: '80px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              opacity: 0.85,
+              width: '235px',
+              height: '245px',
+              maxWidth: '92vw',
+              filter: deepamLit
+                ? 'drop-shadow(0 0 30px rgba(253, 230, 138, 0.65)) drop-shadow(0 15px 25px rgba(0, 0, 0, 0.8))'
+                : 'drop-shadow(0 0 20px rgba(167, 139, 250, 0.35)) drop-shadow(0 15px 25px rgba(0, 0, 0, 0.8))',
+              transition: 'filter 0.4s ease',
             }}
           >
-            <svg viewBox="0 0 40 80" width="36" height="72">
-              {/* Shaft */}
-              <line x1="20" y1="20" x2="20" y2="75" stroke="#FDE68A" strokeWidth="2" />
-              {/* Center Spear */}
-              <path d="M20,5 L23,20 L17,20 Z" fill="#FDE68A" />
-              {/* Left Prong */}
-              <path d="M12,12 C12,22 18,25 20,25" fill="none" stroke="#FDE68A" strokeWidth="2" />
-              <path d="M12,8 L15,16 L9,16 Z" fill="#FDE68A" />
-              {/* Right Prong */}
-              <path d="M28,12 C28,22 22,25 20,25" fill="none" stroke="#FDE68A" strokeWidth="2" />
-              <path d="M28,8 L31,16 L25,16 Z" fill="#FDE68A" />
-              {/* Damru tied to center */}
-              <polygon points="15,30 25,30 18,36 22,36 15,42 25,42 20,36" fill="#F59E0B" stroke="#B45309" strokeWidth="1" />
-            </svg>
-          </div>
+            <defs>
+              {/* Polished Black Granite Cylinder Gradient */}
+              <linearGradient id="krishnaShilaGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#04060C" />
+                <stop offset="16%" stopColor="#111827" />
+                <stop offset="34%" stopColor="#374151" />
+                <stop offset="42%" stopColor="#64748B" />
+                <stop offset="50%" stopColor="#374151" />
+                <stop offset="76%" stopColor="#111827" />
+                <stop offset="92%" stopColor="#0B0F19" />
+                <stop offset="100%" stopColor="#1E293B" />
+              </linearGradient>
 
-          {/* Shivalinga Dome & Body */}
-          <div
-            style={{
-              width: '56px',
-              height: '75px',
-              borderRadius: '28px 28px 8px 8px',
-              background: 'linear-gradient(180deg, #1E293B 0%, #0F172A 60%, #020617 100%)',
-              boxShadow: deepamLit
-                ? '0 0 28px rgba(253, 230, 138, 0.7), inset 0 2px 8px rgba(254, 240, 138, 0.5)'
-                : '0 0 20px rgba(167, 139, 250, 0.45), inset 0 2px 6px rgba(255, 255, 255, 0.3)',
-              border: '1.5px solid rgba(254, 240, 138, 0.5)',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              position: 'relative',
-              transition: 'box-shadow 0.3s ease',
-            }}
-          >
-            {/* Sacred Tripundra (Three White Ash Lines & Red Bindu) */}
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: '2px',
-                marginTop: '-10px',
-              }}
-            >
-              <div style={{ width: '26px', height: '1.5px', background: '#F8FAFC', borderRadius: '1px' }} />
-              <div
-                style={{
-                  width: '28px',
-                  height: '1.5px',
-                  background: '#F8FAFC',
-                  borderRadius: '1px',
-                  position: 'relative',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                {/* Red Kumkum Bindu in center */}
-                <div
-                  style={{
-                    width: '4px',
-                    height: '4px',
-                    borderRadius: '50%',
-                    background: '#EF4444',
-                    boxShadow: '0 0 5px #EF4444',
-                  }}
-                />
-              </div>
-              <div style={{ width: '26px', height: '1.5px', background: '#F8FAFC', borderRadius: '1px' }} />
-            </div>
+              {/* Spherical Crown Dome 3D Radial Highlight */}
+              <radialGradient id="lingaDomeHighlight" cx="38%" cy="28%" r="65%">
+                <stop offset="0%" stopColor="#94A3B8" stopOpacity="0.8" />
+                <stop offset="25%" stopColor="#475569" stopOpacity="0.6" />
+                <stop offset="60%" stopColor="#1E293B" stopOpacity="0.9" />
+                <stop offset="100%" stopColor="#04060C" stopOpacity="1" />
+              </radialGradient>
 
-            {/* Glowing Third Eye Sparkle */}
-            <motion.div
-              animate={{ opacity: [0.6, 1, 0.6] }}
-              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-              style={{
-                marginTop: '6px',
-                color: '#FDE68A',
-                fontSize: '0.65rem',
-              }}
-            >
-              ✦
-            </motion.div>
-          </div>
+              {/* Avudaiyar (Yoni Peedam) Top Tray Basin Gradient */}
+              <radialGradient id="avudaiyarBasinGrad" cx="50%" cy="40%" r="55%">
+                <stop offset="0%" stopColor="#080C16" />
+                <stop offset="70%" stopColor="#161F30" />
+                <stop offset="100%" stopColor="#2D3B50" />
+              </radialGradient>
 
-          {/* Yoni Peedam (Sacred Base Pedestal) */}
-          <div
-            style={{
-              width: '98px',
-              height: '16px',
-              borderRadius: '8px',
-              background: 'linear-gradient(180deg, #334155 0%, #1E293B 100%)',
-              border: '1.5px solid rgba(254, 240, 138, 0.4)',
-              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.6)',
-              marginTop: '-3px',
-              position: 'relative',
-            }}
-          >
-            {/* Spout on left */}
-            <div
-              style={{
-                position: 'absolute',
-                left: '-10px',
-                top: '2px',
-                width: '12px',
-                height: '10px',
-                borderRadius: '4px 0 0 4px',
-                background: '#1E293B',
-                border: '1.5px solid rgba(254, 240, 138, 0.4)',
-                borderRight: 'none',
-              }}
+              {/* Avudaiyar Sculpted Rim Gradient */}
+              <linearGradient id="avudaiyarRimGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#475569" />
+                <stop offset="25%" stopColor="#1E293B" />
+                <stop offset="70%" stopColor="#0F172A" />
+                <stop offset="100%" stopColor="#334155" />
+              </linearGradient>
+
+              {/* Classical Stepped Granite Pedestal Plinth Gradients */}
+              <linearGradient id="plinthBevelGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="#475569" />
+                <stop offset="40%" stopColor="#1E293B" />
+                <stop offset="100%" stopColor="#090D18" />
+              </linearGradient>
+
+              <linearGradient id="kantaNeckGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#050811" />
+                <stop offset="25%" stopColor="#1E293B" />
+                <stop offset="50%" stopColor="#334155" />
+                <stop offset="75%" stopColor="#1E293B" />
+                <stop offset="100%" stopColor="#050811" />
+              </linearGradient>
+
+              {/* Golden Trishula (Trident) Gradient */}
+              <linearGradient id="sacredGoldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#FFFBEB" />
+                <stop offset="30%" stopColor="#FDE68A" />
+                <stop offset="70%" stopColor="#D97706" />
+                <stop offset="100%" stopColor="#78350F" />
+              </linearGradient>
+
+              {/* Warm Candlelight Deepam Overlay Gradient */}
+              <linearGradient id="deepamAmberWash" x1="30%" y1="100%" x2="70%" y2="0%">
+                <stop offset="0%" stopColor="#FDE68A" stopOpacity={deepamLit ? '0.35' : '0'} />
+                <stop offset="50%" stopColor="#F59E0B" stopOpacity={deepamLit ? '0.22' : '0'} />
+                <stop offset="100%" stopColor="#B45309" stopOpacity={deepamLit ? '0.05' : '0'} />
+              </linearGradient>
+
+              {/* Bilva Leaf Green Gradient */}
+              <linearGradient id="bilvaLeafGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#34D399" />
+                <stop offset="50%" stopColor="#059669" />
+                <stop offset="100%" stopColor="#064E3B" />
+              </linearGradient>
+
+              {/* Divine Aura Soft Glow Filter */}
+              <filter id="divineGlow" x="-30%" y="-30%" width="160%" height="160%">
+                <feGaussianBlur stdDeviation="6" result="blur" />
+                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+              </filter>
+            </defs>
+
+            {/* 1. Divine Radiant Golden Aura behind the Lingam */}
+            <circle
+              cx="135"
+              cy="98"
+              r="68"
+              fill={deepamLit ? 'rgba(253, 230, 138, 0.22)' : 'rgba(192, 132, 252, 0.14)'}
+              filter="url(#divineGlow)"
             />
-          </div>
+
+            {/* 2. Golden Trishula (Trident & Damru) standing behind the Lingam on the right */}
+            <g opacity="0.95">
+              {/* Trident Shaft */}
+              <line x1="184" y1="28" x2="184" y2="198" stroke="url(#sacredGoldGrad)" strokeWidth="3" strokeLinecap="round" />
+              <circle cx="184" cy="28" r="2.5" fill="#FEF08A" />
+
+              {/* Trishula Center Spear */}
+              <path d="M 184 10 L 188 28 L 180 28 Z" fill="url(#sacredGoldGrad)" />
+
+              {/* Trishula Left Curved Prong */}
+              <path d="M 174 18 C 174 29 181 33 184 33" fill="none" stroke="url(#sacredGoldGrad)" strokeWidth="2.4" strokeLinecap="round" />
+              <path d="M 174 13 L 177 22 L 171 22 Z" fill="url(#sacredGoldGrad)" />
+
+              {/* Trishula Right Curved Prong */}
+              <path d="M 194 18 C 194 29 187 33 184 33" fill="none" stroke="url(#sacredGoldGrad)" strokeWidth="2.4" strokeLinecap="round" />
+              <path d="M 194 13 L 197 22 L 191 22 Z" fill="url(#sacredGoldGrad)" />
+
+              {/* Sacred Damru (Hourglass Drum) bound to trident */}
+              <polygon points="178 52, 190 52, 181 60, 187 60, 178 68, 190 68, 184 60" fill="#D97706" stroke="#FEF08A" strokeWidth="1" />
+              <line x1="178" y1="52" x2="190" y2="68" stroke="#FEF08A" strokeWidth="0.8" opacity="0.7" />
+              <line x1="190" y1="52" x2="178" y2="68" stroke="#FEF08A" strokeWidth="0.8" opacity="0.7" />
+              {/* Red sacred binding cord */}
+              <circle cx="184" cy="60" r="2.2" fill="#DC2626" />
+            </g>
+
+            {/* 3. Authentic Dravidian Pedestal (Brahma-Vishnu Peedam) */}
+            {/* Base Plinth Shadow */}
+            <ellipse cx="130" cy="236" rx="88" ry="10" fill="rgba(0, 0, 0, 0.7)" filter="url(#divineGlow)" />
+
+            {/* Lowest Tier Plinth (Upana - Heavy Granite Slab) */}
+            <rect x="36" y="215" width="188" height="18" rx="4" fill="url(#plinthBevelGrad)" stroke="rgba(254, 240, 138, 0.35)" strokeWidth="1.2" />
+            <line x1="42" y1="217" x2="218" y2="217" stroke="rgba(255, 255, 255, 0.3)" strokeWidth="1" />
+
+            {/* Stepped Lotus Petal Tier (Padma Peedam) */}
+            <path
+              d="M 52 215 L 64 198 L 196 198 L 208 215 Z"
+              fill="url(#plinthBevelGrad)"
+              stroke="rgba(254, 240, 138, 0.3)"
+              strokeWidth="1"
+            />
+            {/* Lotus Petal Relief Lines */}
+            <g stroke="rgba(253, 230, 138, 0.45)" strokeWidth="1" fill="none">
+              <path d="M 78 213 Q 86 200 94 213" />
+              <path d="M 98 213 Q 106 200 114 213" />
+              <path d="M 118 213 Q 126 200 134 213" />
+              <path d="M 138 213 Q 146 200 154 213" />
+              <path d="M 158 213 Q 166 200 174 213" />
+              <path d="M 178 213 Q 186 200 194 213" />
+            </g>
+
+            {/* Recessed Neck Collar (Kanta) */}
+            <rect x="74" y="184" width="112" height="15" rx="3" fill="url(#kantaNeckGrad)" stroke="rgba(254, 240, 138, 0.25)" strokeWidth="1" />
+            <line x1="76" y1="186" x2="184" y2="186" stroke="rgba(255, 255, 255, 0.2)" strokeWidth="0.8" />
+
+            {/* 4. Avudaiyar (Yoni Peedam - Sacred Circular Platform with Gomukhi Spout to North/Left) */}
+            {/* Avudaiyar Body & Spout Casting */}
+            <path
+              d="
+                M 72 153
+                C 54 153, 36 156, 18 160
+                C 14 161, 14 167, 18 169
+                C 36 173, 54 176, 72 176
+                C 82 185, 107 191, 136 191
+                C 178 191, 210 180, 210 165
+                C 210 150, 178 139, 136 139
+                C 107 139, 82 145, 72 153
+                Z
+              "
+              fill="url(#avudaiyarRimGrad)"
+              stroke="rgba(254, 240, 138, 0.55)"
+              strokeWidth="1.4"
+            />
+
+            {/* Avudaiyar Raised Outer Rim Lip */}
+            <ellipse cx="136" cy="165" rx="72" ry="23" fill="url(#avudaiyarBasinGrad)" stroke="rgba(254, 240, 138, 0.4)" strokeWidth="1.2" />
+
+            {/* Inner Depressed Basin (Argha) */}
+            <ellipse cx="136" cy="163" rx="58" ry="16" fill="#070A12" stroke="rgba(255, 255, 255, 0.12)" strokeWidth="1" />
+
+            {/* Gomukhi Drainage Channel to Spout */}
+            <path
+              d="M 80 159 L 20 162 L 20 167 L 80 167 Z"
+              fill="#060910"
+              stroke="rgba(254, 240, 138, 0.35)"
+              strokeWidth="0.8"
+            />
+            {/* Sculpted Spout Fluted Tip */}
+            <path d="M 18 160 C 14 161, 14 168, 18 169" stroke="#FEF08A" strokeWidth="1.6" fill="none" />
+            {/* Glistening Abhishekam Water Droplet at Gomukhi Tip */}
+            <circle cx="15" cy="165" r="2.5" fill="#38BDF8" opacity="0.9" filter="url(#divineGlow)" />
+            <circle cx="14" cy="164" r="0.8" fill="#FFFFFF" />
+
+            {/* 5. Linga Baanam (Consecrated Krishnashila Black Granite Shaft & Spherical Dome) */}
+            <g>
+              {/* Main Baanam Stone Body */}
+              <path
+                d="
+                  M 110 96
+                  C 110 50, 162 50, 162 96
+                  L 162 162
+                  C 162 171, 110 171, 110 162
+                  Z
+                "
+                fill="url(#krishnaShilaGrad)"
+                stroke="rgba(254, 240, 138, 0.65)"
+                strokeWidth="1.5"
+              />
+
+              {/* Spherical Crown 3D Curved Highlight Dome */}
+              <path
+                d="
+                  M 110 96
+                  C 110 50, 162 50, 162 96
+                  C 162 108, 110 108, 110 96
+                  Z
+                "
+                fill="url(#lingaDomeHighlight)"
+              />
+
+              {/* Cylindrical Specular Glint Line along left curvature */}
+              <line
+                x1="126"
+                y1="56"
+                x2="126"
+                y2="160"
+                stroke="rgba(255, 255, 255, 0.38)"
+                strokeWidth="2.8"
+                strokeLinecap="round"
+                opacity="0.85"
+              />
+
+              {/* Warm Candlelight Deepam Reflection Wash */}
+              {deepamLit && (
+                <path
+                  d="
+                    M 110 96
+                    C 110 50, 162 50, 162 96
+                    L 162 162
+                    C 162 171, 110 171, 110 162
+                    Z
+                  "
+                  fill="url(#deepamAmberWash)"
+                />
+              )}
+
+              {/* Sacred Silver Crescent Moon (Chandra) tucked on upper right of the dome */}
+              <path
+                d="M 152 58 C 158 61, 158 71, 153 76 C 156 71, 156 62, 152 58 Z"
+                fill="#FEF08A"
+                filter="url(#divineGlow)"
+              />
+
+              {/* 6. Sacred Tripundra (Three Curved Horizontal White Vibhuti Ash Lines) */}
+              <g opacity="0.96">
+                {/* Upper Vibhuti Line */}
+                <path
+                  d="M 118 88 Q 136 93 154 88"
+                  fill="none"
+                  stroke="#F8FAFC"
+                  strokeWidth="2.4"
+                  strokeLinecap="round"
+                  style={{ filter: 'drop-shadow(0 0 1px rgba(255,255,255,0.8))' }}
+                />
+                {/* Middle Vibhuti Line */}
+                <path
+                  d="M 116 94 Q 136 99 156 94"
+                  fill="none"
+                  stroke="#F8FAFC"
+                  strokeWidth="2.8"
+                  strokeLinecap="round"
+                  style={{ filter: 'drop-shadow(0 0 1px rgba(255,255,255,0.8))' }}
+                />
+                {/* Lower Vibhuti Line */}
+                <path
+                  d="M 118 100 Q 136 105 154 100"
+                  fill="none"
+                  stroke="#F8FAFC"
+                  strokeWidth="2.4"
+                  strokeLinecap="round"
+                  style={{ filter: 'drop-shadow(0 0 1px rgba(255,255,255,0.8))' }}
+                />
+
+                {/* Vermillion Red Kumkum Tilak Bindu at center of middle line */}
+                <circle cx="136" cy="96" r="4.2" fill="#DC2626" />
+                <circle cx="136" cy="96" r="2.2" fill="#EF4444" />
+                <circle cx="136" cy="96" r="0.9" fill="#FDE68A" />
+
+                {/* Sacred Third Eye (Trinetra) Golden Flame Spark */}
+                <path
+                  d="M 136 78 Q 139 84 136 90 Q 133 84 136 78 Z"
+                  fill="#FDE68A"
+                  opacity="0.9"
+                  filter="url(#divineGlow)"
+                />
+              </g>
+
+              {/* 7. Fragrant Malar Maalai (Jasmine & Marigold Garland draped around Baanam base) */}
+              <g>
+                {/* Garland Base Shadow */}
+                <ellipse cx="136" cy="154" rx="30" ry="8" fill="rgba(0,0,0,0.45)" />
+
+                {/* Alternating White Jasmine Florets and Golden Marigolds */}
+                {/* Jasmine floret 1 */}
+                <circle cx="114" cy="149" r="3.2" fill="#FFFFFF" stroke="#E2E8F0" strokeWidth="0.5" />
+                <circle cx="114" cy="149" r="1.2" fill="#FEF08A" />
+
+                {/* Marigold 1 */}
+                <circle cx="120" cy="153" r="3.8" fill="#F59E0B" stroke="#D97706" strokeWidth="0.5" />
+                <circle cx="120" cy="153" r="1.8" fill="#FEF08A" />
+
+                {/* Jasmine floret 2 */}
+                <circle cx="127" cy="156" r="3.2" fill="#FFFFFF" stroke="#E2E8F0" strokeWidth="0.5" />
+                <circle cx="127" cy="156" r="1.2" fill="#FEF08A" />
+
+                {/* Marigold 2 (Center flower) */}
+                <circle cx="136" cy="158" r="4.2" fill="#F59E0B" stroke="#B45309" strokeWidth="0.5" />
+                <circle cx="136" cy="158" r="2" fill="#FEF08A" />
+
+                {/* Jasmine floret 3 */}
+                <circle cx="145" cy="156" r="3.2" fill="#FFFFFF" stroke="#E2E8F0" strokeWidth="0.5" />
+                <circle cx="145" cy="156" r="1.2" fill="#FEF08A" />
+
+                {/* Marigold 3 */}
+                <circle cx="152" cy="153" r="3.8" fill="#F59E0B" stroke="#D97706" strokeWidth="0.5" />
+                <circle cx="152" cy="153" r="1.8" fill="#FEF08A" />
+
+                {/* Jasmine floret 4 */}
+                <circle cx="158" cy="149" r="3.2" fill="#FFFFFF" stroke="#E2E8F0" strokeWidth="0.5" />
+                <circle cx="158" cy="149" r="1.2" fill="#FEF08A" />
+              </g>
+
+              {/* 8. Sacred Trifoliate Bilva Patra (Vilvam) Leaf resting on right side of Avudaiyar */}
+              <g transform="translate(154, 154) rotate(-18)">
+                {/* Center Stem */}
+                <path d="M 12 18 Q 8 10 0 4" fill="none" stroke="#064E3B" strokeWidth="1.2" />
+                {/* Top Leaflet */}
+                <path d="M 0 4 C -3 -3, 3 -3, 0 -8 C -3 -3, 3 -3, 0 4 Z" fill="url(#bilvaLeafGrad)" stroke="#064E3B" strokeWidth="0.5" />
+                {/* Left Leaflet */}
+                <path d="M -2 4 C -8 1, -8 7, -12 4 C -8 7, -8 1, -2 4 Z" fill="url(#bilvaLeafGrad)" stroke="#064E3B" strokeWidth="0.5" />
+                {/* Right Leaflet */}
+                <path d="M 2 4 C 8 1, 8 7, 12 4 C 8 7, 8 1, 2 4 Z" fill="url(#bilvaLeafGrad)" stroke="#064E3B" strokeWidth="0.5" />
+              </g>
+            </g>
+          </svg>
         </div>
 
         {/* Floating Bilva Patra Leaves Animation */}

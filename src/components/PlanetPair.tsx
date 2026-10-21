@@ -138,6 +138,11 @@ export const PlanetPair: React.FC = () => {
     setIsBridging(true);
     startBridgeAudio();
 
+    if (hapticIntervalRef.current) {
+      clearInterval(hapticIntervalRef.current);
+      hapticIntervalRef.current = null;
+    }
+
     if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
       try {
         navigator.vibrate([35, 50, 35]);
@@ -162,12 +167,51 @@ export const PlanetPair: React.FC = () => {
       clearInterval(hapticIntervalRef.current);
       hapticIntervalRef.current = null;
     }
+    if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
+      try {
+        navigator.vibrate(0);
+      } catch {
+        // Safe fallback
+      }
+    }
   };
 
   useEffect(() => {
-    return () => {
+    const handleGlobalRelease = () => {
       if (hapticIntervalRef.current) {
         clearInterval(hapticIntervalRef.current);
+        hapticIntervalRef.current = null;
+      }
+      if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
+        try {
+          navigator.vibrate(0);
+        } catch {
+          // Safe fallback
+        }
+      }
+      setIsBridging(false);
+      stopBridgeAudio();
+    };
+
+    window.addEventListener('pointerup', handleGlobalRelease);
+    window.addEventListener('touchend', handleGlobalRelease);
+    window.addEventListener('blur', handleGlobalRelease);
+
+    return () => {
+      window.removeEventListener('pointerup', handleGlobalRelease);
+      window.removeEventListener('touchend', handleGlobalRelease);
+      window.removeEventListener('blur', handleGlobalRelease);
+
+      if (hapticIntervalRef.current) {
+        clearInterval(hapticIntervalRef.current);
+        hapticIntervalRef.current = null;
+      }
+      if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
+        try {
+          navigator.vibrate(0);
+        } catch {
+          // Safe fallback
+        }
       }
       stopBridgeAudio();
     };
@@ -727,8 +771,6 @@ export const PlanetPair: React.FC = () => {
           onPointerUp={stopBridge}
           onPointerLeave={stopBridge}
           onPointerCancel={stopBridge}
-          onTouchStart={startBridge}
-          onTouchEnd={stopBridge}
           onContextMenu={(e) => e.preventDefault()}
           whileTap={{ scale: 0.95 }}
           animate={

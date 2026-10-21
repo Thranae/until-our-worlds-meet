@@ -355,28 +355,32 @@ export const Starfield: React.FC = () => {
       <AnimatePresence>
         {wishNotification && (
           <motion.div
-            initial={{ opacity: 0, y: -20, scale: 0.95 }}
+            initial={{ opacity: 0, y: -16, scale: 0.94 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -15, scale: 0.95 }}
-            transition={{ duration: 0.4, ease: 'easeOut' }}
+            exit={{ opacity: 0, y: -12, scale: 0.94 }}
+            transition={{ duration: 0.35, ease: 'easeOut' }}
             style={{
               position: 'fixed',
-              top: 'max(7.5rem, calc(env(safe-area-inset-top) + 6rem))',
+              top: 'max(4.6rem, calc(env(safe-area-inset-top) + 3.8rem))',
               left: '50%',
               transform: 'translateX(-50%)',
               zIndex: 100,
-              padding: '0.65rem 1.45rem',
+              width: 'max-content',
+              maxWidth: 'calc(100vw - 2.5rem)',
+              padding: '0.5rem 1.1rem',
               borderRadius: 'var(--radius-full)',
-              background: 'linear-gradient(135deg, rgba(30, 27, 75, 0.92) 0%, rgba(15, 23, 42, 0.95) 100%)',
-              border: '1px solid rgba(253, 230, 138, 0.45)',
-              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.5), 0 0 20px rgba(253, 230, 138, 0.2)',
+              background: 'linear-gradient(135deg, rgba(30, 27, 75, 0.94) 0%, rgba(15, 23, 42, 0.96) 100%)',
+              border: '1px solid rgba(253, 230, 138, 0.5)',
+              boxShadow: '0 8px 30px rgba(0, 0, 0, 0.6), 0 0 18px rgba(253, 230, 138, 0.22)',
               color: 'var(--color-ivory)',
-              fontSize: '0.85rem',
+              fontSize: '0.78rem',
+              lineHeight: 1.35,
               fontFamily: 'var(--font-serif)',
               fontStyle: 'italic',
               pointerEvents: 'none',
               textAlign: 'center',
-              whiteSpace: 'nowrap',
+              boxSizing: 'border-box',
+              wordBreak: 'break-word',
             }}
           >
             {wishNotification}

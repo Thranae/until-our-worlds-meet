@@ -256,13 +256,17 @@ export const MemoryGallery: React.FC = () => {
                       style={{
                         position: 'relative',
                         width: '100%',
-                        height: '180px',
+                        aspectRatio: item.orientation === 'vertical' ? '9 / 14' : '16 / 9',
+                        maxHeight: item.orientation === 'vertical' ? '360px' : '210px',
                         borderRadius: 'var(--radius-sm)',
                         overflow: 'hidden',
                         marginBottom: '0.9rem',
                         cursor: 'pointer',
                         border: '1px solid rgba(255, 255, 255, 0.12)',
                         background: '#04060E',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
                       }}
                     >
                       <video
@@ -275,7 +279,7 @@ export const MemoryGallery: React.FC = () => {
                           width: '100%',
                           height: '100%',
                           objectFit: 'cover',
-                          filter: 'brightness(0.92)',
+                          filter: 'brightness(0.94)',
                         }}
                       />
                       <div
@@ -323,13 +327,17 @@ export const MemoryGallery: React.FC = () => {
                       style={{
                         position: 'relative',
                         width: '100%',
-                        height: '180px',
+                        aspectRatio: item.orientation === 'vertical' ? '9 / 14' : '16 / 9',
+                        maxHeight: item.orientation === 'vertical' ? '360px' : '210px',
                         borderRadius: 'var(--radius-sm)',
                         overflow: 'hidden',
                         marginBottom: '0.9rem',
                         cursor: 'pointer',
                         border: '1px solid rgba(255, 255, 255, 0.12)',
                         background: '#04060E',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
                       }}
                     >
                       <img
@@ -471,7 +479,7 @@ export const MemoryGallery: React.FC = () => {
               onClick={(e) => e.stopPropagation()}
               style={{
                 position: 'relative',
-                maxWidth: '640px',
+                maxWidth: lightboxItem.orientation === 'vertical' ? '460px' : '680px',
                 width: '100%',
                 maxHeight: '90vh',
                 overflowY: 'auto',
@@ -547,13 +555,14 @@ export const MemoryGallery: React.FC = () => {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  minHeight: '280px',
-                  maxHeight: '480px',
+                  minHeight: '260px',
+                  maxHeight: lightboxItem.orientation === 'vertical' ? '560px' : '480px',
+                  aspectRatio: lightboxItem.orientation === 'vertical' ? '9 / 14' : '16 / 9',
                   overflow: 'hidden',
                 }}
               >
                 {lightboxItem.mediaType === 'video' && lightboxItem.videoPath ? (
-                  <div style={{ position: 'relative', width: '100%', height: '100%', display: 'flex', justifyContent: 'center' }}>
+                  <div style={{ position: 'relative', width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     <video
                       src={lightboxItem.videoPath}
                       controls
@@ -562,9 +571,11 @@ export const MemoryGallery: React.FC = () => {
                       loop
                       playsInline
                       style={{
-                        maxHeight: '440px',
+                        maxHeight: lightboxItem.orientation === 'vertical' ? '540px' : '440px',
                         width: 'auto',
                         maxWidth: '100%',
+                        height: '100%',
+                        objectFit: 'contain',
                         borderRadius: '8px',
                       }}
                     />
@@ -623,9 +634,10 @@ export const MemoryGallery: React.FC = () => {
                     src={lightboxItem.imagePath}
                     alt={lightboxItem.title}
                     style={{
-                      maxHeight: '460px',
+                      maxHeight: lightboxItem.orientation === 'vertical' ? '540px' : '460px',
                       maxWidth: '100%',
                       width: 'auto',
+                      height: '100%',
                       objectFit: 'contain',
                     }}
                   />

@@ -18,6 +18,7 @@ export interface MemoryItem {
   id: string;
   type: 'photo' | 'message' | 'joke' | 'note';
   mediaType?: 'image' | 'video';
+  orientation?: 'vertical' | 'horizontal';
   title: string;
   subtitle: string;
   /**
@@ -173,6 +174,7 @@ export const siteContent: SiteConfiguration = {
       id: "mem-starlight-portrait",
       type: "photo",
       mediaType: "image",
+      orientation: "horizontal",
       title: "The Starlight Portrait",
       subtitle: "Elegance that stopped time",
       imagePath: "/memories/1792580021104.jpg",
@@ -186,6 +188,7 @@ export const siteContent: SiteConfiguration = {
       id: "mem-sunlit-laugh",
       type: "photo",
       mediaType: "image",
+      orientation: "horizontal",
       title: "Sunlight & Your Laughter",
       subtitle: "My favourite sight in the universe",
       imagePath: "/memories/IMG_20260701_200747_397.jpg",
@@ -199,6 +202,7 @@ export const siteContent: SiteConfiguration = {
       id: "mem-night-glow-video",
       type: "message",
       mediaType: "video",
+      orientation: "vertical",
       title: "The 01:34 AM Goodnight Glow",
       subtitle: "When the whole world goes quiet",
       videoPath: "/memories/VID_20260703_013414_130.mp4",
@@ -214,6 +218,7 @@ export const siteContent: SiteConfiguration = {
       id: "mem-car-drive-video",
       type: "note",
       mediaType: "video",
+      orientation: "vertical",
       title: "Highway Songs & Those Eyes",
       subtitle: "Earphones in, cruising through the afternoon",
       videoPath: "/memories/VID_20260901_105722_311.mp4",
@@ -229,6 +234,7 @@ export const siteContent: SiteConfiguration = {
       id: "mem-traditional-red-video",
       type: "photo",
       mediaType: "video",
+      orientation: "vertical",
       title: "A Glimpse in Red",
       subtitle: "Traditional grace & that shy smile",
       videoPath: "/memories/VID_20260306_103009_216.mp4",
@@ -244,6 +250,7 @@ export const siteContent: SiteConfiguration = {
       id: "mem-candid-voice-video",
       type: "joke",
       mediaType: "video",
+      orientation: "vertical",
       title: "Late Evening Candid",
       subtitle: "Gentle expressions & quiet smiles",
       videoPath: "/memories/VID_20260901_160804_563.mp4",
@@ -270,6 +277,7 @@ export const siteContent: SiteConfiguration = {
     {
       id: "mem-redbull",
       type: "joke",
+      orientation: "vertical",
       title: "Bot's Starlight Fuel",
       subtitle: "The holy grail: Red Bull",
       imagePath: "/images/redbull-bot-can.jpg",

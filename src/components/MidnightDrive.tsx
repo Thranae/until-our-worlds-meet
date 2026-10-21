@@ -356,40 +356,6 @@ export const MidnightDrive: React.FC = () => {
                 }}
               />
             </div>
-            <div
-              style={{
-                position: 'absolute',
-                top: '5px',
-                left: '6px',
-                padding: '0.15rem 0.35rem',
-                borderRadius: '3px',
-                background: 'rgba(0, 0, 0, 0.75)',
-                fontSize: '0.52rem',
-                fontFamily: 'monospace',
-                color: '#38BDF8',
-                border: '1px solid rgba(56, 189, 248, 0.4)',
-                letterSpacing: '0.05em',
-                zIndex: 2,
-              }}
-            >
-              SEAT 02 ✦ CAM
-            </div>
-            <div
-              style={{
-                position: 'absolute',
-                bottom: '4px',
-                right: '6px',
-                fontSize: '0.5rem',
-                color: '#FFFFFF',
-                background: 'rgba(0, 0, 0, 0.7)',
-                padding: '0.1rem 0.3rem',
-                borderRadius: '3px',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                zIndex: 2,
-              }}
-            >
-              EXPAND ↗
-            </div>
           </motion.div>
         )}
       </div>
