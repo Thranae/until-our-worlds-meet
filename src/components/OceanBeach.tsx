@@ -452,19 +452,19 @@ export const OceanBeach: React.FC = () => {
       }
     });
 
-    // Spawn bioluminescent glow particles
-    for (let i = 0; i < 8; i++) {
+    // Spawn subtle water micro-particles
+    for (let i = 0; i < 4; i++) {
       const ang = Math.random() * Math.PI * 2;
-      const spd = Math.random() * 2 + 1;
+      const spd = Math.random() * 1.5 + 0.5;
       planktonRef.current.push({
         x,
         y,
         vx: Math.cos(ang) * spd,
         vy: Math.sin(ang) * spd,
-        radius: Math.random() * 2.8 + 1,
-        alpha: 1,
-        color: oceanMode === 'sunrise' ? '#FED7AA' : '#67E8F9',
-        pulseSpeed: 0.05,
+        radius: Math.random() * 1.3 + 0.6,
+        alpha: 0.45,
+        color: oceanMode === 'sunrise' ? '#FED7AA' : '#BAE6FD',
+        pulseSpeed: 0.03,
       });
     }
 
@@ -472,9 +472,9 @@ export const OceanBeach: React.FC = () => {
     ripplesRef.current.push({
       x,
       y,
-      radius: 5,
-      maxRadius: 65,
-      alpha: 0.7,
+      radius: 4,
+      maxRadius: 52,
+      alpha: 0.45,
     });
   };
 
@@ -498,15 +498,15 @@ export const OceanBeach: React.FC = () => {
       // Initialize school of fish
       if (fishRef.current.length === 0) {
         const fishList: Fish[] = [];
-        for (let i = 0; i < 18; i++) {
+        for (let i = 0; i < 14; i++) {
           fishList.push({
             x: Math.random() * rect.width,
             y: rect.height * 0.45 + Math.random() * rect.height * 0.45,
-            vx: Math.random() * 1.5 + 0.8,
-            vy: (Math.random() - 0.5) * 0.5,
-            size: Math.random() * 5 + 7,
+            vx: Math.random() * 1.2 + 0.6,
+            vy: (Math.random() - 0.5) * 0.4,
+            size: Math.random() * 3 + 5,
             angle: 0,
-            color: '#67E8F9',
+            color: 'rgba(186, 230, 253, 0.45)',
             tailPhase: Math.random() * Math.PI * 2,
           });
         }
@@ -516,16 +516,16 @@ export const OceanBeach: React.FC = () => {
       // Initialize ambient plankton
       if (planktonRef.current.length === 0) {
         const particles: PlanktonParticle[] = [];
-        for (let i = 0; i < 55; i++) {
+        for (let i = 0; i < 22; i++) {
           particles.push({
             x: Math.random() * rect.width,
             y: Math.random() * rect.height,
-            vx: (Math.random() - 0.5) * 0.35,
-            vy: (Math.random() - 0.5) * 0.25 - 0.1,
-            radius: Math.random() * 1.8 + 0.8,
-            alpha: Math.random() * 0.6 + 0.25,
-            color: oceanMode === 'sunrise' ? '#FED7AA' : '#67E8F9',
-            pulseSpeed: Math.random() * 0.03 + 0.015,
+            vx: (Math.random() - 0.5) * 0.25,
+            vy: (Math.random() - 0.5) * 0.15 - 0.05,
+            radius: Math.random() * 1.1 + 0.5,
+            alpha: Math.random() * 0.25 + 0.1,
+            color: oceanMode === 'sunrise' ? '#FED7AA' : '#BAE6FD',
+            pulseSpeed: Math.random() * 0.02 + 0.01,
           });
         }
         planktonRef.current = particles;
@@ -536,7 +536,7 @@ export const OceanBeach: React.FC = () => {
     window.addEventListener('resize', resize);
 
     const render = () => {
-      time += 0.02;
+      time += 0.018;
       const rect = canvas.getBoundingClientRect();
       const w = rect.width;
       const h = rect.height;
@@ -546,49 +546,49 @@ export const OceanBeach: React.FC = () => {
       // 1. Realistic Deep Oceanic Ambient Gradient
       const oceanGrad = ctx.createLinearGradient(0, 0, 0, h);
       if (oceanMode === 'sunrise') {
-        oceanGrad.addColorStop(0, '#1E1B4B');
-        oceanGrad.addColorStop(0.35, '#9D174D');
-        oceanGrad.addColorStop(0.7, '#0E7490');
+        oceanGrad.addColorStop(0, '#151336');
+        oceanGrad.addColorStop(0.35, '#50163E');
+        oceanGrad.addColorStop(0.7, '#0C4A6E');
         oceanGrad.addColorStop(1, '#082F49');
       } else if (oceanMode === 'bioluminescent') {
         oceanGrad.addColorStop(0, '#020617');
-        oceanGrad.addColorStop(0.35, '#042F2E');
-        oceanGrad.addColorStop(0.75, '#0F172A');
+        oceanGrad.addColorStop(0.35, '#062033');
+        oceanGrad.addColorStop(0.75, '#0B1728');
         oceanGrad.addColorStop(1, '#020617');
       } else {
-        // Midnight Abyss with deep cerulean depth
+        // Midnight Abyss with deep tranquil cerulean depth
         oceanGrad.addColorStop(0, '#020617');
-        oceanGrad.addColorStop(0.25, '#0B1E3F');
-        oceanGrad.addColorStop(0.65, '#07182F');
-        oceanGrad.addColorStop(1, '#020B16');
+        oceanGrad.addColorStop(0.25, '#081426');
+        oceanGrad.addColorStop(0.65, '#061120');
+        oceanGrad.addColorStop(1, '#020612');
       }
       ctx.fillStyle = oceanGrad;
       ctx.fillRect(0, 0, w, h);
 
-      // 2. Realistic Volumetric Underwater Light Caustics (Sun/Moon rays piercing down)
+      // 2. Subtle Volumetric Underwater Light Caustics
       ctx.save();
       ctx.globalCompositeOperation = 'screen';
-      for (let i = 0; i < 6; i++) {
-        const rayOffset = Math.sin(time * 0.7 + i * 1.2) * 22;
-        const rayX = (w * 0.15) + i * (w * 0.15) + rayOffset;
-        const rayGrad = ctx.createLinearGradient(rayX, 0, rayX + 60, h * 0.9);
+      for (let i = 0; i < 5; i++) {
+        const rayOffset = Math.sin(time * 0.5 + i * 1.3) * 16;
+        const rayX = (w * 0.18) + i * (w * 0.18) + rayOffset;
+        const rayGrad = ctx.createLinearGradient(rayX, 0, rayX + 45, h * 0.85);
 
         if (oceanMode === 'sunrise') {
-          rayGrad.addColorStop(0, 'rgba(254, 215, 170, 0.28)');
-          rayGrad.addColorStop(0.5, 'rgba(251, 146, 60, 0.09)');
+          rayGrad.addColorStop(0, 'rgba(254, 215, 170, 0.08)');
+          rayGrad.addColorStop(0.5, 'rgba(251, 146, 60, 0.02)');
           rayGrad.addColorStop(1, 'transparent');
         } else {
-          rayGrad.addColorStop(0, 'rgba(103, 232, 249, 0.24)');
-          rayGrad.addColorStop(0.5, 'rgba(14, 165, 233, 0.08)');
+          rayGrad.addColorStop(0, 'rgba(186, 230, 253, 0.06)');
+          rayGrad.addColorStop(0.5, 'rgba(56, 189, 248, 0.015)');
           rayGrad.addColorStop(1, 'transparent');
         }
 
         ctx.fillStyle = rayGrad;
         ctx.beginPath();
-        ctx.moveTo(rayX - 20, 0);
-        ctx.lineTo(rayX + 30, 0);
-        ctx.lineTo(rayX + 90, h);
-        ctx.lineTo(rayX + 20, h);
+        ctx.moveTo(rayX - 15, 0);
+        ctx.lineTo(rayX + 20, 0);
+        ctx.lineTo(rayX + 65, h);
+        ctx.lineTo(rayX + 15, h);
         ctx.closePath();
         ctx.fill();
       }
@@ -600,22 +600,22 @@ export const OceanBeach: React.FC = () => {
       ctx.beginPath();
       ctx.moveTo(0, 22);
       for (let x = 0; x <= w; x += 8) {
-        const y = 22 + Math.sin(x * 0.018 + time * 1.8) * 4 + Math.cos(x * 0.01 - time * 0.9) * 3;
+        const y = 22 + Math.sin(x * 0.018 + time * 1.4) * 3 + Math.cos(x * 0.01 - time * 0.7) * 2;
         ctx.lineTo(x, y);
       }
-      ctx.strokeStyle = 'rgba(56, 189, 248, 0.35)';
-      ctx.lineWidth = 1.5;
+      ctx.strokeStyle = 'rgba(56, 189, 248, 0.2)';
+      ctx.lineWidth = 1;
       ctx.stroke();
 
-      // Front crest with foam shimmer
+      // Front crest with subtle foam shimmer
       ctx.beginPath();
-      ctx.moveTo(0, 26);
+      ctx.moveTo(0, 25);
       for (let x = 0; x <= w; x += 6) {
-        const y = 26 + Math.sin(x * 0.024 - time * 2.2) * 5 + Math.cos(x * 0.014 + time) * 3.5;
+        const y = 25 + Math.sin(x * 0.022 - time * 1.8) * 3.5 + Math.cos(x * 0.012 + time) * 2;
         ctx.lineTo(x, y);
       }
-      ctx.strokeStyle = oceanMode === 'sunrise' ? 'rgba(254, 240, 138, 0.75)' : 'rgba(186, 230, 253, 0.75)';
-      ctx.lineWidth = 2.5;
+      ctx.strokeStyle = oceanMode === 'sunrise' ? 'rgba(254, 240, 138, 0.35)' : 'rgba(186, 230, 253, 0.35)';
+      ctx.lineWidth = 1.2;
       ctx.stroke();
       ctx.restore();
 
@@ -623,8 +623,8 @@ export const OceanBeach: React.FC = () => {
       const ripples = ripplesRef.current;
       for (let i = ripples.length - 1; i >= 0; i--) {
         const r = ripples[i];
-        r.radius += 2.4;
-        r.alpha -= 0.01;
+        r.radius += 2.0;
+        r.alpha -= 0.012;
 
         if (r.alpha <= 0 || r.radius >= r.maxRadius) {
           ripples.splice(i, 1);
@@ -634,10 +634,8 @@ export const OceanBeach: React.FC = () => {
         ctx.save();
         ctx.beginPath();
         ctx.arc(r.x, r.y, r.radius, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(103, 232, 249, ${r.alpha})`;
-        ctx.lineWidth = 2.4;
-        ctx.shadowColor = '#38BDF8';
-        ctx.shadowBlur = 12;
+        ctx.strokeStyle = `rgba(147, 197, 253, ${r.alpha * 0.45})`;
+        ctx.lineWidth = 1.2;
         ctx.stroke();
         ctx.restore();
       }
@@ -649,7 +647,7 @@ export const OceanBeach: React.FC = () => {
         p.x += p.vx;
         p.y += p.vy;
         p.vy += 0.12;
-        p.alpha -= 0.016;
+        p.alpha -= 0.018;
 
         if (p.alpha <= 0 || p.y > h) {
           mist.splice(i, 1);
@@ -659,24 +657,22 @@ export const OceanBeach: React.FC = () => {
         ctx.save();
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(224, 242, 254, ${p.alpha})`;
-        ctx.shadowColor = '#BAE6FD';
-        ctx.shadowBlur = 8;
+        ctx.fillStyle = `rgba(224, 242, 254, ${p.alpha * 0.55})`;
         ctx.fill();
         ctx.restore();
       }
 
-      // 6. Interactive School of Glowing Tropical Fish (Boids)
+      // 6. Interactive School of Deep Ocean Fish (Boids)
       const fish = fishRef.current;
       fish.forEach((f) => {
         f.x += f.vx;
         f.y += f.vy;
-        f.tailPhase += 0.18;
+        f.tailPhase += 0.16;
 
         // Gentle drag back to cruising speed
-        if (f.vx > 1.8) f.vx *= 0.96;
-        if (f.vx < 0.6) f.vx += 0.04;
-        if (Math.abs(f.vy) > 0.6) f.vy *= 0.95;
+        if (f.vx > 1.4) f.vx *= 0.97;
+        if (f.vx < 0.5) f.vx += 0.03;
+        if (Math.abs(f.vy) > 0.5) f.vy *= 0.95;
 
         // Wrap around screen
         if (f.x > w + 20) f.x = -20;
@@ -690,26 +686,24 @@ export const OceanBeach: React.FC = () => {
         ctx.translate(f.x, f.y);
         ctx.rotate(f.angle);
 
-        // Fish Body
+        // Fish Body - subtle natural silver-blue
         ctx.fillStyle = f.color;
-        ctx.shadowColor = f.color;
-        ctx.shadowBlur = 6;
         ctx.beginPath();
-        ctx.ellipse(0, 0, f.size, f.size * 0.38, 0, 0, Math.PI * 2);
+        ctx.ellipse(0, 0, f.size, f.size * 0.35, 0, 0, Math.PI * 2);
         ctx.fill();
 
         // Oscillating Tail Fin
-        const tailWag = Math.sin(f.tailPhase) * 3;
+        const tailWag = Math.sin(f.tailPhase) * 2.2;
         ctx.beginPath();
         ctx.moveTo(-f.size * 0.8, 0);
-        ctx.lineTo(-f.size * 1.5, -f.size * 0.5 + tailWag);
-        ctx.lineTo(-f.size * 1.5, f.size * 0.5 + tailWag);
+        ctx.lineTo(-f.size * 1.4, -f.size * 0.45 + tailWag);
+        ctx.lineTo(-f.size * 1.4, f.size * 0.45 + tailWag);
         ctx.closePath();
         ctx.fill();
         ctx.restore();
       });
 
-      // 7. Drifting Bioluminescent Plankton Particles
+      // 7. Drifting Subtle Marine Snow / Plankton Particles
       const plankton = planktonRef.current;
       plankton.forEach((p) => {
         p.x += p.vx;
@@ -720,16 +714,14 @@ export const OceanBeach: React.FC = () => {
         if (p.y < -10) p.y = h + 10;
         if (p.y > h + 10) p.y = -10;
 
-        const pulse = Math.sin(time * 3 * p.pulseSpeed) * 0.25;
-        const currentAlpha = Math.max(0.1, Math.min(1, p.alpha + pulse));
+        const pulse = Math.sin(time * 2.5 * p.pulseSpeed) * 0.12;
+        const currentAlpha = Math.max(0.04, Math.min(0.4, p.alpha + pulse));
 
         ctx.save();
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
         ctx.fillStyle = p.color;
         ctx.globalAlpha = currentAlpha;
-        ctx.shadowColor = p.color;
-        ctx.shadowBlur = 6;
         ctx.fill();
         ctx.restore();
       });
@@ -765,8 +757,8 @@ export const OceanBeach: React.FC = () => {
           height: '370px',
           borderRadius: 'var(--radius-lg)',
           overflow: 'hidden',
-          border: '1.5px solid rgba(147, 197, 253, 0.35)',
-          boxShadow: '0 18px 50px rgba(0, 0, 0, 0.75), inset 0 0 60px rgba(14, 165, 233, 0.12)',
+          border: '1px solid rgba(147, 197, 253, 0.22)',
+          boxShadow: '0 14px 40px rgba(0, 0, 0, 0.65)',
           touchAction: 'none',
           userSelect: 'none',
           WebkitUserSelect: 'none',
@@ -815,16 +807,15 @@ export const OceanBeach: React.FC = () => {
               gap: '0.4rem',
               padding: '0.35rem 0.75rem',
               borderRadius: 'var(--radius-full)',
-              background: isAudioPlaying ? 'rgba(6, 182, 212, 0.35)' : 'rgba(8, 11, 24, 0.85)',
+              background: isAudioPlaying ? 'rgba(6, 182, 212, 0.28)' : 'rgba(8, 11, 24, 0.85)',
               border: isAudioPlaying
-                ? '1px solid rgba(103, 232, 249, 0.8)'
-                : '1px solid rgba(255, 255, 255, 0.2)',
+                ? '1px solid rgba(103, 232, 249, 0.6)'
+                : '1px solid rgba(255, 255, 255, 0.16)',
               color: isAudioPlaying ? '#A5F3FC' : '#E2E8F0',
               fontSize: '0.72rem',
               fontWeight: 600,
               cursor: 'pointer',
               backdropFilter: 'blur(8px)',
-              boxShadow: isAudioPlaying ? '0 0 16px rgba(6, 182, 212, 0.4)' : 'none',
               touchAction: 'manipulation',
             }}
           >
@@ -859,15 +850,15 @@ export const OceanBeach: React.FC = () => {
                   borderRadius: 'var(--radius-full)',
                   fontSize: '0.66rem',
                   fontFamily: 'monospace',
-                  background: oceanMode === m ? 'rgba(56, 189, 248, 0.3)' : 'transparent',
-                  border: oceanMode === m ? '1px solid #38BDF8' : 'none',
+                  background: oceanMode === m ? 'rgba(56, 189, 248, 0.22)' : 'transparent',
+                  border: oceanMode === m ? '1px solid rgba(56, 189, 248, 0.6)' : 'none',
                   color: oceanMode === m ? '#E0F2FE' : 'var(--color-muted)',
                   cursor: 'pointer',
                   touchAction: 'manipulation',
                   textTransform: 'uppercase',
                 }}
               >
-                {m === 'midnight' ? 'Abyss' : m === 'bioluminescent' ? 'Glow' : 'Sunrise'}
+                {m === 'midnight' ? 'Abyss' : m === 'bioluminescent' ? 'Twilight' : 'Sunrise'}
               </button>
             ))}
           </div>
@@ -902,45 +893,38 @@ export const OceanBeach: React.FC = () => {
         >
           <svg viewBox="0 0 400 160" style={{ width: '100%', height: 'auto', display: 'block' }}>
             <defs>
-              {/* Oceanic Slate & Cerulean Skin Gradient */}
+              {/* Realistic Deep Oceanic Slate Skin Gradient */}
               <linearGradient id="whaleSkinReal" x1="0%" y1="0%" x2="100%" y2="80%">
-                <stop offset="0%" stopColor="#1E293B" />
-                <stop offset="25%" stopColor="#0F355C" />
-                <stop offset="60%" stopColor="#0B4B75" />
-                <stop offset="100%" stopColor="#0284C7" />
+                <stop offset="0%" stopColor="#0F172A" />
+                <stop offset="25%" stopColor="#1E293B" />
+                <stop offset="65%" stopColor="#1E3A5F" />
+                <stop offset="100%" stopColor="#1D4ED8" />
               </linearGradient>
 
-              {/* Luminous Ventral Belly Gradient */}
+              {/* Subtle Natural Ventral Groove Gradient */}
               <linearGradient id="whaleBellyReal" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor="#0369A1" />
-                <stop offset="50%" stopColor="#38BDF8" />
-                <stop offset="100%" stopColor="#BAE6FD" />
-              </linearGradient>
-
-              {/* Bioluminescent Lateral Line Glow */}
-              <linearGradient id="lateralGlow" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#38BDF8" stopOpacity="0.8" />
-                <stop offset="50%" stopColor="#67E8F9" stopOpacity="1" />
-                <stop offset="100%" stopColor="#0284C7" stopOpacity="0.4" />
+                <stop offset="0%" stopColor="#1E293B" />
+                <stop offset="60%" stopColor="#334155" />
+                <stop offset="100%" stopColor="#475569" />
               </linearGradient>
             </defs>
 
-            {/* Realistic Caustic Light Ripple across Whale's Back */}
+            {/* Subtle Caustic Ripple across Whale's Back */}
             <path
               d="M45,58 Q120,42 210,50 Q265,58 290,70"
-              stroke="rgba(255, 255, 255, 0.45)"
-              strokeWidth="2.5"
+              stroke="rgba(255, 255, 255, 0.16)"
+              strokeWidth="1.2"
               fill="none"
-              strokeDasharray="8 12"
+              strokeDasharray="4 8"
             />
 
             {/* Organic Flexible Tail Fluke (Caudal Fin) */}
             <motion.g
               animate={{
-                rotate: [0, -7, 7, 0],
+                rotate: [0, -6, 6, 0],
                 transformOrigin: '270px 70px',
               }}
-              transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut' }}
+              transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
             >
               {/* Caudal Peduncle */}
               <path
@@ -951,8 +935,8 @@ export const OceanBeach: React.FC = () => {
               <path
                 d="M295,71 Q315,48 338,46 C330,62 320,69 310,71 C320,73 330,80 338,96 Q315,94 295,71 Z"
                 fill="url(#whaleSkinReal)"
-                stroke="#67E8F9"
-                strokeWidth="1.2"
+                stroke="rgba(147, 197, 253, 0.25)"
+                strokeWidth="0.8"
               />
             </motion.g>
 
@@ -960,68 +944,68 @@ export const OceanBeach: React.FC = () => {
             <path
               d="M35,62 C65,40 135,36 215,48 C250,54 270,64 280,71 C270,76 250,86 215,92 C135,102 65,96 35,78 C25,72 25,68 35,62 Z"
               fill="url(#whaleSkinReal)"
-              stroke="url(#lateralGlow)"
-              strokeWidth="1.6"
+              stroke="rgba(147, 197, 253, 0.3)"
+              strokeWidth="0.8"
             />
 
             {/* Ventral Throat Grooves */}
             <path
               d="M38,72 C70,92 135,97 185,90 C185,82 135,80 70,72 Z"
               fill="url(#whaleBellyReal)"
-              opacity="0.85"
+              opacity="0.65"
             />
             {/* Throat Pleats */}
-            <path d="M55,75 Q115,86 175,82" stroke="#E0F2FE" strokeWidth="0.8" fill="none" opacity="0.75" />
-            <path d="M60,78 Q115,89 170,85" stroke="#E0F2FE" strokeWidth="0.8" fill="none" opacity="0.75" />
-            <path d="M68,82 Q115,92 165,88" stroke="#E0F2FE" strokeWidth="0.8" fill="none" opacity="0.75" />
+            <path d="M55,75 Q115,86 175,82" stroke="rgba(226, 232, 240, 0.25)" strokeWidth="0.6" fill="none" />
+            <path d="M60,78 Q115,89 170,85" stroke="rgba(226, 232, 240, 0.25)" strokeWidth="0.6" fill="none" />
+            <path d="M68,82 Q115,92 165,88" stroke="rgba(226, 232, 240, 0.25)" strokeWidth="0.6" fill="none" />
 
             {/* Small Curved Dorsal Fin */}
             <path
               d="M232,50 Q240,41 248,44 Q245,51 238,53 Z"
               fill="#0F172A"
-              stroke="#67E8F9"
-              strokeWidth="0.8"
+              stroke="rgba(147, 197, 253, 0.2)"
+              strokeWidth="0.6"
             />
 
             {/* Pectoral Fin (Flipper with gentle flex) */}
             <motion.path
               d="M105,74 Q135,96 155,116 Q145,118 128,102 Q105,82 98,75 Z"
-              fill="#0284C7"
-              stroke="#67E8F9"
-              strokeWidth="1"
+              fill="#1E3A5F"
+              stroke="rgba(147, 197, 253, 0.25)"
+              strokeWidth="0.8"
               animate={{
-                rotate: [0, 5, -5, 0],
+                rotate: [0, 4, -4, 0],
                 transformOrigin: '105px 74px',
               }}
-              transition={{ duration: 4.2, repeat: Infinity, ease: 'easeInOut' }}
+              transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
             />
 
-            {/* Starlight Mottled Spots */}
-            <g opacity="0.6">
-              <ellipse cx="85" cy="54" rx="4" ry="2" fill="#BAE6FD" />
-              <ellipse cx="120" cy="50" rx="6" ry="2.5" fill="#E0F2FE" />
-              <ellipse cx="155" cy="56" rx="5" ry="2" fill="#BAE6FD" />
-              <ellipse cx="190" cy="60" rx="7" ry="2.5" fill="#E0F2FE" />
-              <ellipse cx="225" cy="64" rx="5" ry="2" fill="#BAE6FD" />
+            {/* Natural Mottled Markings */}
+            <g opacity="0.3">
+              <ellipse cx="85" cy="54" rx="4" ry="2" fill="#94A3B8" />
+              <ellipse cx="120" cy="50" rx="6" ry="2.5" fill="#CBD5E1" />
+              <ellipse cx="155" cy="56" rx="5" ry="2" fill="#94A3B8" />
+              <ellipse cx="190" cy="60" rx="7" ry="2.5" fill="#CBD5E1" />
+              <ellipse cx="225" cy="64" rx="5" ry="2" fill="#94A3B8" />
             </g>
 
             {/* Blowhole */}
-            <ellipse cx="68" cy="46" rx="3.5" ry="1.2" fill="#020617" stroke="#38BDF8" strokeWidth="0.8" />
+            <ellipse cx="68" cy="46" rx="3.5" ry="1.2" fill="#020617" stroke="rgba(147, 197, 253, 0.3)" strokeWidth="0.6" />
 
-            {/* Gentle Eye with Starlight Glisten */}
-            <circle cx="52" cy="63" r="2.4" fill="#020617" />
-            <circle cx="51.5" cy="62.5" r="0.9" fill="#FFFFFF" />
+            {/* Gentle Eye */}
+            <circle cx="52" cy="63" r="2.2" fill="#020617" />
+            <circle cx="51.5" cy="62.5" r="0.7" fill="#E2E8F0" />
 
-            {/* Sound Wave Resonance Ring around head when singing */}
+            {/* Subtle Acoustic Waves when Singing */}
             {isSinging && (
               <g transform="translate(52, 63)">
-                <circle cx="0" cy="0" r="15" fill="none" stroke="#67E8F9" strokeWidth="1.8">
-                  <animate attributeName="r" values="8;45;8" dur="1.8s" repeatCount="indefinite" />
-                  <animate attributeName="opacity" values="1;0;1" dur="1.8s" repeatCount="indefinite" />
+                <circle cx="0" cy="0" r="15" fill="none" stroke="rgba(147, 197, 253, 0.35)" strokeWidth="1">
+                  <animate attributeName="r" values="8;40;8" dur="2s" repeatCount="indefinite" />
+                  <animate attributeName="opacity" values="0.7;0;0.7" dur="2s" repeatCount="indefinite" />
                 </circle>
-                <circle cx="0" cy="0" r="28" fill="none" stroke="#38BDF8" strokeWidth="1.2">
-                  <animate attributeName="r" values="14;60;14" dur="2.2s" repeatCount="indefinite" />
-                  <animate attributeName="opacity" values="0.8;0;0.8" dur="2.2s" repeatCount="indefinite" />
+                <circle cx="0" cy="0" r="28" fill="none" stroke="rgba(56, 189, 248, 0.25)" strokeWidth="0.8">
+                  <animate attributeName="r" values="14;55;14" dur="2.4s" repeatCount="indefinite" />
+                  <animate attributeName="opacity" values="0.5;0;0.5" dur="2.4s" repeatCount="indefinite" />
                 </circle>
               </g>
             )}
@@ -1039,7 +1023,7 @@ export const OceanBeach: React.FC = () => {
               padding: '0.28rem 0.85rem',
               borderRadius: 'var(--radius-full)',
               background: 'rgba(2, 6, 23, 0.92)',
-              border: '1.5px solid rgba(56, 189, 248, 0.65)',
+              border: '1px solid rgba(56, 189, 248, 0.45)',
               color: '#BAE6FD',
               fontSize: '0.72rem',
               fontFamily: 'monospace',
@@ -1067,7 +1051,7 @@ export const OceanBeach: React.FC = () => {
             background: 'rgba(8, 11, 24, 0.85)',
             padding: '0.22rem 0.75rem',
             borderRadius: 'var(--radius-full)',
-            border: '1px solid rgba(147, 197, 253, 0.35)',
+            border: '1px solid rgba(147, 197, 253, 0.25)',
             maxWidth: 'calc(100% - 24px)',
             textAlign: 'center',
             boxShadow: '0 2px 10px rgba(0, 0, 0, 0.55)',
@@ -1075,7 +1059,7 @@ export const OceanBeach: React.FC = () => {
             pointerEvents: 'none',
           }}
         >
-          ✦ Tap whale to sing • Drag water for bioluminescent ripples
+          ✦ Tap whale to sing • Drag water for gentle ripples
         </div>
       </div>
 
