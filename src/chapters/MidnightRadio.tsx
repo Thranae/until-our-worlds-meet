@@ -11,8 +11,8 @@ export const MidnightRadio: React.FC<MidnightRadioProps> = ({ onProceed }) => {
   return (
     <ChapterLayout
       id="chapter-midnight-radio"
-      chapterNumber={6}
-      eyebrow="CHAPTER 06 • THE MIDNIGHT FREQUENCIES"
+      chapterNumber={7}
+      eyebrow="CHAPTER 07 • THE MIDNIGHT FREQUENCIES"
       title="Signals travelling through the dark"
       subtitle={`Late at night, when the rest of the world is quiet, it's our thoughts and conversations traveling across the miles.\n\nSlide the tuning dial to explore our shared late-night frequencies — from soothing rain to your special birthday channel.`}
       primaryAction={{

@@ -9,9 +9,12 @@ import { Invitation } from './chapters/Invitation';
 import { TwoWorlds } from './chapters/TwoWorlds';
 import { AstrolabeChapter } from './chapters/AstrolabeChapter';
 import { DropZoneChapter } from './chapters/DropZoneChapter';
+import { HeartbeatChapter } from './chapters/HeartbeatChapter';
 import { OurConnection } from './chapters/OurConnection';
 import { MidnightRadio } from './chapters/MidnightRadio';
 import { MistyWindowChapter } from './chapters/MistyWindowChapter';
+import { StarlightJarChapter } from './chapters/StarlightJarChapter';
+import { PolaroidChapter } from './chapters/PolaroidChapter';
 import { MusicBoxChapter } from './chapters/MusicBoxChapter';
 import { VoiceMessage } from './chapters/VoiceMessage';
 import { FutureTogether } from './chapters/FutureTogether';
@@ -28,9 +31,12 @@ export const App: React.FC = () => {
     'Two Worlds',
     'The Dual Horizon',
     'The Drop Zone',
+    'The Pulse Across Miles',
     'The Little Things',
     'Midnight Radio',
     'Misty Window',
+    'The Starlight Bottle',
+    'The Starlit Darkroom',
     'Music Box',
     'Voice Message',
     'Someday',
@@ -187,7 +193,7 @@ export const App: React.FC = () => {
                   // Safe fallback
                 }
               }
-              setCurrentChapter(10); // Jump straight to Chapter 11: Sea of Lanterns
+              setCurrentChapter(13); // Jump straight to Chapter 14: Sea of Lanterns
             }}
             title="Release a midnight sky lantern for Bot"
             aria-label="Release a sky lantern"
@@ -197,7 +203,7 @@ export const App: React.FC = () => {
               gap: '0.3rem',
               padding: '0.35rem 0.65rem',
               borderRadius: 'var(--radius-full)',
-              background: currentChapter === 10 ? 'rgba(245, 158, 11, 0.35)' : 'rgba(245, 158, 11, 0.15)',
+              background: currentChapter === 13 ? 'rgba(245, 158, 11, 0.35)' : 'rgba(245, 158, 11, 0.15)',
               border: '1px solid rgba(251, 191, 36, 0.45)',
               color: '#FDE68A',
               fontSize: '0.74rem',
@@ -234,38 +240,50 @@ export const App: React.FC = () => {
           )}
 
           {currentChapter === 4 && (
-            <OurConnection key="ch-4" onProceed={() => setCurrentChapter(5)} />
+            <HeartbeatChapter key="ch-4" onProceed={() => setCurrentChapter(5)} />
           )}
 
           {currentChapter === 5 && (
-            <MidnightRadio key="ch-5" onProceed={() => setCurrentChapter(6)} />
+            <OurConnection key="ch-5" onProceed={() => setCurrentChapter(6)} />
           )}
 
           {currentChapter === 6 && (
-            <MistyWindowChapter key="ch-6" onProceed={() => setCurrentChapter(7)} />
+            <MidnightRadio key="ch-6" onProceed={() => setCurrentChapter(7)} />
           )}
 
           {currentChapter === 7 && (
-            <MusicBoxChapter key="ch-7" onProceed={() => setCurrentChapter(8)} />
+            <MistyWindowChapter key="ch-7" onProceed={() => setCurrentChapter(8)} />
           )}
 
           {currentChapter === 8 && (
-            <VoiceMessage key="ch-8" onProceed={() => setCurrentChapter(9)} />
+            <StarlightJarChapter key="ch-8" onProceed={() => setCurrentChapter(9)} />
           )}
 
           {currentChapter === 9 && (
-            <FutureTogether key="ch-9" onProceed={() => setCurrentChapter(10)} />
+            <PolaroidChapter key="ch-9" onProceed={() => setCurrentChapter(10)} />
           )}
 
           {currentChapter === 10 && (
-            <LanternSky key="ch-10" onProceedToLetter={() => setCurrentChapter(11)} />
+            <MusicBoxChapter key="ch-10" onProceed={() => setCurrentChapter(11)} />
           )}
 
           {currentChapter === 11 && (
+            <VoiceMessage key="ch-11" onProceed={() => setCurrentChapter(12)} />
+          )}
+
+          {currentChapter === 12 && (
+            <FutureTogether key="ch-12" onProceed={() => setCurrentChapter(13)} />
+          )}
+
+          {currentChapter === 13 && (
+            <LanternSky key="ch-13" onProceedToLetter={() => setCurrentChapter(14)} />
+          )}
+
+          {currentChapter === 14 && (
             <BirthdayLetter
-              key="ch-11"
-              onReturnToVoice={() => setCurrentChapter(8)}
-              onOpenLantern={() => setCurrentChapter(10)}
+              key="ch-14"
+              onReturnToVoice={() => setCurrentChapter(11)}
+              onOpenLantern={() => setCurrentChapter(13)}
             />
           )}
         </AnimatePresence>

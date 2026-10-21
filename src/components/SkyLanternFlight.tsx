@@ -386,7 +386,7 @@ export const SkyLanternFlight: React.FC<SkyLanternFlightProps> = ({ onProceedToL
           }}
         >
           <Flame size={13} color="#F59E0B" fill="#F59E0B" />
-          <span>CHAPTER 11 • THE ASCENT THROUGH THE CLOUDS</span>
+          <span>CHAPTER 14 • THE ASCENT THROUGH THE CLOUDS</span>
         </div>
 
         <h2

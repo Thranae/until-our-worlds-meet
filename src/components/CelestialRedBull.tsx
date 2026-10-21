@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence, useMotionValue, useTransform, useSpring } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Zap, RotateCcw, Sparkles } from 'lucide-react';
 import { siteContent } from '../data/siteContent';
 
@@ -123,29 +123,6 @@ export const CelestialRedBull: React.FC = () => {
   const [bubbles, setBubbles] = useState<Bubble[]>([]);
   const bubbleCounterRef = useRef(0);
   const containerRef = useRef<HTMLDivElement | null>(null);
-
-  // 3D Interactive Spring Physics on Touch / Drag
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-
-  const springConfig = { damping: 20, stiffness: 200 };
-  const rotateX = useSpring(useTransform(mouseY, [-120, 120], [14, -14]), springConfig);
-  const rotateY = useSpring(useTransform(mouseX, [-120, 120], [-18, 18]), springConfig);
-  const specularX = useSpring(useTransform(mouseX, [-120, 120], [-25, 25]), springConfig);
-
-  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (!containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left - rect.width / 2;
-    const y = e.clientY - rect.top - rect.height / 2;
-    mouseX.set(x);
-    mouseY.set(y);
-  };
-
-  const handlePointerLeave = () => {
-    mouseX.set(0);
-    mouseY.set(0);
-  };
 
   // Synthesize realistic aluminum can tab-pop and crisp carbonation fizz
   const playCanPopAudio = () => {
@@ -321,8 +298,6 @@ export const CelestialRedBull: React.FC = () => {
   return (
     <div
       ref={containerRef}
-      onPointerMove={handlePointerMove}
-      onPointerLeave={handlePointerLeave}
       style={{
         width: '100%',
         maxWidth: '560px',
@@ -331,7 +306,6 @@ export const CelestialRedBull: React.FC = () => {
         flexDirection: 'column',
         alignItems: 'center',
         position: 'relative',
-        perspective: '1000px',
       }}
     >
       {/* Eyebrow / Tag */}
@@ -564,15 +538,14 @@ export const CelestialRedBull: React.FC = () => {
           onClick={handleOpenCan}
           whileHover={{ scale: 1.04 }}
           whileTap={{ scale: 0.96 }}
+          animate={{ y: [0, -6, 0] }}
+          transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
           style={{
             width: '126px',
             height: '290px',
             position: 'relative',
             zIndex: 4,
             cursor: isOpen ? 'default' : 'pointer',
-            rotateX,
-            rotateY,
-            transformStyle: 'preserve-3d',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -884,8 +857,10 @@ export const CelestialRedBull: React.FC = () => {
               }}
             />
 
-            {/* Dynamic Moving Specular Highlight (Glides with 3D tilt) */}
+            {/* Ambient Shimmering Specular Highlight */}
             <motion.div
+              animate={{ x: [0, 8, 0], opacity: [0.65, 0.95, 0.65] }}
+              transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
               style={{
                 position: 'absolute',
                 top: 0,
@@ -896,7 +871,6 @@ export const CelestialRedBull: React.FC = () => {
                 mixBlendMode: 'screen',
                 pointerEvents: 'none',
                 zIndex: 3,
-                x: specularX,
               }}
             />
 

@@ -47,7 +47,7 @@ export const ProgressIndicator: React.FC<ProgressIndicatorProps> = ({
         touchAction: 'manipulation',
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
         {Array.from({ length: totalChapters }).map((_, index) => {
           const isActive = index === currentChapter;
           const isPassed = index < currentChapter;
@@ -63,9 +63,9 @@ export const ProgressIndicator: React.FC<ProgressIndicatorProps> = ({
                 display: 'inline-flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                minWidth: '22px',
-                minHeight: '38px',
-                padding: '4px',
+                minWidth: '14px',
+                minHeight: '34px',
+                padding: '2px',
                 background: 'transparent',
                 border: 'none',
                 position: 'relative',
@@ -74,9 +74,9 @@ export const ProgressIndicator: React.FC<ProgressIndicatorProps> = ({
             >
               <span
                 style={{
-                  width: isActive ? '24px' : '8px',
-                  height: '8px',
-                  borderRadius: '4px',
+                  width: isActive ? '18px' : '5px',
+                  height: '5px',
+                  borderRadius: '3px',
                   backgroundColor: isActive
                     ? 'var(--color-lavender)'
                     : isPassed

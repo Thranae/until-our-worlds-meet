@@ -12,8 +12,8 @@ export const OurConnection: React.FC<OurConnectionProps> = ({ onProceed }) => {
   return (
     <ChapterLayout
       id="chapter-our-connection"
-      chapterNumber={5}
-      eyebrow="CHAPTER 05 • THE ARTIFACTS"
+      chapterNumber={6}
+      eyebrow="CHAPTER 06 • THE ARTIFACTS"
       title="Things that mean more than they look"
       subtitle={`Not every meaningful thing has to be a big moment. Sometimes, it's a conversation, a voice note, a silly little thing that makes you smile, or just hearing from the person you wanted to hear from.\n\nThese are the little things I want to keep close.`}
       primaryAction={{
