@@ -14,15 +14,18 @@ import { SafeZoneChapter } from './chapters/SafeZoneChapter';
 import { SniperScopeChapter } from './chapters/SniperScopeChapter';
 import { AirDropChapter } from './chapters/AirDropChapter';
 import { HeartbeatChapter } from './chapters/HeartbeatChapter';
+import { RedBullChapter } from './chapters/RedBullChapter';
 import { OurConnection } from './chapters/OurConnection';
 import { MidnightCallChapter } from './chapters/MidnightCallChapter';
 import { MidnightRadio } from './chapters/MidnightRadio';
 import { MistyWindowChapter } from './chapters/MistyWindowChapter';
-import { VinylChapter } from './chapters/VinylChapter';
+import { GalaxyProjectorChapter } from './chapters/GalaxyProjectorChapter';
 import { AuroraChapter } from './chapters/AuroraChapter';
 import { MidnightDriveChapter } from './chapters/MidnightDriveChapter';
+import { MarinaBeachChapter } from './chapters/MarinaBeachChapter';
+import { ShivaChapter } from './chapters/ShivaChapter';
 import { AirportTerminalChapter } from './chapters/AirportTerminalChapter';
-import { ChaiChapter } from './chapters/ChaiChapter';
+import { CoffeeChapter } from './chapters/CoffeeChapter';
 import { TravelJournalChapter } from './chapters/TravelJournalChapter';
 import { MusicBoxChapter } from './chapters/MusicBoxChapter';
 import { VoiceMessage } from './chapters/VoiceMessage';
@@ -46,16 +49,19 @@ export const App: React.FC = () => {
     'The 8x Optical Lock',
     'The Care Package',
     'The Pulse Across Miles',
-    'The Little Things',
+    'Her Starlight Red Bull',
+    'Living Memories',
     'The 03:47 AM Call',
     'Midnight Radio',
     'Misty Window',
-    'The 3 AM Turntable',
+    'Our Starlit Ceiling',
     'The Aurora Veil',
     'The Midnight Drive',
+    'The Ocean & Blue Whale',
+    'Sacred Kailash • Mahadeva',
     'Terminal Arrival',
-    'Two Cups of Chai',
-    'The Future Scrapbook',
+    'Two Cups of Coffee',
+    'Himalayan Shivan Temple',
     'Music Box',
     'Voice Message',
     'Nov 8 Time Capsule',
@@ -136,41 +142,65 @@ export const App: React.FC = () => {
       {/* Cinematic Starfield Canvas Background */}
       <Starfield />
 
-      {/* Discreet Minimalist Top Bar */}
+      {/* Discreet Minimalist Top Bar with Frosted Glass */}
       <header
         style={{
           position: 'fixed',
           top: 0,
           left: 0,
           right: 0,
-          height: 'max(3.2rem, calc(env(safe-area-inset-top) + 2rem))',
+          height: 'max(3.3rem, calc(env(safe-area-inset-top) + 2.2rem))',
           paddingTop: 'env(safe-area-inset-top)',
-          paddingLeft: 'max(1.5rem, env(safe-area-inset-left))',
-          paddingRight: 'max(1.5rem, env(safe-area-inset-right))',
+          paddingLeft: 'max(0.85rem, env(safe-area-inset-left))',
+          paddingRight: 'max(0.85rem, env(safe-area-inset-right))',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           zIndex: 40,
-          background: 'linear-gradient(180deg, rgba(8, 11, 24, 0.75) 0%, transparent 100%)',
+          backgroundColor: 'rgba(8, 11, 24, 0.88)',
+          backdropFilter: 'blur(16px)',
+          WebkitBackdropFilter: 'blur(16px)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
           pointerEvents: 'none',
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', pointerEvents: 'auto' }}>
-          <span style={{ color: 'var(--color-lavender)', fontSize: '0.85rem' }}>✦</span>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.4rem',
+            pointerEvents: 'auto',
+            minWidth: 0,
+            flexShrink: 1,
+            marginRight: '0.5rem',
+          }}
+        >
+          <span style={{ color: 'var(--color-lavender)', fontSize: '0.82rem', flexShrink: 0 }}>✦</span>
           <span
             style={{
               fontFamily: 'var(--font-serif)',
-              fontSize: '1.05rem',
-              fontWeight: 500,
+              fontSize: '0.95rem',
+              fontWeight: 600,
               color: 'var(--color-ivory)',
-              letterSpacing: '0.04em',
+              letterSpacing: '0.03em',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
             }}
           >
             {siteContent.siteMeta.title}
           </span>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', pointerEvents: 'auto' }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.4rem',
+            pointerEvents: 'auto',
+            flexShrink: 0,
+          }}
+        >
           <button
             type="button"
             onClick={() => {
@@ -213,7 +243,7 @@ export const App: React.FC = () => {
                   // Safe fallback
                 }
               }
-              setCurrentChapter(23); // Jump straight to Chapter 24: Sea of Lanterns
+              setCurrentChapter(26); // Jump straight to Chapter 27: Sea of Lanterns
             }}
             title="Release a midnight sky lantern for Bot"
             aria-label="Release a sky lantern"
@@ -223,7 +253,7 @@ export const App: React.FC = () => {
               gap: '0.3rem',
               padding: '0.35rem 0.65rem',
               borderRadius: 'var(--radius-full)',
-              background: currentChapter === 23 ? 'rgba(245, 158, 11, 0.35)' : 'rgba(245, 158, 11, 0.15)',
+              background: currentChapter === 26 ? 'rgba(245, 158, 11, 0.35)' : 'rgba(245, 158, 11, 0.15)',
               border: '1px solid rgba(251, 191, 36, 0.45)',
               color: '#FDE68A',
               fontSize: '0.74rem',
@@ -280,70 +310,82 @@ export const App: React.FC = () => {
           )}
 
           {currentChapter === 9 && (
-            <OurConnection key="ch-9" onProceed={() => setCurrentChapter(10)} />
+            <RedBullChapter key="ch-9" onProceed={() => setCurrentChapter(10)} />
           )}
 
           {currentChapter === 10 && (
-            <MidnightCallChapter key="ch-10" onProceed={() => setCurrentChapter(11)} />
+            <OurConnection key="ch-10" onProceed={() => setCurrentChapter(11)} />
           )}
 
           {currentChapter === 11 && (
-            <MidnightRadio key="ch-11" onProceed={() => setCurrentChapter(12)} />
+            <MidnightCallChapter key="ch-11" onProceed={() => setCurrentChapter(12)} />
           )}
 
           {currentChapter === 12 && (
-            <MistyWindowChapter key="ch-12" onProceed={() => setCurrentChapter(13)} />
+            <MidnightRadio key="ch-12" onProceed={() => setCurrentChapter(13)} />
           )}
 
           {currentChapter === 13 && (
-            <VinylChapter key="ch-13" onProceed={() => setCurrentChapter(14)} />
+            <MistyWindowChapter key="ch-13" onProceed={() => setCurrentChapter(14)} />
           )}
 
           {currentChapter === 14 && (
-            <AuroraChapter key="ch-14" onProceed={() => setCurrentChapter(15)} />
+            <GalaxyProjectorChapter key="ch-14" onProceed={() => setCurrentChapter(15)} />
           )}
 
           {currentChapter === 15 && (
-            <MidnightDriveChapter key="ch-15" onProceed={() => setCurrentChapter(16)} />
+            <AuroraChapter key="ch-15" onProceed={() => setCurrentChapter(16)} />
           )}
 
           {currentChapter === 16 && (
-            <AirportTerminalChapter key="ch-16" onProceed={() => setCurrentChapter(17)} />
+            <MidnightDriveChapter key="ch-16" onProceed={() => setCurrentChapter(17)} />
           )}
 
           {currentChapter === 17 && (
-            <ChaiChapter key="ch-17" onProceed={() => setCurrentChapter(18)} />
+            <MarinaBeachChapter key="ch-17" onProceed={() => setCurrentChapter(18)} />
           )}
 
           {currentChapter === 18 && (
-            <TravelJournalChapter key="ch-18" onProceed={() => setCurrentChapter(19)} />
+            <ShivaChapter key="ch-18" onProceed={() => setCurrentChapter(19)} />
           )}
 
           {currentChapter === 19 && (
-            <MusicBoxChapter key="ch-19" onProceed={() => setCurrentChapter(20)} />
+            <AirportTerminalChapter key="ch-19" onProceed={() => setCurrentChapter(20)} />
           )}
 
           {currentChapter === 20 && (
-            <VoiceMessage key="ch-20" onProceed={() => setCurrentChapter(21)} />
+            <CoffeeChapter key="ch-20" onProceed={() => setCurrentChapter(21)} />
           )}
 
           {currentChapter === 21 && (
-            <TimeCapsuleChapter key="ch-21" onProceed={() => setCurrentChapter(22)} />
+            <TravelJournalChapter key="ch-21" onProceed={() => setCurrentChapter(22)} />
           )}
 
           {currentChapter === 22 && (
-            <FutureTogether key="ch-22" onProceed={() => setCurrentChapter(23)} />
+            <MusicBoxChapter key="ch-22" onProceed={() => setCurrentChapter(23)} />
           )}
 
           {currentChapter === 23 && (
-            <LanternSky key="ch-23" onProceedToLetter={() => setCurrentChapter(24)} />
+            <VoiceMessage key="ch-23" onProceed={() => setCurrentChapter(24)} />
           )}
 
           {currentChapter === 24 && (
+            <TimeCapsuleChapter key="ch-24" onProceed={() => setCurrentChapter(25)} />
+          )}
+
+          {currentChapter === 25 && (
+            <FutureTogether key="ch-25" onProceed={() => setCurrentChapter(26)} />
+          )}
+
+          {currentChapter === 26 && (
+            <LanternSky key="ch-26" onProceedToLetter={() => setCurrentChapter(27)} />
+          )}
+
+          {currentChapter === 27 && (
             <BirthdayLetter
-              key="ch-24"
-              onReturnToVoice={() => setCurrentChapter(20)}
-              onOpenLantern={() => setCurrentChapter(23)}
+              key="ch-27"
+              onReturnToVoice={() => setCurrentChapter(23)}
+              onOpenLantern={() => setCurrentChapter(26)}
             />
           )}
         </AnimatePresence>

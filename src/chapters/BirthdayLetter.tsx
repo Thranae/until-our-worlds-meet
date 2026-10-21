@@ -89,7 +89,7 @@ export const BirthdayLetter: React.FC<BirthdayLetterProps> = ({ onReturnToVoice,
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'flex-start',
-        paddingTop: 'max(4rem, env(safe-area-inset-top))',
+        paddingTop: 'max(5.8rem, calc(env(safe-area-inset-top) + 4.2rem))',
         paddingBottom: 'max(7rem, calc(env(safe-area-inset-bottom) + 5rem))',
         paddingLeft: 'max(1.25rem, env(safe-area-inset-left))',
         paddingRight: 'max(1.25rem, env(safe-area-inset-right))',
@@ -121,7 +121,7 @@ export const BirthdayLetter: React.FC<BirthdayLetterProps> = ({ onReturnToVoice,
           }}
         >
           <Sparkles size={13} />
-          <span>CHAPTER 25 • FOR {siteContent.recipient.nickname.toUpperCase()}, WITH LOVE</span>
+          <span>CHAPTER 27 • FOR {siteContent.recipient.nickname.toUpperCase()}, WITH LOVE</span>
         </motion.div>
 
         {/* Heading */}
@@ -229,7 +229,7 @@ export const BirthdayLetter: React.FC<BirthdayLetterProps> = ({ onReturnToVoice,
                 marginBottom: '0.5rem',
               }}
             >
-              A Letter from Across the Distance
+              A Letter from Coimbatore to Chennai
             </h3>
 
             <p
@@ -240,7 +240,7 @@ export const BirthdayLetter: React.FC<BirthdayLetterProps> = ({ onReturnToVoice,
                 maxWidth: '360px',
               }}
             >
-              Written especially for your birthday on November 8. Tap to break the celestial seal and open.
+              Written especially for your birthday on November 8, celebrating your graduation and our story. Tap to break the celestial seal and open.
             </p>
 
             <button
@@ -340,9 +340,91 @@ export const BirthdayLetter: React.FC<BirthdayLetterProps> = ({ onReturnToVoice,
                 {letter.salutation}
               </p>
 
-              {letter.paragraphs.map((paragraph, idx) => (
+              {letter.paragraphs.slice(0, 2).map((paragraph, idx) => (
                 <p
                   key={idx}
+                  style={{
+                    marginBottom: '1.6rem',
+                    color: 'rgba(245, 240, 232, 0.92)',
+                  }}
+                >
+                  {paragraph}
+                </p>
+              ))}
+
+              {/* Tucked Polaroid Keepsake */}
+              <motion.div
+                initial={{ opacity: 0, rotate: -4, scale: 0.95 }}
+                animate={{ opacity: 1, rotate: -1.5, scale: 1 }}
+                transition={{ delay: 0.35, duration: 0.6 }}
+                whileHover={{ rotate: 0, scale: 1.03 }}
+                style={{
+                  maxWidth: '250px',
+                  margin: '2rem auto 2.5rem',
+                  padding: '0.85rem 0.85rem 1.6rem 0.85rem',
+                  background: '#FFFDF9',
+                  borderRadius: '4px',
+                  boxShadow: '0 16px 36px rgba(0, 0, 0, 0.5), 0 0 1px rgba(0, 0, 0, 0.4)',
+                  textAlign: 'center',
+                  position: 'relative',
+                  cursor: 'pointer',
+                }}
+              >
+                {/* Golden Paperclip Accent */}
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: '-14px',
+                    left: '26px',
+                    width: '14px',
+                    height: '32px',
+                    borderRadius: '8px',
+                    border: '2.5px solid #D97706',
+                    borderBottom: 'none',
+                    boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
+                    zIndex: 2,
+                  }}
+                />
+
+                <div
+                  style={{
+                    width: '100%',
+                    height: '240px',
+                    overflow: 'hidden',
+                    borderRadius: '2px',
+                    background: '#0B0D1A',
+                  }}
+                >
+                  <img
+                    src="/memories/1792580021104.jpg"
+                    alt="Her Starlight Portrait"
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      filter: 'contrast(1.04) brightness(0.96)',
+                    }}
+                  />
+                </div>
+
+                <p
+                  style={{
+                    fontFamily: 'var(--font-serif)',
+                    fontSize: '0.88rem',
+                    fontStyle: 'italic',
+                    color: '#292524',
+                    marginTop: '0.85rem',
+                    marginBottom: 0,
+                    letterSpacing: '0.02em',
+                  }}
+                >
+                  "The starlight of November 8 ✦"
+                </p>
+              </motion.div>
+
+              {letter.paragraphs.slice(2).map((paragraph, idx) => (
+                <p
+                  key={idx + 2}
                   style={{
                     marginBottom: '1.6rem',
                     color: 'rgba(245, 240, 232, 0.92)',

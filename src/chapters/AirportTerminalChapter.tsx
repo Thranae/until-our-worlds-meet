@@ -11,12 +11,12 @@ export const AirportTerminalChapter: React.FC<AirportTerminalChapterProps> = ({ 
   return (
     <ChapterLayout
       id="chapter-airport-terminal"
-      chapterNumber={17}
-      eyebrow="CHAPTER 17 • TERMINAL ✦ THE ARRIVAL"
+      chapterNumber={19}
+      eyebrow="CHAPTER 19 • TERMINAL ✦ THE ARRIVAL"
       title="The arrival gate countdown"
-      subtitle="The moment you walk through the sliding glass doors, put down your bags, and we never have to talk through a screen again."
+      subtitle="The moment you arrive from Chennai, walk through the sliding glass doors, put down your bags, and we never have to talk through a screen again."
       primaryAction={{
-        label: 'Two cups of chai next ✦',
+        label: 'Two cups of coffee next ✦',
         onClick: onProceed,
         icon: <ArrowRight size={17} />,
       }}

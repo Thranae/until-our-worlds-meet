@@ -80,7 +80,7 @@ export const MistyWindowChapter: React.FC<MistyWindowChapterProps> = ({ onProcee
             touchAction: 'manipulation',
           }}
         >
-          <span>Drop the vinyl needle next ✦</span>
+          <span>Turn on our starlit ceiling next ✦</span>
           <ArrowRight size={16} />
         </motion.button>
       </div>

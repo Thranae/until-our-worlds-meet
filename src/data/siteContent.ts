@@ -17,13 +17,20 @@
 export interface MemoryItem {
   id: string;
   type: 'photo' | 'message' | 'joke' | 'note';
+  mediaType?: 'image' | 'video';
   title: string;
   subtitle: string;
   /**
-   * Path relative to public folder (e.g. '/images/memories/photo1.webp')
-   * Leave as null/undefined to use the elegant abstract celestial placeholder.
+   * Path relative to public folder (e.g. '/memories/1792580021104.jpg')
    */
   imagePath?: string | null;
+  /**
+   * Path to video clip if applicable (e.g. '/memories/VID_20260703_013414_130.mp4')
+   */
+  videoPath?: string | null;
+  duration?: string;
+  badge?: string;
+  hasAudio?: boolean;
   /**
    * Short excerpt or genuine snippet
    */
@@ -137,41 +144,116 @@ export const siteContent: SiteConfiguration = {
   /* -------------------------------------------------------------------------- */
   planets: {
     herWorld: {
-      label: "Your world",
-      title: "Where you are",
-      imagePath: null, // Set to "/images/planet-you.webp" when ready
+      label: "Chennai ✦ Her World",
+      title: "The Marina Breeze • Chennai",
+      imagePath: "/memories/1792580021104.jpg",
       personalNote:
-        "Under your sky, living your days, making everyone around you smile. Even from miles away, your presence brightens up my everyday life.",
+        "Under the warm coastal sky of Chennai, celebrating the huge milestone of finishing your studies. You've worked so hard, stayed up through so many challenges, and now this beautiful new chapter of your life begins. Even with ~500 km between Chennai and Coimbatore, your smile reaches me across Tamil Nadu in an instant.",
       color: "#A78BFA", // Lavender
       glowColor: "rgba(167, 139, 250, 0.45)",
-      cityName: undefined, // Keep undefined to respect privacy
+      cityName: "Chennai, Tamil Nadu",
     },
     myWorld: {
-      label: "My world",
-      title: "Where I am",
+      label: "Coimbatore ✦ My World",
+      title: "The Western Foothills • Kovai",
       imagePath: null, // Set to "/images/planet-me.webp" when ready
       personalNote:
-        "Here in my city, looking up at the same stars and building this little corner of the universe for you. You're always on my mind.",
+        "Here in Coimbatore, under the cool mountain breeze from the Western Ghats, looking up at the very same Tamil Nadu sky that covers you in Chennai. Building this little universe for you, so proud of everything you've achieved, and counting down the days until our worlds meet in person.",
       color: "#93C5FD", // Soft Blue
       glowColor: "rgba(147, 197, 253, 0.45)",
-      cityName: undefined, // Keep undefined to respect privacy
+      cityName: "Coimbatore, Tamil Nadu",
     },
   },
 
   /* -------------------------------------------------------------------------- */
-  /* CHAPTER 3 — THE LITTLE THINGS (INTERACTIVE MEMORY OBJECTS)                  */
+  /* CHAPTER 3 & 10 — LIVING MEMORIES ARCHIVE                                    */
   /* -------------------------------------------------------------------------- */
   memories: [
     {
-      id: "mem-photo",
+      id: "mem-starlight-portrait",
       type: "photo",
-      title: "A Picture You Shared",
-      subtitle: "A glimpse into your day",
-      imagePath: null, // Set to "/images/memories/real-photo.webp" when ready
-      snippet: "That picture you sent that made me pause and smile for minutes.",
+      mediaType: "image",
+      title: "The Starlight Portrait",
+      subtitle: "Elegance that stopped time",
+      imagePath: "/memories/1792580021104.jpg",
+      badge: "STILL PORTRAIT",
+      snippet: "The picture where everything else in the room completely faded away.",
       revealedNote:
-        "Every little picture you share gives me a window into your world. It's one of my favorite things in my day.",
-      accent: "#A78BFA",
+        "The traditional jewelry, the gentle focus, the sparkle in your eyes. Out of all the stars scattered across this midnight sky, you are easily the brightest one.",
+      accent: "#C084FC",
+    },
+    {
+      id: "mem-sunlit-laugh",
+      type: "photo",
+      mediaType: "image",
+      title: "Sunlight & Your Laughter",
+      subtitle: "My favourite sight in the universe",
+      imagePath: "/memories/IMG_20260701_200747_397.jpg",
+      badge: "GOLDEN HOUR",
+      snippet: "That radiant, beaming laugh that feels like warm sunshine after months of cold.",
+      revealedNote:
+        "Look at that smile. It's completely unforced, pure, and genuinely contagious. Whenever I'm having a quiet or exhausting day, this one picture can reset everything in a heartbeat.",
+      accent: "#FDE68A",
+    },
+    {
+      id: "mem-night-glow-video",
+      type: "message",
+      mediaType: "video",
+      title: "The 01:34 AM Goodnight Glow",
+      subtitle: "When the whole world goes quiet",
+      videoPath: "/memories/VID_20260703_013414_130.mp4",
+      duration: "0:02",
+      badge: "01:34 AM VIDEO",
+      hasAudio: false,
+      snippet: "Those late-night moments when you smile at the camera and tuck your hair behind your ear.",
+      revealedNote:
+        "01:34 in the morning, the rest of the world fast asleep, and yet time completely halts. There's an unmatched softness in how you look when it's just the two of us talking across the distance.",
+      accent: "#93C5FD",
+    },
+    {
+      id: "mem-car-drive-video",
+      type: "note",
+      mediaType: "video",
+      title: "Highway Songs & Those Eyes",
+      subtitle: "Earphones in, cruising through the afternoon",
+      videoPath: "/memories/VID_20260901_105722_311.mp4",
+      duration: "0:04",
+      badge: "AUDIO STREAM",
+      hasAudio: true,
+      snippet: "The car breeze, your favourite songs, and that close zoom into your eyes.",
+      revealedNote:
+        "You listening to music with wired earphones, watching the trees glide by, and then that zoom into your eyes. You have the deepest, most expressive eyes I've ever seen.",
+      accent: "#38BDF8",
+    },
+    {
+      id: "mem-traditional-red-video",
+      type: "photo",
+      mediaType: "video",
+      title: "A Glimpse in Red",
+      subtitle: "Traditional grace & that shy smile",
+      videoPath: "/memories/VID_20260306_103009_216.mp4",
+      duration: "0:03",
+      badge: "TRADITIONAL CLIP",
+      hasAudio: false,
+      snippet: "The red patterned attire, the bindi, and that adorable little tilt of your head.",
+      revealedNote:
+        "You in traditional wear looks like something out of a classic poetry book. That shy little smile right before the camera cuts is my absolute favorite second in the world.",
+      accent: "#F43F5E",
+    },
+    {
+      id: "mem-candid-voice-video",
+      type: "joke",
+      mediaType: "video",
+      title: "Late Evening Candid",
+      subtitle: "Gentle expressions & quiet smiles",
+      videoPath: "/memories/VID_20260901_160804_563.mp4",
+      duration: "0:02",
+      badge: "EVENING CLIP",
+      hasAudio: false,
+      snippet: "Hand on your cheek, looking at the camera with that quiet, gentle smile — purely and genuinely you.",
+      revealedNote:
+        "The sweet little expressions, the way you look directly at the screen like you're right in front of me. Distance feels like nothing in quiet moments like this.",
+      accent: "#F472B6",
     },
     {
       id: "mem-bgmi",
@@ -179,54 +261,23 @@ export const siteContent: SiteConfiguration = {
       title: "Dropping into the Zone",
       subtitle: "Where our story started",
       imagePath: null,
+      badge: "BGMI SQUAD",
       snippet: "Two random players in a BGMI lobby who became each other's favorite person.",
       revealedNote:
         "Out of all the matches, all the maps, and all the chaos, meeting you in BGMI was the luckiest drop I ever made. You with your AMR, me watching your six — best duo partner in the world.",
       accent: "#EF4444",
     },
     {
-      id: "mem-msg",
-      type: "message",
-      title: "A Genuine Message",
-      subtitle: "Words that stayed with me",
-      imagePath: null,
-      snippet: "The message that arrived right when I needed to hear from you.",
-      revealedNote:
-        "Sometimes just seeing your notification pop up completely resets whatever kind of day I was having. Thank you for that.",
-      accent: "#93C5FD",
-    },
-    {
-      id: "mem-joke",
-      type: "joke",
-      title: "Our Inside Joke",
-      subtitle: "Something only we laugh at",
-      imagePath: null,
-      snippet: "The silly remark that made no sense to anyone else except us.",
-      revealedNote:
-        "I love the banter we have — how effortlessly we can tease each other and turn an ordinary conversation into laughter.",
-      accent: "#FDE68A",
-    },
-    {
       id: "mem-redbull",
       type: "joke",
       title: "Bot's Starlight Fuel",
       subtitle: "The holy grail: Red Bull",
-      imagePath: null,
-      snippet: "How a cold silver-and-blue can became our sweetest late-night staple.",
+      imagePath: "/images/redbull-bot-can.jpg",
+      badge: "GRADUATION FUEL",
+      snippet: "How a cold silver-and-blue can fueled the journey from late-night studies to graduation day.",
       revealedNote:
-        "Every time I see a can of Red Bull, I instantly think of you. Whether you're working hard, studying late, or talking with me, you are my favorite person in the whole universe to cheer for.",
+        "Every time I see a can of Red Bull, I instantly think of you. You powered through all those study nights, finished your degree, and now you have the whole world at your feet. Here's to your wings, Bot.",
       accent: "#38BDF8",
-    },
-    {
-      id: "mem-note",
-      type: "note",
-      title: "A Quiet Thought",
-      subtitle: "Written just for you",
-      imagePath: null,
-      snippet: "Knowing you are out there makes the whole universe feel warmer.",
-      revealedNote:
-        "You don't even have to try. Just being who you are is more than enough, and I appreciate you more than you know.",
-      accent: "#F472B6",
     },
   ],
 
@@ -275,9 +326,9 @@ export const siteContent: SiteConfiguration = {
   letter: {
     salutation: "Happy birthday, Bot. ❤️",
     paragraphs: [
-      "I wish I could be there to celebrate with you today, to see your smile in person, and to make this day feel a little more special for you.",
-      "Even though we're in different cities, I'm grateful that our paths crossed and that I get to be part of your world. I hope this next year brings you happiness, peace, beautiful surprises, and so many reasons to smile.",
-      "We haven't met in person yet, and there's still so much we haven't experienced together. But I hope that, when that day comes, we get to turn some of these little hopes into real memories.",
+      "Watching you finish your studies and step into this new chapter has made me so immensely proud of you. I know how much effort, quiet resilience, and heart you poured into reaching this milestone.",
+      "From the shores of Chennai to the hills of Coimbatore, ~500 kilometers of Tamil Nadu lie between our worlds, but under this same sky, you never feel far away. I hope this birthday brings you deep peace, laughter, and endless excitement for everything your future holds.",
+      "We haven't met in person yet, but knowing you are out there makes every day brighter. One day soon, whether it's a drive down the highway or a train pulling into the station, we'll turn all these late-night phone calls into real memories.",
       "Until our worlds meet, here's a little piece of mine for you.",
     ],
     closing: "Happy birthday, Bot. I'm really glad it's you. ❤️",

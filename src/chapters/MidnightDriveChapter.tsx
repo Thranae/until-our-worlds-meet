@@ -14,9 +14,9 @@ export const MidnightDriveChapter: React.FC<MidnightDriveChapterProps> = ({ onPr
       chapterNumber={16}
       eyebrow="CHAPTER 16 • THE MIDNIGHT DRIVE"
       title="The passenger seat under the stars"
-      subtitle="02:15 AM • Empty highway, cool night breeze through the windows, and nowhere we have to rush."
+      subtitle="02:15 AM • Cruising down the highway from Kovai to Chennai, cool night breeze through the windows, and nowhere we have to rush."
       primaryAction={{
-        label: 'Arrival Terminal ✦',
+        label: 'Drive to the Marina shoreline ✦',
         onClick: onProceed,
         icon: <ArrowRight size={17} />,
       }}

@@ -16,6 +16,7 @@ export const MistyWindow: React.FC = () => {
   const [hasSwiped, setHasSwiped] = useState(false);
   const [wipedPercentage, setWipedPercentage] = useState(0);
   const [isBreathing, setIsBreathing] = useState(false);
+  const [windowPhoto, setWindowPhoto] = useState<string>('/memories/IMG_20260701_200747_397.jpg');
   const dropletsRef = useRef<Droplet[]>([]);
   const isPointerDownRef = useRef(false);
   const hasSwipedRef = useRef(false);
@@ -462,18 +463,50 @@ export const MistyWindow: React.FC = () => {
             boxSizing: 'border-box',
           }}
         >
+          {/* REVEALED PHOTO LAYER (Gently appears as you wipe the condensation away) */}
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              zIndex: 1,
+              overflow: 'hidden',
+            }}
+          >
+            <img
+              src={windowPhoto}
+              alt="Her smile revealed through the misty window"
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                filter: 'brightness(0.88) contrast(1.08)',
+                transform: 'scale(1.03)',
+                transition: 'opacity 0.6s ease',
+              }}
+            />
+            {/* Atmospheric Nocturnal Glass Lighting Overlay */}
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background: 'linear-gradient(180deg, rgba(8, 11, 26, 0.35) 0%, rgba(14, 17, 38, 0.45) 55%, rgba(5, 7, 18, 0.92) 100%)',
+              }}
+            />
+          </div>
+
           {/* Glowing Full Moon with Luminous Halo */}
           <div
             style={{
               position: 'absolute',
-              top: '15%',
-              right: '18%',
-              width: '64px',
-              height: '64px',
+              top: '12%',
+              right: '12%',
+              width: '56px',
+              height: '56px',
               borderRadius: '50%',
               background: 'radial-gradient(circle at 35% 35%, #FFFDF2 0%, #FDE68A 60%, #F59E0B 100%)',
-              boxShadow: '0 0 45px rgba(253, 230, 138, 0.65), 0 0 90px rgba(245, 158, 11, 0.3)',
+              boxShadow: '0 0 35px rgba(253, 230, 138, 0.7), 0 0 70px rgba(245, 158, 11, 0.35)',
               pointerEvents: 'none',
+              zIndex: 2,
             }}
           />
 
@@ -486,6 +519,7 @@ export const MistyWindow: React.FC = () => {
               backgroundSize: '80px 120px',
               opacity: 0.5,
               pointerEvents: 'none',
+              zIndex: 2,
             }}
           />
 
@@ -837,6 +871,44 @@ export const MistyWindow: React.FC = () => {
         >
           <Droplets size={14} color="#FDE68A" />
           <span>Clear Mist</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => {
+            setWindowPhoto((prev) =>
+              prev.includes('IMG')
+                ? '/memories/1792580021104.jpg'
+                : '/memories/IMG_20260701_200747_397.jpg'
+            );
+            if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
+              try {
+                navigator.vibrate(15);
+              } catch {
+                // fallback
+              }
+            }
+          }}
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.4rem',
+            padding: '0.55rem 0.95rem',
+            borderRadius: 'var(--radius-full)',
+            background: 'rgba(167, 139, 250, 0.12)',
+            border: '1px solid rgba(167, 139, 250, 0.35)',
+            color: '#DDD6FE',
+            fontSize: '0.8rem',
+            fontFamily: 'var(--font-sans)',
+            cursor: 'pointer',
+            touchAction: 'manipulation',
+            transition: 'transform 0.15s ease-out, background 0.2s',
+          }}
+          onMouseDown={(e) => (e.currentTarget.style.transform = 'scale(0.96)')}
+          onMouseUp={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+        >
+          <Sparkles size={14} color="#C084FC" />
+          <span>{windowPhoto.includes('IMG') ? 'Show Starlight Portrait' : 'Show Sunlit Laugh'}</span>
         </button>
       </div>
     </div>

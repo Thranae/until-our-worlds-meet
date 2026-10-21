@@ -2,7 +2,6 @@ import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import { ChapterLayout } from '../components/ChapterLayout';
 import { MemoryGallery } from '../components/MemoryGallery';
-import { CelestialRedBull } from '../components/CelestialRedBull';
 
 interface OurConnectionProps {
   onProceed: () => void;
@@ -12,10 +11,10 @@ export const OurConnection: React.FC<OurConnectionProps> = ({ onProceed }) => {
   return (
     <ChapterLayout
       id="chapter-our-connection"
-      chapterNumber={10}
-      eyebrow="CHAPTER 10 • THE ARTIFACTS"
+      chapterNumber={11}
+      eyebrow="CHAPTER 11 • LIVING MEMORIES ARCHIVE"
       title="Things that mean more than they look"
-      subtitle={`Not every meaningful thing has to be a big moment. Sometimes, it's a conversation, a voice note, a silly little thing that makes you smile, or just hearing from the person you wanted to hear from.\n\nThese are the little things I want to keep close.`}
+      subtitle={`Not every meaningful thing has to be a big moment. Sometimes, it's a conversation, a video clip, a candid laugh, or just hearing from the person you wanted to hear from.\n\nThese are the little pieces of your world I want to keep close.`}
       primaryAction={{
         label: 'The 03:47 AM call next ✦',
         onClick: onProceed,
@@ -23,11 +22,7 @@ export const OurConnection: React.FC<OurConnectionProps> = ({ onProceed }) => {
       }}
       maxWidth="860px"
     >
-      <div style={{ display: 'flex', flexDirection: 'column', width: '100%', gap: '1.5rem' }}>
-        <MemoryGallery />
-        <CelestialRedBull />
-      </div>
+      <MemoryGallery />
     </ChapterLayout>
   );
 };
-

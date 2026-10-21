@@ -25,7 +25,7 @@ const STATIONS: Station[] = [
     name: "Lo-Fi Star Reverie",
     genre: "Warm Rhodes Chords",
     icon: <Music size={16} color="#A78BFA" />,
-    description: "Quiet mellow chords for late night studying, relaxing, or thinking of you.",
+    description: "Quiet mellow chords for unwinding after graduating, late night thoughts, and dreaming under Tamil Nadu skies.",
     color: "#A78BFA",
   },
   {

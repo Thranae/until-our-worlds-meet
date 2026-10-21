@@ -1,10 +1,62 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Compass, Lightbulb, Wind, Sparkles } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Compass, Lightbulb, Wind, Sparkles, Camera, X, Play, Pause, Volume2, VolumeX } from 'lucide-react';
 
 export const MidnightDrive: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [highBeams, setHighBeams] = useState(true);
   const [speed, setSpeed] = useState(82); // km/h
+  const [showPassengerCam, setShowPassengerCam] = useState(true);
+  const [isCamModalOpen, setIsCamModalOpen] = useState(false);
+  const [isCamMuted, setIsCamMuted] = useState(false);
+  const [isCamPlaying, setIsCamPlaying] = useState(true);
+  const [camProgress, setCamProgress] = useState(0);
+  const [modalDims, setModalDims] = useState<{ w: number; h: number }>({ w: 420, h: 236 });
+  const modalContainerRef = useRef<HTMLDivElement | null>(null);
+  const modalVideoRef = useRef<HTMLVideoElement | null>(null);
+
+  useEffect(() => {
+    if (!isCamModalOpen) return;
+    const updateDims = () => {
+      if (modalContainerRef.current) {
+        const rect = modalContainerRef.current.getBoundingClientRect();
+        if (rect.width > 0 && rect.height > 0) {
+          setModalDims({ w: rect.width, h: rect.height });
+        }
+      }
+    };
+    updateDims();
+    const id = requestAnimationFrame(updateDims);
+    window.addEventListener('resize', updateDims);
+    return () => {
+      cancelAnimationFrame(id);
+      window.removeEventListener('resize', updateDims);
+    };
+  }, [isCamModalOpen]);
+
+  const togglePlayModalVideo = () => {
+    if (!modalVideoRef.current) return;
+    if (modalVideoRef.current.paused) {
+      modalVideoRef.current.play();
+      setIsCamPlaying(true);
+    } else {
+      modalVideoRef.current.pause();
+      setIsCamPlaying(false);
+    }
+  };
+
+  const toggleMuteModalVideo = () => {
+    setIsCamMuted((prev) => !prev);
+  };
+
+  const handleTimeUpdate = () => {
+    if (!modalVideoRef.current) return;
+    const cur = modalVideoRef.current.currentTime;
+    const dur = modalVideoRef.current.duration;
+    if (dur > 0) {
+      setCamProgress((cur / dur) * 100);
+    }
+  };
 
   // Audio synthesis: Warm coastal breeze & asphalt hum
   const playBeamsClick = () => {
@@ -248,13 +300,106 @@ export const MidnightDrive: React.FC = () => {
             ✦ BOT & YOU ✦
           </span>
         </div>
+
+        {/* Floating Passenger Seat Live Cam HUD - Horizontal Widescreen */}
+        {showPassengerCam && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            whileHover={{ scale: 1.05 }}
+            onClick={() => setIsCamModalOpen(true)}
+            style={{
+              position: 'absolute',
+              bottom: '16px',
+              right: '14px',
+              width: '142px',
+              height: '84px',
+              borderRadius: '12px',
+              overflow: 'hidden',
+              border: '1.5px solid rgba(56, 189, 248, 0.75)',
+              boxShadow: '0 10px 25px rgba(0, 0, 0, 0.8), 0 0 20px rgba(56, 189, 248, 0.35)',
+              background: '#04060E',
+              cursor: 'pointer',
+              zIndex: 15,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+            title="Passenger Seat • Bot (Tap to expand)"
+          >
+            {/* Centered 90-degree rotated video to display upright horizontally */}
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                overflow: 'hidden',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <video
+                src="/memories/VID_20260901_105722_311.mp4"
+                autoPlay
+                loop
+                muted
+                playsInline
+                style={{
+                  width: '84px',
+                  height: '149px',
+                  transform: 'rotate(90deg)',
+                  transformOrigin: 'center center',
+                  objectFit: 'cover',
+                  flexShrink: 0,
+                  pointerEvents: 'none',
+                }}
+              />
+            </div>
+            <div
+              style={{
+                position: 'absolute',
+                top: '5px',
+                left: '6px',
+                padding: '0.15rem 0.35rem',
+                borderRadius: '3px',
+                background: 'rgba(0, 0, 0, 0.75)',
+                fontSize: '0.52rem',
+                fontFamily: 'monospace',
+                color: '#38BDF8',
+                border: '1px solid rgba(56, 189, 248, 0.4)',
+                letterSpacing: '0.05em',
+                zIndex: 2,
+              }}
+            >
+              SEAT 02 ✦ CAM
+            </div>
+            <div
+              style={{
+                position: 'absolute',
+                bottom: '4px',
+                right: '6px',
+                fontSize: '0.5rem',
+                color: '#FFFFFF',
+                background: 'rgba(0, 0, 0, 0.7)',
+                padding: '0.1rem 0.3rem',
+                borderRadius: '3px',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                zIndex: 2,
+              }}
+            >
+              EXPAND ↗
+            </div>
+          </motion.div>
+        )}
       </div>
 
       {/* Car Dashboard Quick Toggles */}
       <div
         style={{
           display: 'flex',
-          gap: '0.6rem',
+          flexWrap: 'wrap',
+          gap: '0.5rem',
           width: '100%',
           justifyContent: 'center',
         }}
@@ -266,7 +411,7 @@ export const MidnightDrive: React.FC = () => {
             setHighBeams(!highBeams);
           }}
           style={{
-            flex: 1,
+            flex: '1 1 120px',
             padding: '0.65rem 0.6rem',
             borderRadius: 'var(--radius-full)',
             background: highBeams ? 'rgba(253, 230, 138, 0.22)' : 'rgba(14, 18, 36, 0.6)',
@@ -292,7 +437,7 @@ export const MidnightDrive: React.FC = () => {
             setSpeed(speed === 82 ? 105 : 82);
           }}
           style={{
-            flex: 1,
+            flex: '1 1 140px',
             padding: '0.65rem 0.6rem',
             borderRadius: 'var(--radius-full)',
             background: speed > 82 ? 'rgba(244, 114, 182, 0.22)' : 'rgba(14, 18, 36, 0.6)',
@@ -310,7 +455,304 @@ export const MidnightDrive: React.FC = () => {
           <Wind size={14} />
           <span>{speed > 82 ? 'Windows Down • 105 km/h' : 'Cruising • 82 km/h'}</span>
         </button>
+
+        <button
+          type="button"
+          onClick={() => setShowPassengerCam(!showPassengerCam)}
+          style={{
+            flex: '1 1 140px',
+            padding: '0.65rem 0.6rem',
+            borderRadius: 'var(--radius-full)',
+            background: showPassengerCam ? 'rgba(56, 189, 248, 0.22)' : 'rgba(14, 18, 36, 0.6)',
+            border: `1.5px solid ${showPassengerCam ? '#38BDF8' : 'rgba(216, 204, 255, 0.12)'}`,
+            color: showPassengerCam ? '#38BDF8' : 'var(--color-muted)',
+            fontSize: '0.78rem',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '0.35rem',
+            touchAction: 'manipulation',
+          }}
+        >
+          <Camera size={14} />
+          <span>{showPassengerCam ? 'Passenger Cam ON' : 'Passenger Cam OFF'}</span>
+        </button>
       </div>
+
+      {/* Expanded Passenger Cam Modal with Audio - Horizontal Widescreen */}
+      <AnimatePresence>
+        {isCamModalOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setIsCamModalOpen(false)}
+            style={{
+              position: 'fixed',
+              inset: 0,
+              zIndex: 100,
+              background: 'rgba(4, 6, 14, 0.94)',
+              backdropFilter: 'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '1.25rem',
+            }}
+          >
+            <motion.div
+              initial={{ scale: 0.92, y: 15 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.92, y: 15 }}
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                width: '100%',
+                maxWidth: '480px',
+                borderRadius: '24px',
+                background: 'linear-gradient(180deg, #0F142D 0%, #080A18 100%)',
+                border: '1.5px solid rgba(56, 189, 248, 0.5)',
+                boxShadow: '0 25px 60px rgba(0,0,0,0.85), 0 0 35px rgba(56, 189, 248, 0.25)',
+                overflow: 'hidden',
+                display: 'flex',
+                flexDirection: 'column',
+              }}
+            >
+              {/* Header */}
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  padding: '0.9rem 1.25rem',
+                  borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                }}
+              >
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                    <span
+                      style={{
+                        display: 'inline-block',
+                        width: '7px',
+                        height: '7px',
+                        borderRadius: '50%',
+                        background: '#34D399',
+                        boxShadow: '0 0 8px #34D399',
+                      }}
+                    />
+                    <span style={{ fontSize: '0.7rem', color: '#38BDF8', fontFamily: 'monospace', letterSpacing: '0.06em' }}>
+                      PASSENGER SEAT 02 • LIVE CAM ✦
+                    </span>
+                  </div>
+                  <h4 style={{ fontFamily: 'var(--font-serif)', color: '#FFFFFF', margin: '0.15rem 0 0 0', fontSize: '1.15rem' }}>
+                    Roadtrip Songs & Those Eyes
+                  </h4>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setIsCamModalOpen(false)}
+                  style={{
+                    width: '32px',
+                    height: '32px',
+                    borderRadius: '50%',
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    border: 'none',
+                    color: '#FFFFFF',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                  }}
+                  aria-label="Close Passenger Cam"
+                >
+                  <X size={16} />
+                </button>
+              </div>
+
+              {/* Horizontal 16:9 Video Player View */}
+              <div
+                ref={modalContainerRef}
+                onClick={togglePlayModalVideo}
+                style={{
+                  position: 'relative',
+                  width: '100%',
+                  aspectRatio: '16 / 9',
+                  background: '#020308',
+                  overflow: 'hidden',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                {/* Rotated video perfectly sized to fill horizontal 16:9 upright */}
+                <video
+                  ref={modalVideoRef}
+                  src="/memories/VID_20260901_105722_311.mp4"
+                  autoPlay
+                  loop
+                  playsInline
+                  muted={isCamMuted}
+                  onTimeUpdate={handleTimeUpdate}
+                  style={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    width: `${modalDims.h}px`,
+                    height: `${modalDims.w}px`,
+                    transform: 'translate(-50%, -50%) rotate(90deg)',
+                    transformOrigin: 'center center',
+                    objectFit: 'cover',
+                  }}
+                />
+
+                {/* Subtle vignette border */}
+                <div
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    background: 'radial-gradient(ellipse at center, transparent 65%, rgba(0,0,0,0.5) 100%)',
+                    pointerEvents: 'none',
+                  }}
+                />
+
+                {/* Large center Play indicator when paused */}
+                {!isCamPlaying && (
+                  <motion.div
+                    initial={{ scale: 0.8, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    style={{
+                      position: 'absolute',
+                      width: '56px',
+                      height: '56px',
+                      borderRadius: '50%',
+                      background: 'rgba(0, 0, 0, 0.75)',
+                      border: '1.5px solid rgba(56, 189, 248, 0.8)',
+                      backdropFilter: 'blur(8px)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: '#38BDF8',
+                      boxShadow: '0 0 25px rgba(56, 189, 248, 0.4)',
+                      zIndex: 3,
+                    }}
+                  >
+                    <Play size={24} style={{ marginLeft: '3px' }} />
+                  </motion.div>
+                )}
+
+                {/* Custom Overlay Controls: Play/Pause, Sound Toggle, Live Badge */}
+                <div
+                  onClick={(e) => e.stopPropagation()}
+                  style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    padding: '0.6rem 0.9rem',
+                    background: 'linear-gradient(0deg, rgba(0,0,0,0.85) 0%, transparent 100%)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '0.4rem',
+                    zIndex: 4,
+                  }}
+                >
+                  {/* Progress Line */}
+                  <div
+                    style={{
+                      width: '100%',
+                      height: '3px',
+                      background: 'rgba(255, 255, 255, 0.2)',
+                      borderRadius: '2px',
+                      overflow: 'hidden',
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: `${camProgress}%`,
+                        height: '100%',
+                        background: 'linear-gradient(90deg, #38BDF8, #818CF8)',
+                        borderRadius: '2px',
+                        transition: 'width 0.1s linear',
+                      }}
+                    />
+                  </div>
+
+                  {/* Buttons Row */}
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                      <button
+                        type="button"
+                        onClick={togglePlayModalVideo}
+                        style={{
+                          background: 'rgba(255, 255, 255, 0.15)',
+                          border: 'none',
+                          color: '#FFFFFF',
+                          padding: '0.35rem 0.55rem',
+                          borderRadius: '6px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.35rem',
+                          cursor: 'pointer',
+                          fontSize: '0.72rem',
+                        }}
+                      >
+                        {isCamPlaying ? <Pause size={13} /> : <Play size={13} />}
+                        <span>{isCamPlaying ? 'Pause' : 'Play'}</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={toggleMuteModalVideo}
+                        style={{
+                          background: isCamMuted ? 'rgba(239, 68, 68, 0.25)' : 'rgba(56, 189, 248, 0.25)',
+                          border: `1px solid ${isCamMuted ? 'rgba(239, 68, 68, 0.5)' : 'rgba(56, 189, 248, 0.5)'}`,
+                          color: isCamMuted ? '#FCA5A5' : '#7DD3FC',
+                          padding: '0.35rem 0.55rem',
+                          borderRadius: '6px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.35rem',
+                          cursor: 'pointer',
+                          fontSize: '0.72rem',
+                        }}
+                      >
+                        {isCamMuted ? <VolumeX size={13} /> : <Volume2 size={13} />}
+                        <span>{isCamMuted ? 'Muted' : 'Audio ON'}</span>
+                      </button>
+                    </div>
+
+                    <span
+                      style={{
+                        fontSize: '0.65rem',
+                        color: 'rgba(255, 255, 255, 0.65)',
+                        fontFamily: 'monospace',
+                        letterSpacing: '0.05em',
+                      }}
+                    >
+                      1080P WIDESCREEN ✦
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Caption */}
+              <div style={{ padding: '0.9rem 1.25rem 1.1rem 1.25rem' }}>
+                <p style={{ color: 'var(--color-ivory)', fontSize: '0.86rem', lineHeight: 1.6, margin: 0, fontStyle: 'italic' }}>
+                  "Earphones in, the highway wind rushing past, and the road ahead. Sitting right beside you is the only place I ever want to be."
+                </p>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Atmospheric Late-Night Road Story */}
       <div

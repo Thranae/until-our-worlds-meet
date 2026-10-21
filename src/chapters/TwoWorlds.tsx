@@ -13,9 +13,9 @@ export const TwoWorlds: React.FC<TwoWorldsProps> = ({ onProceed }) => {
     <ChapterLayout
       id="chapter-two-worlds"
       chapterNumber={2}
-      eyebrow="CHAPTER 02 • THE DISTANCE"
-      title="Different places, same little universe"
-      subtitle={`We're in different cities, under different skies. And somehow, you've become such a special part of my everyday life.\n\nIt's strange and beautiful how someone can feel close even when they're far away.`}
+      eyebrow="CHAPTER 02 • CHENNAI TO COIMBATORE"
+      title="From Kovai's Hills to the Marina Coast"
+      subtitle={`Coimbatore and Chennai • ~500 km across Tamil Nadu, under the exact same starlit sky.\n\nYou've finished your studies and stepped into this exciting new chapter of your life, and across every mile of this state, I am endlessly proud of you.`}
       primaryAction={{
         label: 'Where we first dropped ✦',
         onClick: onProceed,

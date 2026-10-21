@@ -60,7 +60,7 @@ export const ChapterLayout: React.FC<ChapterLayoutProps> = ({
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'flex-start',
-        paddingTop: 'max(4.8rem, calc(env(safe-area-inset-top) + 2.5rem))',
+        paddingTop: 'max(5.8rem, calc(env(safe-area-inset-top) + 4.2rem))',
         paddingBottom: 'max(7.5rem, calc(env(safe-area-inset-bottom) + 6.5rem))',
         paddingLeft: 'max(1.25rem, env(safe-area-inset-left))',
         paddingRight: 'max(1.25rem, env(safe-area-inset-right))',
