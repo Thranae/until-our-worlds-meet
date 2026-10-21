@@ -897,14 +897,13 @@ export const OceanBeach: React.FC = () => {
             background: 'rgba(8, 11, 24, 0.8)',
             padding: '0.22rem 0.75rem',
             borderRadius: 'var(--radius-full)',
-            border: '1px solid rgba(147, 197, 253, 0.35)',
-            pointerEvents: 'none',
-            whiteSpace: 'nowrap',
+            maxWidth: 'calc(100% - 24px)',
+            textAlign: 'center',
             boxShadow: '0 2px 10px rgba(0, 0, 0, 0.55)',
             zIndex: 15,
           }}
         >
-          ✦ Tap the whale to sing • Drag in water for bioluminescence
+          ✦ Tap whale to sing • Drag for glow
         </div>
       </div>
 

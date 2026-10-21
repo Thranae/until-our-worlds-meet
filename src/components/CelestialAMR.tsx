@@ -231,10 +231,10 @@ export const CelestialAMR: React.FC = () => {
     setHasFired(true);
     playAMRFiringSound();
 
-    // Check ballistic hit if scoped
+    // Check ballistic hit if scoped (generous lock radius for mobile)
     const isLocked =
-      Math.abs(scopeOffset.x - currentTarget.targetX) <= 18 &&
-      Math.abs(scopeOffset.y - currentTarget.targetY) <= 18;
+      Math.abs(scopeOffset.x - currentTarget.targetX) <= 32 &&
+      Math.abs(scopeOffset.y - currentTarget.targetY) <= 32;
 
     if (isScoped) {
       setTimeout(() => {
@@ -851,16 +851,22 @@ export const CelestialAMR: React.FC = () => {
                       onClick={() => {
                         setCurrentTargetIndex(idx);
                         setLastShotResult(null);
+                        setScopeOffset({ x: tgt.targetX, y: tgt.targetY });
+                        if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
+                          try { navigator.vibrate(20); } catch {}
+                        }
                       }}
                       style={{
-                        padding: '0.25rem 0.55rem',
+                        padding: '0.3rem 0.65rem',
                         borderRadius: 'var(--radius-full)',
-                        fontSize: '0.68rem',
+                        fontSize: '0.72rem',
+                        fontWeight: 600,
                         fontFamily: 'var(--font-sans)',
-                        background: currentTargetIndex === idx ? 'rgba(239, 68, 68, 0.35)' : 'rgba(255, 255, 255, 0.05)',
-                        border: currentTargetIndex === idx ? '1px solid #EF4444' : '1px solid rgba(255, 255, 255, 0.1)',
+                        background: currentTargetIndex === idx ? 'rgba(239, 68, 68, 0.4)' : 'rgba(255, 255, 255, 0.06)',
+                        border: currentTargetIndex === idx ? '1.5px solid #EF4444' : '1px solid rgba(255, 255, 255, 0.12)',
                         color: currentTargetIndex === idx ? '#FEE2E2' : 'var(--color-muted)',
                         cursor: 'pointer',
+                        touchAction: 'manipulation',
                       }}
                     >
                       {tgt.icon} {tgt.distance}
@@ -870,6 +876,12 @@ export const CelestialAMR: React.FC = () => {
 
                 {/* The Circular 8X Scope Housing */}
                 <div
+                  onClick={() => {
+                    setScopeOffset({ x: currentTarget.targetX, y: currentTarget.targetY });
+                    if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
+                      try { navigator.vibrate(20); } catch {}
+                    }
+                  }}
                   onTouchStart={handleScopeTouchStart}
                   onTouchMove={handleScopeTouchMove}
                   onTouchEnd={handleScopeTouchEnd}
