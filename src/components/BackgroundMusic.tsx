@@ -258,12 +258,12 @@ export const BackgroundMusic: React.FC<BackgroundMusicProps> = ({
         {isMuted ? (
           <>
             <VolumeX size={13} color="rgba(255,255,255,0.6)" />
-            <span>BGM Off</span>
+            <span className="bgm-label">BGM Off</span>
           </>
         ) : (
           <>
             <Music size={12} color="#FDE68A" />
-            <span>{isDucked ? 'Zaalima •' : 'Zaalima 5%'}</span>
+            <span className="bgm-label">{isDucked ? 'Zaalima •' : 'Zaalima 5%'}</span>
 
             {/* Micro Equalizer Bar Animation when playing */}
             {isPlaying && !isDucked && (

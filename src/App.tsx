@@ -100,38 +100,8 @@ export const App: React.FC = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [chapterNames.length]);
 
-  // Touch swipe navigation for mobile
-  const touchStartX = React.useRef<number | null>(null);
-  const touchStartY = React.useRef<number | null>(null);
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
-    touchStartY.current = e.touches[0].clientY;
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    if (touchStartX.current === null || touchStartY.current === null) return;
-    const deltaX = e.changedTouches[0].clientX - touchStartX.current;
-    const deltaY = e.changedTouches[0].clientY - touchStartY.current;
-
-    // Detect predominantly horizontal swipe (distance >= 55px)
-    if (Math.abs(deltaX) > 55 && Math.abs(deltaX) > Math.abs(deltaY) * 1.5) {
-      if (deltaX < 0) {
-        // Swiped left -> advance to next chapter
-        setCurrentChapter((prev) => Math.min(prev + 1, chapterNames.length - 1));
-      } else {
-        // Swiped right -> return to previous chapter
-        setCurrentChapter((prev) => Math.max(prev - 1, 0));
-      }
-    }
-    touchStartX.current = null;
-    touchStartY.current = null;
-  };
-
   return (
     <div
-      onTouchStart={handleTouchStart}
-      onTouchEnd={handleTouchEnd}
       style={{
         position: 'relative',
         width: '100%',
@@ -263,7 +233,7 @@ export const App: React.FC = () => {
             }}
           >
             <Flame size={12} color="#F59E0B" fill="#F59E0B" />
-            <span>Lanterns</span>
+            <span className="lanterns-text">Lanterns</span>
           </button>
 
           <BackgroundMusic src="/sounds/zaalima.mp3" targetVolume={0.05} />

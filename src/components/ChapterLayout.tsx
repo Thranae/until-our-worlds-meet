@@ -60,10 +60,10 @@ export const ChapterLayout: React.FC<ChapterLayoutProps> = ({
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'flex-start',
-        paddingTop: 'max(5.8rem, calc(env(safe-area-inset-top) + 4.2rem))',
-        paddingBottom: 'max(7.5rem, calc(env(safe-area-inset-bottom) + 6.5rem))',
-        paddingLeft: 'max(1.25rem, env(safe-area-inset-left))',
-        paddingRight: 'max(1.25rem, env(safe-area-inset-right))',
+        paddingTop: 'max(4.2rem, calc(env(safe-area-inset-top) + 3.2rem))',
+        paddingBottom: 'max(6.2rem, calc(env(safe-area-inset-bottom) + 5.2rem))',
+        paddingLeft: 'max(1.15rem, env(safe-area-inset-left))',
+        paddingRight: 'max(1.15rem, env(safe-area-inset-right))',
         position: 'relative',
         zIndex: 1,
       }}
@@ -85,6 +85,7 @@ export const ChapterLayout: React.FC<ChapterLayoutProps> = ({
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.15, duration: 0.5 }}
             className="eyebrow"
+            style={{ marginBottom: '0.45rem' }}
           >
             {eyebrow}
           </motion.div>
@@ -97,7 +98,7 @@ export const ChapterLayout: React.FC<ChapterLayoutProps> = ({
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.25, duration: 0.55 }}
             className="heading-chapter"
-            style={{ marginBottom: subtitle ? '1.2rem' : '1.8rem' }}
+            style={{ marginBottom: subtitle ? '0.65rem' : '1.2rem' }}
           >
             {title}
           </motion.h2>
@@ -112,7 +113,7 @@ export const ChapterLayout: React.FC<ChapterLayoutProps> = ({
             className="body-lead"
             style={{
               maxWidth: '640px',
-              marginBottom: '2.4rem',
+              marginBottom: '1.4rem',
               whiteSpace: 'pre-line',
             }}
           >
@@ -141,10 +142,10 @@ export const ChapterLayout: React.FC<ChapterLayoutProps> = ({
               flexDirection: 'column',
               width: '100%',
               maxWidth: '380px',
-              gap: '0.85rem',
+              gap: '0.75rem',
               alignItems: 'center',
               justifyContent: 'center',
-              marginTop: '2.5rem',
+              marginTop: '1.6rem',
               marginRight: 'auto',
               marginLeft: 'auto',
             }}

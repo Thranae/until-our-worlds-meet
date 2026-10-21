@@ -284,6 +284,21 @@ a:focus-visible {
   }
 }
 
+@media (max-width: 480px) {
+  .lanterns-text {
+    display: none;
+  }
+}
+
+@media (max-width: 420px) {
+  .bgm-label {
+    display: none;
+  }
+  .chapter-pill-name {
+    display: none !important;
+  }
+}
+
 @media (max-width: 380px) {
   .btn-primary,
   .btn-secondary {
@@ -291,4 +306,5 @@ a:focus-visible {
     padding: 0.8rem 1rem;
   }
 }
+
 
