@@ -16,7 +16,7 @@ export const TravelJournalChapter: React.FC<TravelJournalChapterProps> = ({ onPr
       title="Ujjain Shivan Temple in the Snow-Covered Himalayas"
       subtitle="Perched high atop the snow-covered peaks among the clouds • Standing side-by-side in the gentle snowfall, hearing holy temple bells ring across the frozen mountain air, and seeking Mahadeva’s blessings together."
       primaryAction={{
-        label: 'Wind the celestial music box ✦',
+        label: 'Visit the Dutch tulip gardens ✦',
         onClick: onProceed,
         icon: <ArrowRight size={17} />,
       }}

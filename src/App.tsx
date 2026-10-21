@@ -27,6 +27,7 @@ import { ShivaChapter } from './chapters/ShivaChapter';
 import { AirportTerminalChapter } from './chapters/AirportTerminalChapter';
 import { CoffeeChapter } from './chapters/CoffeeChapter';
 import { TravelJournalChapter } from './chapters/TravelJournalChapter';
+import { TulipGardenChapter } from './chapters/TulipGardenChapter';
 import { MusicBoxChapter } from './chapters/MusicBoxChapter';
 import { VoiceMessage } from './chapters/VoiceMessage';
 import { TimeCapsuleChapter } from './chapters/TimeCapsuleChapter';
@@ -62,6 +63,7 @@ export const App: React.FC = () => {
     'Terminal Arrival',
     'Two Cups of Coffee',
     'Himalayan Shivan Temple',
+    'Dutch Tulip Fields',
     'Music Box',
     'Voice Message',
     'Nov 8 Time Capsule',
@@ -213,7 +215,7 @@ export const App: React.FC = () => {
                   // Safe fallback
                 }
               }
-              setCurrentChapter(26); // Jump straight to Chapter 27: Sea of Lanterns
+              setCurrentChapter(27); // Jump straight to Chapter 28: Sea of Lanterns
             }}
             title="Release a midnight sky lantern for Bot"
             aria-label="Release a sky lantern"
@@ -223,7 +225,7 @@ export const App: React.FC = () => {
               gap: '0.3rem',
               padding: '0.35rem 0.65rem',
               borderRadius: 'var(--radius-full)',
-              background: currentChapter === 26 ? 'rgba(245, 158, 11, 0.35)' : 'rgba(245, 158, 11, 0.15)',
+              background: currentChapter === 27 ? 'rgba(245, 158, 11, 0.35)' : 'rgba(245, 158, 11, 0.15)',
               border: '1px solid rgba(251, 191, 36, 0.45)',
               color: '#FDE68A',
               fontSize: '0.74rem',
@@ -332,30 +334,34 @@ export const App: React.FC = () => {
           )}
 
           {currentChapter === 22 && (
-            <MusicBoxChapter key="ch-22" onProceed={() => setCurrentChapter(23)} />
+            <TulipGardenChapter key="ch-22" onProceed={() => setCurrentChapter(23)} />
           )}
 
           {currentChapter === 23 && (
-            <VoiceMessage key="ch-23" onProceed={() => setCurrentChapter(24)} />
+            <MusicBoxChapter key="ch-23" onProceed={() => setCurrentChapter(24)} />
           )}
 
           {currentChapter === 24 && (
-            <TimeCapsuleChapter key="ch-24" onProceed={() => setCurrentChapter(25)} />
+            <VoiceMessage key="ch-24" onProceed={() => setCurrentChapter(25)} />
           )}
 
           {currentChapter === 25 && (
-            <FutureTogether key="ch-25" onProceed={() => setCurrentChapter(26)} />
+            <TimeCapsuleChapter key="ch-25" onProceed={() => setCurrentChapter(26)} />
           )}
 
           {currentChapter === 26 && (
-            <LanternSky key="ch-26" onProceedToLetter={() => setCurrentChapter(27)} />
+            <FutureTogether key="ch-26" onProceed={() => setCurrentChapter(27)} />
           )}
 
           {currentChapter === 27 && (
+            <LanternSky key="ch-27" onProceedToLetter={() => setCurrentChapter(28)} />
+          )}
+
+          {currentChapter === 28 && (
             <BirthdayLetter
-              key="ch-27"
-              onReturnToVoice={() => setCurrentChapter(23)}
-              onOpenLantern={() => setCurrentChapter(26)}
+              key="ch-28"
+              onReturnToVoice={() => setCurrentChapter(24)}
+              onOpenLantern={() => setCurrentChapter(27)}
             />
           )}
         </AnimatePresence>

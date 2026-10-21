@@ -11,8 +11,8 @@ export const TimeCapsuleChapter: React.FC<TimeCapsuleChapterProps> = ({ onProcee
   return (
     <ChapterLayout
       id="chapter-time-capsule"
-      chapterNumber={24}
-      eyebrow="CHAPTER 24 • THE NOVEMBER 8TH CAPSULE"
+      chapterNumber={25}
+      eyebrow="CHAPTER 25 • THE NOVEMBER 8TH CAPSULE"
       title="The astronomical birthday vault"
       subtitle="Dial in the celestial combination: 08 • NOV • BOT to unlock our time capsule."
       primaryAction={{

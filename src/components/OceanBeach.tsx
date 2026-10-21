@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Volume2, VolumeX, Waves, Wind } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Sparkles, Volume2, VolumeX, Waves, Wind, Heart } from 'lucide-react';
 
 interface PlanktonParticle {
   x: number;
@@ -31,27 +31,51 @@ interface SpoutMistParticle {
   life: number;
 }
 
+interface Fish {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  size: number;
+  angle: number;
+  color: string;
+  tailPhase: number;
+}
+
 export const OceanBeach: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const [oceanMode, setOceanMode] = useState<'abyss' | 'bioluminescent' | 'sunrise'>('abyss');
+  const [oceanMode, setOceanMode] = useState<'midnight' | 'bioluminescent' | 'sunrise'>('midnight');
   const [isSinging, setIsSinging] = useState(false);
   const [isSurfacing, setIsSurfacing] = useState(false);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const [songCount, setSongCount] = useState(0);
+  const [activeCallType, setActiveCallType] = useState<'deep' | 'melodic' | 'spout'>('deep');
   const [bannerNotice, setBannerNotice] = useState<string | null>(null);
 
   const planktonRef = useRef<PlanktonParticle[]>([]);
   const ripplesRef = useRef<SoundWaveRipple[]>([]);
   const spoutMistRef = useRef<SpoutMistParticle[]>([]);
+  const fishRef = useRef<Fish[]>([]);
   const audioCtxRef = useRef<AudioContext | null>(null);
   const ambientNodesRef = useRef<{
-    noiseSource: AudioBufferSourceNode;
-    filter: BiquadFilterNode;
-    gainNode: GainNode;
-    lfo: OscillatorNode;
+    noiseSource?: AudioBufferSourceNode;
+    filter?: BiquadFilterNode;
+    gainNode?: GainNode;
+    lfo?: OscillatorNode;
   } | null>(null);
 
-  // Synthesize realistic deep oceanic surf soundscape using filtered pink noise and LFO swell
+  // Haptic feedback helper
+  const triggerHaptic = useCallback((pattern: number | number[] = 20) => {
+    if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
+      try {
+        navigator.vibrate(pattern);
+      } catch {
+        // Safe fallback
+      }
+    }
+  }, []);
+
+  // Synthesize realistic deep oceanic surf soundscape
   const startOceanAudio = useCallback(() => {
     try {
       const AudioCtx =
@@ -77,7 +101,7 @@ export const OceanBeach: React.FC = () => {
         b3 = 0.86650 * b3 + white * 0.3104856;
         b4 = 0.55000 * b4 + white * 0.5329522;
         b5 = -0.7616 * b5 - white * 0.0168980;
-        output[i] = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362) * 0.09;
+        output[i] = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362) * 0.08;
         b6 = white * 0.115926;
       }
 
@@ -87,19 +111,19 @@ export const OceanBeach: React.FC = () => {
 
       const filter = ctx.createBiquadFilter();
       filter.type = 'lowpass';
-      filter.frequency.setValueAtTime(280, ctx.currentTime);
+      filter.frequency.setValueAtTime(260, ctx.currentTime);
       filter.Q.setValueAtTime(2.2, ctx.currentTime);
 
       const lfo = ctx.createOscillator();
       lfo.frequency.setValueAtTime(0.12, ctx.currentTime);
       const lfoGain = ctx.createGain();
-      lfoGain.gain.setValueAtTime(220, ctx.currentTime);
+      lfoGain.gain.setValueAtTime(180, ctx.currentTime);
       lfo.connect(lfoGain);
       lfoGain.connect(filter.frequency);
 
       const gainNode = ctx.createGain();
       gainNode.gain.setValueAtTime(0.001, ctx.currentTime);
-      gainNode.gain.linearRampToValueAtTime(0.16, ctx.currentTime + 1.2);
+      gainNode.gain.linearRampToValueAtTime(0.12, ctx.currentTime + 1.2);
 
       noiseSource.connect(filter);
       filter.connect(gainNode);
@@ -117,16 +141,16 @@ export const OceanBeach: React.FC = () => {
     if (!ambientNodesRef.current) return;
     try {
       const { noiseSource, gainNode, lfo } = ambientNodesRef.current;
-      if (audioCtxRef.current) {
+      if (audioCtxRef.current && gainNode) {
         const now = audioCtxRef.current.currentTime;
         gainNode.gain.setValueAtTime(gainNode.gain.value, now);
         gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.8);
         setTimeout(() => {
           try {
-            noiseSource.stop();
-            noiseSource.disconnect();
-            lfo.stop();
-            lfo.disconnect();
+            noiseSource?.stop();
+            noiseSource?.disconnect();
+            lfo?.stop();
+            lfo?.disconnect();
           } catch {}
         }, 850);
       }
@@ -149,8 +173,8 @@ export const OceanBeach: React.FC = () => {
     }
   };
 
-  // Acoustic Blue Whale Song synthesis (Deep mournful FM glide between 45Hz and 180Hz)
-  const playWhaleSong = useCallback(() => {
+  // Realistic Acoustic Blue Whale Song Synthesizer with Formant Resonances & Sub-bass
+  const playRealisticWhaleCall = useCallback((callType: 'deep' | 'melodic' | 'spout') => {
     try {
       const AudioCtx =
         window.AudioContext ||
@@ -160,177 +184,301 @@ export const OceanBeach: React.FC = () => {
       if (ctx.state === 'suspended') ctx.resume();
 
       const now = ctx.currentTime;
+      const masterGain = ctx.createGain();
+      masterGain.gain.setValueAtTime(0.001, now);
+      masterGain.connect(ctx.destination);
 
-      // Primary mournful vocalization oscillator (baleen resonance)
-      const osc1 = ctx.createOscillator();
-      const osc2 = ctx.createOscillator();
-      const subOsc = ctx.createOscillator();
-      const gainNode = ctx.createGain();
-      const filter = ctx.createBiquadFilter();
+      // Acoustic echo delay simulating miles of open oceanic water
+      const delay = ctx.createDelay(1.5);
+      delay.delayTime.setValueAtTime(0.35, now);
+      const delayGain = ctx.createGain();
+      delayGain.gain.setValueAtTime(0.35, now);
+      const delayFilter = ctx.createBiquadFilter();
+      delayFilter.type = 'lowpass';
+      delayFilter.frequency.setValueAtTime(320, now);
 
-      filter.type = 'lowpass';
-      filter.frequency.setValueAtTime(340, now);
-      filter.Q.setValueAtTime(3.5, now);
+      masterGain.connect(delay);
+      delay.connect(delayFilter);
+      delayFilter.connect(delayGain);
+      delayGain.connect(delay);
+      delayGain.connect(ctx.destination);
 
-      // Pitch glide characteristic of blue whale vocalizations
-      osc1.type = 'sine';
-      osc1.frequency.setValueAtTime(95, now);
-      osc1.frequency.exponentialRampToValueAtTime(155, now + 1.2);
-      osc1.frequency.exponentialRampToValueAtTime(130, now + 2.3);
-      osc1.frequency.exponentialRampToValueAtTime(75, now + 3.8);
+      if (callType === 'deep') {
+        // Authentic Deep 52-Hz Blue Whale Call
+        // Sub-bass chest oscillator (fundamental pitch 46Hz -> 68Hz -> 52Hz)
+        const sub = ctx.createOscillator();
+        const subGain = ctx.createGain();
+        sub.type = 'sine';
+        sub.frequency.setValueAtTime(48, now);
+        sub.frequency.exponentialRampToValueAtTime(74, now + 1.2);
+        sub.frequency.exponentialRampToValueAtTime(52, now + 2.8);
+        sub.frequency.exponentialRampToValueAtTime(36, now + 4.2);
 
-      osc2.type = 'triangle';
-      osc2.frequency.setValueAtTime(190, now);
-      osc2.frequency.exponentialRampToValueAtTime(310, now + 1.2);
-      osc2.frequency.exponentialRampToValueAtTime(150, now + 3.6);
+        subGain.gain.setValueAtTime(0.001, now);
+        subGain.gain.linearRampToValueAtTime(0.32, now + 0.6);
+        subGain.gain.setValueAtTime(0.32, now + 2.8);
+        subGain.gain.exponentialRampToValueAtTime(0.0001, now + 4.4);
 
-      subOsc.type = 'sine';
-      subOsc.frequency.setValueAtTime(48, now);
-      subOsc.frequency.exponentialRampToValueAtTime(68, now + 1.2);
-      subOsc.frequency.exponentialRampToValueAtTime(38, now + 3.8);
+        // Formant filter 1: Cranial acoustic resonance cavity
+        const f1 = ctx.createBiquadFilter();
+        f1.type = 'bandpass';
+        f1.frequency.setValueAtTime(160, now);
+        f1.Q.setValueAtTime(4.2, now);
 
-      // Warm acoustic envelope
-      gainNode.gain.setValueAtTime(0.001, now);
-      gainNode.gain.linearRampToValueAtTime(0.24, now + 0.6);
-      gainNode.gain.setValueAtTime(0.24, now + 2.5);
-      gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 4.1);
+        // Formant filter 2: Baleen & Throat cavity harmonic
+        const f2 = ctx.createBiquadFilter();
+        f2.type = 'bandpass';
+        f2.frequency.setValueAtTime(340, now);
+        f2.Q.setValueAtTime(3.8, now);
 
-      osc1.connect(filter);
-      osc2.connect(filter);
-      subOsc.connect(filter);
-      filter.connect(gainNode);
-      gainNode.connect(ctx.destination);
+        // Harmonic oscillator (rich acoustic vocalization)
+        const harm = ctx.createOscillator();
+        harm.type = 'triangle';
+        harm.frequency.setValueAtTime(96, now);
+        harm.frequency.exponentialRampToValueAtTime(148, now + 1.2);
+        harm.frequency.exponentialRampToValueAtTime(104, now + 2.8);
+        harm.frequency.exponentialRampToValueAtTime(72, now + 4.2);
 
-      osc1.start(now);
-      osc2.start(now);
-      subOsc.start(now);
+        const harmGain = ctx.createGain();
+        harmGain.gain.setValueAtTime(0.001, now);
+        harmGain.gain.linearRampToValueAtTime(0.18, now + 0.5);
+        harmGain.gain.exponentialRampToValueAtTime(0.0001, now + 4.2);
 
-      osc1.stop(now + 4.2);
-      osc2.stop(now + 4.2);
-      subOsc.stop(now + 4.2);
-    } catch {}
+        sub.connect(f1);
+        f1.connect(subGain);
+        harm.connect(f2);
+        f2.connect(harmGain);
+
+        subGain.connect(masterGain);
+        harmGain.connect(masterGain);
+
+        masterGain.gain.linearRampToValueAtTime(0.28, now + 0.4);
+        masterGain.gain.exponentialRampToValueAtTime(0.0001, now + 4.6);
+
+        sub.start(now);
+        harm.start(now);
+        sub.stop(now + 4.6);
+        harm.stop(now + 4.6);
+
+      } else if (callType === 'melodic') {
+        // Melodic Humpback / Blue Whale Ascending Call
+        const osc = ctx.createOscillator();
+        const oscGain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(110, now);
+        osc.frequency.exponentialRampToValueAtTime(260, now + 0.8);
+        osc.frequency.exponentialRampToValueAtTime(340, now + 1.8);
+        osc.frequency.exponentialRampToValueAtTime(180, now + 3.2);
+
+        // Vocal vibrato
+        const vibrato = ctx.createOscillator();
+        const vibGain = ctx.createGain();
+        vibrato.frequency.setValueAtTime(3.8, now);
+        vibGain.gain.setValueAtTime(12, now);
+        vibrato.connect(vibGain);
+        vibGain.connect(osc.frequency);
+
+        const bp = ctx.createBiquadFilter();
+        bp.type = 'bandpass';
+        bp.frequency.setValueAtTime(240, now);
+        bp.Q.setValueAtTime(3.2, now);
+
+        oscGain.gain.setValueAtTime(0.001, now);
+        oscGain.gain.linearRampToValueAtTime(0.25, now + 0.3);
+        oscGain.gain.exponentialRampToValueAtTime(0.0001, now + 3.5);
+
+        osc.connect(bp);
+        bp.connect(oscGain);
+        oscGain.connect(masterGain);
+
+        masterGain.gain.linearRampToValueAtTime(0.25, now + 0.2);
+        masterGain.gain.exponentialRampToValueAtTime(0.0001, now + 3.8);
+
+        osc.start(now);
+        vibrato.start(now);
+        osc.stop(now + 3.8);
+        vibrato.stop(now + 3.8);
+
+      } else {
+        // Surfacing Blowhole Exhale + Echolocation Click Train
+        // 1. Pressurized Air Burst
+        const bufferSize = ctx.sampleRate * 2.2;
+        const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+        const data = noiseBuffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (ctx.sampleRate * 0.4));
+        }
+
+        const burstSource = ctx.createBufferSource();
+        burstSource.buffer = noiseBuffer;
+
+        const burstFilter = ctx.createBiquadFilter();
+        burstFilter.type = 'bandpass';
+        burstFilter.frequency.setValueAtTime(450, now);
+        burstFilter.frequency.exponentialRampToValueAtTime(120, now + 0.9);
+        burstFilter.Q.setValueAtTime(1.8, now);
+
+        const burstGain = ctx.createGain();
+        burstGain.gain.setValueAtTime(0.001, now);
+        burstGain.gain.linearRampToValueAtTime(0.35, now + 0.08);
+        burstGain.gain.exponentialRampToValueAtTime(0.0001, now + 1.2);
+
+        burstSource.connect(burstFilter);
+        burstFilter.connect(burstGain);
+        burstGain.connect(masterGain);
+        burstSource.start(now);
+
+        // 2. High-frequency click train (echolocation clicks)
+        for (let c = 0; c < 6; c++) {
+          const clickTime = now + 1.1 + c * 0.12;
+          const cOsc = ctx.createOscillator();
+          const cGain = ctx.createGain();
+          cOsc.type = 'triangle';
+          cOsc.frequency.setValueAtTime(1800 + c * 80, clickTime);
+
+          cGain.gain.setValueAtTime(0.001, clickTime);
+          cGain.gain.linearRampToValueAtTime(0.12, clickTime + 0.005);
+          cGain.gain.exponentialRampToValueAtTime(0.0001, clickTime + 0.05);
+
+          cOsc.connect(cGain);
+          cGain.connect(masterGain);
+          cOsc.start(clickTime);
+          cOsc.stop(clickTime + 0.06);
+        }
+
+        masterGain.gain.linearRampToValueAtTime(0.3, now + 0.05);
+        masterGain.gain.exponentialRampToValueAtTime(0.0001, now + 2.5);
+      }
+    } catch {
+      // Safe fallback
+    }
   }, []);
 
   // Trigger Whale Song & Soundwave Ripples
-  const handleWhaleSong = () => {
+  const handleWhaleSong = (type: 'deep' | 'melodic' | 'spout' = 'deep') => {
     if (isSinging) return;
     setIsSinging(true);
+    setActiveCallType(type);
     setSongCount((prev) => prev + 1);
+    triggerHaptic([30, 80, 40, 100]);
 
-    if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
-      try {
-        navigator.vibrate([25, 60, 30, 80]);
-      } catch {}
+    playRealisticWhaleCall(type);
+
+    if (type === 'deep') {
+      setBannerNotice('The Blue Whale sings a deep 52-Hz call across thousands of miles ✦');
+    } else if (type === 'melodic') {
+      setBannerNotice('A gentle ocean melody echoing through the Bay of Bengal ✦');
+    } else {
+      setBannerNotice('The gentle giant surfaces, exhales sea spray, and pulses clicks ✦');
     }
 
-    playWhaleSong();
-    setBannerNotice('The Blue Whale sings a song across thousands of miles ✦');
-
-    // Add concentric acoustic soundwave ripples from whale's head
+    // Add acoustic ripples from whale's head
     const canvas = canvasRef.current;
     if (canvas) {
       const rect = canvas.getBoundingClientRect();
-      const originX = rect.width * 0.32;
-      const originY = rect.height * 0.48;
+      const originX = rect.width * 0.35;
+      const originY = rect.height * 0.52;
 
-      for (let i = 0; i < 4; i++) {
+      for (let i = 0; i < 5; i++) {
         setTimeout(() => {
           ripplesRef.current.push({
             x: originX,
             y: originY,
-            radius: 15,
-            maxRadius: rect.width * 0.65,
-            alpha: 0.85,
+            radius: 12,
+            maxRadius: rect.width * 0.75,
+            alpha: 0.9,
           });
-        }, i * 400);
+        }, i * 350);
       }
     }
 
     setTimeout(() => {
       setIsSinging(false);
-    }, 4200);
-
-    setTimeout(() => {
       setBannerNotice(null);
-    }, 4800);
+    }, 4500);
   };
 
-  // Trigger Surface Breach & Blowhole Spout
+  // Surface breach & spout
   const handleSurfaceBreach = () => {
     if (isSurfacing) return;
     setIsSurfacing(true);
+    triggerHaptic([40, 90, 50, 120]);
+    handleWhaleSong('spout');
 
-    if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
-      try {
-        navigator.vibrate([15, 30, 20]);
-      } catch {}
-    }
-
-    setBannerNotice('The Blue Whale surfaces to breathe under the starlit sky ✦');
-
-    // Generate towering spray plume from blowhole
+    // Generate mist spout particles
     const canvas = canvasRef.current;
     if (canvas) {
       const rect = canvas.getBoundingClientRect();
-      const blowholeX = rect.width * 0.34;
-      const blowholeY = rect.height * 0.28;
+      const spoutX = rect.width * 0.38;
+      const spoutY = rect.height * 0.38;
 
-      // Shoot spray mist particles
-      for (let i = 0; i < 48; i++) {
-        const angle = -Math.PI / 2 + (Math.random() - 0.5) * 0.45;
-        const speed = Math.random() * 5 + 4.5;
-        spoutMistRef.current.push({
-          x: blowholeX + (Math.random() - 0.5) * 8,
-          y: blowholeY,
-          vx: Math.cos(angle) * speed,
-          vy: Math.sin(angle) * speed,
-          radius: Math.random() * 2.5 + 1.2,
-          alpha: 0.9,
-          life: 1,
+      const particles: SpoutMistParticle[] = [];
+      for (let i = 0; i < 80; i++) {
+        const ang = -Math.PI / 2 + (Math.random() - 0.5) * 0.45;
+        const spd = Math.random() * 6 + 3.5;
+        particles.push({
+          x: spoutX + (Math.random() - 0.5) * 12,
+          y: spoutY,
+          vx: Math.cos(ang) * spd,
+          vy: Math.sin(ang) * spd,
+          radius: Math.random() * 3.5 + 1.2,
+          alpha: Math.random() * 0.8 + 0.2,
+          life: 0,
         });
       }
+      spoutMistRef.current.push(...particles);
     }
 
     setTimeout(() => {
       setIsSurfacing(false);
-    }, 3800);
-
-    setTimeout(() => {
-      setBannerNotice(null);
-    }, 4600);
+    }, 4200);
   };
 
-  // Swirl Bioluminescent Plankton upon user drag / tap
-  const addPlanktonSwirl = (clientX: number, clientY: number) => {
+  // Touch water to create bioluminescent swirl & scatter fish
+  const handleWaterInteraction = (clientX: number, clientY: number) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const rect = canvas.getBoundingClientRect();
     const x = clientX - rect.left;
     const y = clientY - rect.top;
 
-    if (x < 0 || x > rect.width || y < 0 || y > rect.height) return;
+    // Scatter nearby fish
+    fishRef.current.forEach((f) => {
+      const dist = Math.hypot(f.x - x, f.y - y);
+      if (dist < 80) {
+        const ang = Math.atan2(f.y - y, f.x - x);
+        f.vx += Math.cos(ang) * 4;
+        f.vy += Math.sin(ang) * 4;
+      }
+    });
 
-    for (let i = 0; i < 4; i++) {
-      const angle = Math.random() * Math.PI * 2;
-      const speed = Math.random() * 1.8 + 0.4;
+    // Spawn bioluminescent glow particles
+    for (let i = 0; i < 8; i++) {
+      const ang = Math.random() * Math.PI * 2;
+      const spd = Math.random() * 2 + 1;
       planktonRef.current.push({
-        x: x + (Math.random() - 0.5) * 16,
-        y: y + (Math.random() - 0.5) * 16,
-        vx: Math.cos(angle) * speed,
-        vy: Math.sin(angle) * speed - 0.3,
-        radius: Math.random() * 2 + 1,
-        alpha: 0.9,
+        x,
+        y,
+        vx: Math.cos(ang) * spd,
+        vy: Math.sin(ang) * spd,
+        radius: Math.random() * 2.8 + 1,
+        alpha: 1,
         color: oceanMode === 'sunrise' ? '#FED7AA' : '#67E8F9',
-        pulseSpeed: Math.random() * 0.04 + 0.02,
+        pulseSpeed: 0.05,
       });
     }
 
-    if (planktonRef.current.length > 120) {
-      planktonRef.current.splice(0, planktonRef.current.length - 120);
-    }
+    // Ripple
+    ripplesRef.current.push({
+      x,
+      y,
+      radius: 5,
+      maxRadius: 65,
+      alpha: 0.7,
+    });
   };
 
-  // Canvas Animation Loop (Ocean Caustics, Water Light Rays, Plankton & Spout Mist)
+  // Canvas Deep Ocean, Realistic Caustics, Multi-Layer Waves & Boids Simulation
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -347,21 +495,41 @@ export const OceanBeach: React.FC = () => {
       canvas.height = rect.height * dpr;
       ctx.scale(dpr, dpr);
 
-      // Seed ambient drifting plankton motes
-      const particles: PlanktonParticle[] = [];
-      for (let i = 0; i < 50; i++) {
-        particles.push({
-          x: Math.random() * rect.width,
-          y: Math.random() * rect.height,
-          vx: (Math.random() - 0.5) * 0.4,
-          vy: (Math.random() - 0.5) * 0.3 - 0.15,
-          radius: Math.random() * 1.8 + 0.6,
-          alpha: Math.random() * 0.6 + 0.25,
-          color: oceanMode === 'sunrise' ? '#FED7AA' : '#67E8F9',
-          pulseSpeed: Math.random() * 0.03 + 0.015,
-        });
+      // Initialize school of fish
+      if (fishRef.current.length === 0) {
+        const fishList: Fish[] = [];
+        for (let i = 0; i < 18; i++) {
+          fishList.push({
+            x: Math.random() * rect.width,
+            y: rect.height * 0.45 + Math.random() * rect.height * 0.45,
+            vx: Math.random() * 1.5 + 0.8,
+            vy: (Math.random() - 0.5) * 0.5,
+            size: Math.random() * 5 + 7,
+            angle: 0,
+            color: '#67E8F9',
+            tailPhase: Math.random() * Math.PI * 2,
+          });
+        }
+        fishRef.current = fishList;
       }
-      planktonRef.current = particles;
+
+      // Initialize ambient plankton
+      if (planktonRef.current.length === 0) {
+        const particles: PlanktonParticle[] = [];
+        for (let i = 0; i < 55; i++) {
+          particles.push({
+            x: Math.random() * rect.width,
+            y: Math.random() * rect.height,
+            vx: (Math.random() - 0.5) * 0.35,
+            vy: (Math.random() - 0.5) * 0.25 - 0.1,
+            radius: Math.random() * 1.8 + 0.8,
+            alpha: Math.random() * 0.6 + 0.25,
+            color: oceanMode === 'sunrise' ? '#FED7AA' : '#67E8F9',
+            pulseSpeed: Math.random() * 0.03 + 0.015,
+          });
+        }
+        planktonRef.current = particles;
+      }
     };
 
     resize();
@@ -373,64 +541,80 @@ export const OceanBeach: React.FC = () => {
       const w = rect.width;
       const h = rect.height;
 
-      // 1. Deep Oceanic Gradient Background
-      const bgGrad = ctx.createLinearGradient(0, 0, 0, h);
+      ctx.clearRect(0, 0, w, h);
+
+      // 1. Realistic Deep Oceanic Ambient Gradient
+      const oceanGrad = ctx.createLinearGradient(0, 0, 0, h);
       if (oceanMode === 'sunrise') {
-        bgGrad.addColorStop(0, '#1E1B4B');
-        bgGrad.addColorStop(0.35, '#BE185D');
-        bgGrad.addColorStop(0.7, '#0E7490');
-        bgGrad.addColorStop(1, '#082F49');
+        oceanGrad.addColorStop(0, '#1E1B4B');
+        oceanGrad.addColorStop(0.35, '#9D174D');
+        oceanGrad.addColorStop(0.7, '#0E7490');
+        oceanGrad.addColorStop(1, '#082F49');
       } else if (oceanMode === 'bioluminescent') {
-        bgGrad.addColorStop(0, '#020617');
-        bgGrad.addColorStop(0.4, '#042F2E');
-        bgGrad.addColorStop(0.75, '#0F172A');
-        bgGrad.addColorStop(1, '#020617');
+        oceanGrad.addColorStop(0, '#020617');
+        oceanGrad.addColorStop(0.35, '#042F2E');
+        oceanGrad.addColorStop(0.75, '#0F172A');
+        oceanGrad.addColorStop(1, '#020617');
       } else {
-        // Midnight Abyss
-        bgGrad.addColorStop(0, '#030712');
-        bgGrad.addColorStop(0.35, '#0B1D3A');
-        bgGrad.addColorStop(0.7, '#07182F');
-        bgGrad.addColorStop(1, '#020A16');
+        // Midnight Abyss with deep cerulean depth
+        oceanGrad.addColorStop(0, '#020617');
+        oceanGrad.addColorStop(0.25, '#0B1E3F');
+        oceanGrad.addColorStop(0.65, '#07182F');
+        oceanGrad.addColorStop(1, '#020B16');
       }
-      ctx.fillStyle = bgGrad;
+      ctx.fillStyle = oceanGrad;
       ctx.fillRect(0, 0, w, h);
 
-      // 2. Volumetric Underwater Sun/Moon Light Caustic Rays
+      // 2. Realistic Volumetric Underwater Light Caustics (Sun/Moon rays piercing down)
       ctx.save();
       ctx.globalCompositeOperation = 'screen';
-      for (let i = 0; i < 5; i++) {
-        const rayX = (w * 0.2) + i * (w * 0.16) + Math.sin(time * 0.8 + i) * 15;
-        const rayGrad = ctx.createLinearGradient(rayX, 0, rayX + 45, h * 0.85);
+      for (let i = 0; i < 6; i++) {
+        const rayOffset = Math.sin(time * 0.7 + i * 1.2) * 22;
+        const rayX = (w * 0.15) + i * (w * 0.15) + rayOffset;
+        const rayGrad = ctx.createLinearGradient(rayX, 0, rayX + 60, h * 0.9);
+
         if (oceanMode === 'sunrise') {
-          rayGrad.addColorStop(0, 'rgba(254, 215, 170, 0.22)');
-          rayGrad.addColorStop(0.6, 'rgba(251, 146, 60, 0.08)');
+          rayGrad.addColorStop(0, 'rgba(254, 215, 170, 0.28)');
+          rayGrad.addColorStop(0.5, 'rgba(251, 146, 60, 0.09)');
           rayGrad.addColorStop(1, 'transparent');
         } else {
-          rayGrad.addColorStop(0, 'rgba(56, 189, 248, 0.2)');
-          rayGrad.addColorStop(0.6, 'rgba(14, 165, 233, 0.06)');
+          rayGrad.addColorStop(0, 'rgba(103, 232, 249, 0.24)');
+          rayGrad.addColorStop(0.5, 'rgba(14, 165, 233, 0.08)');
           rayGrad.addColorStop(1, 'transparent');
         }
 
         ctx.fillStyle = rayGrad;
         ctx.beginPath();
-        ctx.moveTo(rayX - 15, 0);
-        ctx.lineTo(rayX + 25, 0);
-        ctx.lineTo(rayX + 75, h);
-        ctx.lineTo(rayX + 15, h);
+        ctx.moveTo(rayX - 20, 0);
+        ctx.lineTo(rayX + 30, 0);
+        ctx.lineTo(rayX + 90, h);
+        ctx.lineTo(rayX + 20, h);
         ctx.closePath();
         ctx.fill();
       }
       ctx.restore();
 
-      // 3. Shimmering Ocean Surface Line at the top
+      // 3. Multi-Frequency Realistic Surface Waves at Top
       ctx.save();
+      // Back wave
       ctx.beginPath();
-      ctx.moveTo(0, 15);
-      for (let x = 0; x <= w; x += 10) {
-        const y = 15 + Math.sin(x * 0.02 + time * 1.6) * 4 + Math.cos(x * 0.012 - time) * 3;
+      ctx.moveTo(0, 22);
+      for (let x = 0; x <= w; x += 8) {
+        const y = 22 + Math.sin(x * 0.018 + time * 1.8) * 4 + Math.cos(x * 0.01 - time * 0.9) * 3;
         ctx.lineTo(x, y);
       }
-      ctx.strokeStyle = oceanMode === 'sunrise' ? 'rgba(253, 230, 138, 0.55)' : 'rgba(147, 197, 253, 0.5)';
+      ctx.strokeStyle = 'rgba(56, 189, 248, 0.35)';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      // Front crest with foam shimmer
+      ctx.beginPath();
+      ctx.moveTo(0, 26);
+      for (let x = 0; x <= w; x += 6) {
+        const y = 26 + Math.sin(x * 0.024 - time * 2.2) * 5 + Math.cos(x * 0.014 + time) * 3.5;
+        ctx.lineTo(x, y);
+      }
+      ctx.strokeStyle = oceanMode === 'sunrise' ? 'rgba(254, 240, 138, 0.75)' : 'rgba(186, 230, 253, 0.75)';
       ctx.lineWidth = 2.5;
       ctx.stroke();
       ctx.restore();
@@ -439,8 +623,8 @@ export const OceanBeach: React.FC = () => {
       const ripples = ripplesRef.current;
       for (let i = ripples.length - 1; i >= 0; i--) {
         const r = ripples[i];
-        r.radius += 2.2;
-        r.alpha -= 0.012;
+        r.radius += 2.4;
+        r.alpha -= 0.01;
 
         if (r.alpha <= 0 || r.radius >= r.maxRadius) {
           ripples.splice(i, 1);
@@ -451,9 +635,9 @@ export const OceanBeach: React.FC = () => {
         ctx.beginPath();
         ctx.arc(r.x, r.y, r.radius, 0, Math.PI * 2);
         ctx.strokeStyle = `rgba(103, 232, 249, ${r.alpha})`;
-        ctx.lineWidth = 2.2;
+        ctx.lineWidth = 2.4;
         ctx.shadowColor = '#38BDF8';
-        ctx.shadowBlur = 10;
+        ctx.shadowBlur = 12;
         ctx.stroke();
         ctx.restore();
       }
@@ -464,7 +648,7 @@ export const OceanBeach: React.FC = () => {
         const p = mist[i];
         p.x += p.vx;
         p.y += p.vy;
-        p.vy += 0.12; // gentle gravity
+        p.vy += 0.12;
         p.alpha -= 0.016;
 
         if (p.alpha <= 0 || p.y > h) {
@@ -482,13 +666,55 @@ export const OceanBeach: React.FC = () => {
         ctx.restore();
       }
 
-      // 6. Bioluminescent Drifting Marine Plankton Particles
+      // 6. Interactive School of Glowing Tropical Fish (Boids)
+      const fish = fishRef.current;
+      fish.forEach((f) => {
+        f.x += f.vx;
+        f.y += f.vy;
+        f.tailPhase += 0.18;
+
+        // Gentle drag back to cruising speed
+        if (f.vx > 1.8) f.vx *= 0.96;
+        if (f.vx < 0.6) f.vx += 0.04;
+        if (Math.abs(f.vy) > 0.6) f.vy *= 0.95;
+
+        // Wrap around screen
+        if (f.x > w + 20) f.x = -20;
+        if (f.x < -20) f.x = w + 20;
+        if (f.y < h * 0.35) f.y = h * 0.35;
+        if (f.y > h * 0.92) f.y = h * 0.92;
+
+        f.angle = Math.atan2(f.vy, f.vx);
+
+        ctx.save();
+        ctx.translate(f.x, f.y);
+        ctx.rotate(f.angle);
+
+        // Fish Body
+        ctx.fillStyle = f.color;
+        ctx.shadowColor = f.color;
+        ctx.shadowBlur = 6;
+        ctx.beginPath();
+        ctx.ellipse(0, 0, f.size, f.size * 0.38, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Oscillating Tail Fin
+        const tailWag = Math.sin(f.tailPhase) * 3;
+        ctx.beginPath();
+        ctx.moveTo(-f.size * 0.8, 0);
+        ctx.lineTo(-f.size * 1.5, -f.size * 0.5 + tailWag);
+        ctx.lineTo(-f.size * 1.5, f.size * 0.5 + tailWag);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+      });
+
+      // 7. Drifting Bioluminescent Plankton Particles
       const plankton = planktonRef.current;
       plankton.forEach((p) => {
         p.x += p.vx;
         p.y += p.vy;
 
-        // Wrap around viewport edges
         if (p.x < -10) p.x = w + 10;
         if (p.x > w + 10) p.x = -10;
         if (p.y < -10) p.y = h + 10;
@@ -525,7 +751,7 @@ export const OceanBeach: React.FC = () => {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        gap: '1.15rem',
+        gap: '1rem',
         width: '100%',
         maxWidth: '520px',
         margin: '0 auto',
@@ -536,18 +762,19 @@ export const OceanBeach: React.FC = () => {
         style={{
           position: 'relative',
           width: '100%',
-          height: '380px',
+          height: '370px',
           borderRadius: 'var(--radius-lg)',
           overflow: 'hidden',
           border: '1.5px solid rgba(147, 197, 253, 0.35)',
-          boxShadow: '0 16px 45px rgba(0, 0, 0, 0.7), inset 0 0 60px rgba(14, 165, 233, 0.1)',
+          boxShadow: '0 18px 50px rgba(0, 0, 0, 0.75), inset 0 0 60px rgba(14, 165, 233, 0.12)',
           touchAction: 'none',
           userSelect: 'none',
           WebkitUserSelect: 'none',
+          cursor: 'pointer',
         }}
-        onPointerDown={(e) => addPlanktonSwirl(e.clientX, e.clientY)}
+        onPointerDown={(e) => handleWaterInteraction(e.clientX, e.clientY)}
         onPointerMove={(e) => {
-          if (e.buttons === 1) addPlanktonSwirl(e.clientX, e.clientY);
+          if (e.buttons === 1) handleWaterInteraction(e.clientX, e.clientY);
         }}
       >
         <canvas
@@ -579,6 +806,7 @@ export const OceanBeach: React.FC = () => {
             onClick={(e) => {
               e.stopPropagation();
               toggleAudio();
+              triggerHaptic(15);
             }}
             style={{
               pointerEvents: 'auto',
@@ -587,7 +815,7 @@ export const OceanBeach: React.FC = () => {
               gap: '0.4rem',
               padding: '0.35rem 0.75rem',
               borderRadius: 'var(--radius-full)',
-              background: isAudioPlaying ? 'rgba(6, 182, 212, 0.35)' : 'rgba(8, 11, 24, 0.8)',
+              background: isAudioPlaying ? 'rgba(6, 182, 212, 0.35)' : 'rgba(8, 11, 24, 0.85)',
               border: isAudioPlaying
                 ? '1px solid rgba(103, 232, 249, 0.8)'
                 : '1px solid rgba(255, 255, 255, 0.2)',
@@ -600,291 +828,233 @@ export const OceanBeach: React.FC = () => {
               touchAction: 'manipulation',
             }}
           >
-            {isAudioPlaying ? <Volume2 size={13} /> : <VolumeX size={13} />}
-            <span>{isAudioPlaying ? 'Ocean Surf • On' : 'Play Surf'}</span>
+            {isAudioPlaying ? <Volume2 size={13} color="#67E8F9" /> : <VolumeX size={13} />}
+            <span>{isAudioPlaying ? 'DEEP SURF ON' : 'AUDIO OFF'}</span>
           </button>
 
-          {/* Ocean Water Modes */}
+          {/* Ocean Lighting Mood Tabs */}
           <div
             style={{
               pointerEvents: 'auto',
               display: 'flex',
-              gap: '0.3rem',
-              background: 'rgba(8, 11, 24, 0.8)',
-              padding: '0.2rem 0.35rem',
+              gap: '0.25rem',
+              background: 'rgba(8, 11, 24, 0.85)',
+              padding: '0.25rem',
               borderRadius: 'var(--radius-full)',
-              border: '1px solid rgba(216, 204, 255, 0.18)',
+              border: '1px solid rgba(255, 255, 255, 0.15)',
               backdropFilter: 'blur(8px)',
             }}
           >
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                setOceanMode('abyss');
-              }}
-              title="Midnight Abyss"
-              style={{
-                width: '18px',
-                height: '18px',
-                borderRadius: '50%',
-                background: 'linear-gradient(135deg, #1E3A8A 0%, #0F172A 100%)',
-                border: oceanMode === 'abyss' ? '2px solid #FFFFFF' : '1px solid rgba(255,255,255,0.3)',
-                cursor: 'pointer',
-                touchAction: 'manipulation',
-              }}
-            />
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                setOceanMode('bioluminescent');
-              }}
-              title="Bioluminescent Bloom"
-              style={{
-                width: '18px',
-                height: '18px',
-                borderRadius: '50%',
-                background: 'linear-gradient(135deg, #06B6D4 0%, #10B981 100%)',
-                border: oceanMode === 'bioluminescent' ? '2px solid #FFFFFF' : '1px solid rgba(255,255,255,0.3)',
-                cursor: 'pointer',
-                touchAction: 'manipulation',
-              }}
-            />
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                setOceanMode('sunrise');
-              }}
-              title="Sunrise Tide"
-              style={{
-                width: '18px',
-                height: '18px',
-                borderRadius: '50%',
-                background: 'linear-gradient(135deg, #F97316 0%, #FDE047 100%)',
-                border: oceanMode === 'sunrise' ? '2px solid #FFFFFF' : '1px solid rgba(255,255,255,0.3)',
-                cursor: 'pointer',
-                touchAction: 'manipulation',
-              }}
-            />
+            {(['midnight', 'bioluminescent', 'sunrise'] as const).map((m) => (
+              <button
+                key={m}
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setOceanMode(m);
+                  triggerHaptic(12);
+                }}
+                style={{
+                  padding: '0.2rem 0.55rem',
+                  borderRadius: 'var(--radius-full)',
+                  fontSize: '0.66rem',
+                  fontFamily: 'monospace',
+                  background: oceanMode === m ? 'rgba(56, 189, 248, 0.3)' : 'transparent',
+                  border: oceanMode === m ? '1px solid #38BDF8' : 'none',
+                  color: oceanMode === m ? '#E0F2FE' : 'var(--color-muted)',
+                  cursor: 'pointer',
+                  touchAction: 'manipulation',
+                  textTransform: 'uppercase',
+                }}
+              >
+                {m === 'midnight' ? 'Abyss' : m === 'bioluminescent' ? 'Glow' : 'Sunrise'}
+              </button>
+            ))}
           </div>
         </div>
 
-        {/* Live Whale Song Count Badge */}
-        {songCount > 0 && (
-          <div
-            style={{
-              position: 'absolute',
-              top: '46px',
-              left: '12px',
-              fontSize: '0.66rem',
-              color: '#A5F3FC',
-              fontFamily: 'monospace',
-              background: 'rgba(8, 11, 24, 0.8)',
-              padding: '0.2rem 0.55rem',
-              borderRadius: 'var(--radius-full)',
-              border: '1px solid rgba(103, 232, 249, 0.35)',
-              pointerEvents: 'none',
-              zIndex: 15,
-            }}
-          >
-            ✦ WHALE CALLS: {songCount}
-          </div>
-        )}
-
-        {/* Live Banner Notification */}
-        <AnimatePresence>
-          {bannerNotice && (
-            <motion.div
-              initial={{ opacity: 0, y: -8, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -6, scale: 0.95 }}
-              style={{
-                position: 'absolute',
-                top: '55px',
-                left: '50%',
-                transform: 'translateX(-50%)',
-                background: 'rgba(8, 14, 30, 0.88)',
-                backdropFilter: 'blur(12px)',
-                WebkitBackdropFilter: 'blur(12px)',
-                border: '1px solid rgba(103, 232, 249, 0.55)',
-                color: '#E0F2FE',
-                fontSize: '0.74rem',
-                padding: '0.35rem 0.85rem',
-                borderRadius: 'var(--radius-full)',
-                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.55)',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.4rem',
-                zIndex: 25,
-                whiteSpace: 'nowrap',
-                pointerEvents: 'none',
-              }}
-            >
-              <Sparkles size={12} color="#67E8F9" />
-              <span>{bannerNotice}</span>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* -------------------------------------------------------------
-            Cinematic Blue Whale Anatomical Vector Illustration (Overlay)
-           ------------------------------------------------------------- */}
+        {/* Floating Realistic Oceanic Blue Whale Graphic */}
         <motion.div
-          onClick={(e) => {
-            e.stopPropagation();
-            handleWhaleSong();
-          }}
-          title="Tap to hear the Blue Whale's song across the ocean"
           animate={{
-            y: isSurfacing ? [-15, -70, -70, 0] : [0, -10, 0],
-            rotate: isSurfacing ? [0, -7, 2, 0] : [0, 1.2, -1.2, 0],
+            x: isSurfacing ? ['-10%', '10%', '-10%'] : ['-3%', '3%', '-3%'],
+            y: isSurfacing ? [-25, -60, -25] : [-8, 8, -8],
+            rotate: isSurfacing ? [-3, -7, -3] : [-1.5, 1.5, -1.5],
           }}
           transition={{
-            duration: isSurfacing ? 3.6 : 5.8,
-            repeat: isSurfacing ? 0 : Infinity,
+            duration: isSurfacing ? 3.5 : 7,
+            repeat: Infinity,
             ease: 'easeInOut',
+          }}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleWhaleSong('deep');
           }}
           style={{
             position: 'absolute',
-            top: '42%',
             left: '50%',
+            top: '48%',
             transform: 'translate(-50%, -50%)',
-            width: '330px',
-            height: '140px',
+            width: '88%',
+            maxWidth: '380px',
             cursor: 'pointer',
-            zIndex: 12,
-            pointerEvents: 'auto',
+            zIndex: 10,
           }}
         >
-          <svg
-            viewBox="0 0 340 140"
-            width="100%"
-            height="100%"
-            style={{
-              overflow: 'visible',
-              filter: isSinging
-                ? 'drop-shadow(0 0 18px rgba(56, 189, 248, 0.8))'
-                : 'drop-shadow(0 8px 22px rgba(0, 0, 0, 0.6))',
-              transition: 'filter 0.4s ease',
-            }}
-          >
+          <svg viewBox="0 0 400 160" style={{ width: '100%', height: 'auto', display: 'block' }}>
             <defs>
-              {/* Blue Whale Mottled Slate-Blue Skin Gradient */}
-              <linearGradient id="whaleSkin" x1="0" y1="0" x2="1" y2="0">
+              {/* Oceanic Slate & Cerulean Skin Gradient */}
+              <linearGradient id="whaleSkinReal" x1="0%" y1="0%" x2="100%" y2="80%">
                 <stop offset="0%" stopColor="#1E293B" />
-                <stop offset="25%" stopColor="#2563EB" />
-                <stop offset="55%" stopColor="#1D4ED8" />
-                <stop offset="85%" stopColor="#1E3A8A" />
-                <stop offset="100%" stopColor="#0F172A" />
+                <stop offset="25%" stopColor="#0F355C" />
+                <stop offset="60%" stopColor="#0B4B75" />
+                <stop offset="100%" stopColor="#0284C7" />
               </linearGradient>
 
-              {/* Ventral Throat Grooves (White/Cream Underbelly) */}
-              <linearGradient id="whaleBelly" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#3B82F6" stopOpacity="0.2" />
-                <stop offset="70%" stopColor="#E2E8F0" stopOpacity="0.85" />
-                <stop offset="100%" stopColor="#F8FAFC" stopOpacity="0.95" />
+              {/* Luminous Ventral Belly Gradient */}
+              <linearGradient id="whaleBellyReal" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="#0369A1" />
+                <stop offset="50%" stopColor="#38BDF8" />
+                <stop offset="100%" stopColor="#BAE6FD" />
               </linearGradient>
 
-              {/* Bioluminescent Rim Highlight */}
-              <linearGradient id="whaleBiolum" x1="0" y1="0" x2="1" y2="0">
+              {/* Bioluminescent Lateral Line Glow */}
+              <linearGradient id="lateralGlow" x1="0%" y1="0%" x2="100%" y2="0%">
                 <stop offset="0%" stopColor="#38BDF8" stopOpacity="0.8" />
-                <stop offset="50%" stopColor="#67E8F9" stopOpacity="0.95" />
-                <stop offset="100%" stopColor="#A5F3FC" stopOpacity="0.7" />
+                <stop offset="50%" stopColor="#67E8F9" stopOpacity="1" />
+                <stop offset="100%" stopColor="#0284C7" stopOpacity="0.4" />
               </linearGradient>
             </defs>
 
-            {/* Powerful Undulating Tail Flukes (Animated sinusoidal flex) */}
+            {/* Realistic Caustic Light Ripple across Whale's Back */}
+            <path
+              d="M45,58 Q120,42 210,50 Q265,58 290,70"
+              stroke="rgba(255, 255, 255, 0.45)"
+              strokeWidth="2.5"
+              fill="none"
+              strokeDasharray="8 12"
+            />
+
+            {/* Organic Flexible Tail Fluke (Caudal Fin) */}
             <motion.g
               animate={{
-                rotate: [0, -6, 6, 0],
+                rotate: [0, -7, 7, 0],
                 transformOrigin: '270px 70px',
               }}
               transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut' }}
             >
-              {/* Caudal Peduncle (Tail Stock) */}
+              {/* Caudal Peduncle */}
               <path
                 d="M240,65 Q275,67 295,69 L295,73 Q275,75 240,77 Z"
-                fill="url(#whaleSkin)"
+                fill="url(#whaleSkinReal)"
               />
-              {/* Majestic Horizontal Flukes with Center Notch */}
+              {/* Majestic Fluke Blades */}
               <path
-                d="M295,71 Q315,48 335,46 C328,62 318,69 308,71 C318,73 328,80 335,96 Q315,94 295,71 Z"
-                fill="url(#whaleSkin)"
+                d="M295,71 Q315,48 338,46 C330,62 320,69 310,71 C320,73 330,80 338,96 Q315,94 295,71 Z"
+                fill="url(#whaleSkinReal)"
                 stroke="#67E8F9"
-                strokeWidth="0.8"
+                strokeWidth="1.2"
               />
             </motion.g>
 
-            {/* Main Streamlined Body of the Blue Whale */}
+            {/* Main Streamlined Body */}
             <path
-              d="M35,62 C65,42 135,38 215,50 C250,56 270,66 280,71 C270,76 250,86 215,92 C135,102 65,96 35,78 C25,72 25,68 35,62 Z"
-              fill="url(#whaleSkin)"
-              stroke="url(#whaleBiolum)"
-              strokeWidth="1.2"
+              d="M35,62 C65,40 135,36 215,48 C250,54 270,64 280,71 C270,76 250,86 215,92 C135,102 65,96 35,78 C25,72 25,68 35,62 Z"
+              fill="url(#whaleSkinReal)"
+              stroke="url(#lateralGlow)"
+              strokeWidth="1.6"
             />
 
-            {/* Ventral Throat Grooves (Pleats beneath the chin & chest) */}
+            {/* Ventral Throat Grooves */}
             <path
               d="M38,72 C70,92 135,97 185,90 C185,82 135,80 70,72 Z"
-              fill="url(#whaleBelly)"
+              fill="url(#whaleBellyReal)"
+              opacity="0.85"
             />
-            {/* Throat Pleat Lines */}
-            <path d="M55,75 Q115,86 175,82" stroke="#94A3B8" strokeWidth="0.8" fill="none" opacity="0.65" />
-            <path d="M60,78 Q115,89 170,85" stroke="#94A3B8" strokeWidth="0.8" fill="none" opacity="0.65" />
-            <path d="M68,82 Q115,92 165,88" stroke="#94A3B8" strokeWidth="0.8" fill="none" opacity="0.65" />
+            {/* Throat Pleats */}
+            <path d="M55,75 Q115,86 175,82" stroke="#E0F2FE" strokeWidth="0.8" fill="none" opacity="0.75" />
+            <path d="M60,78 Q115,89 170,85" stroke="#E0F2FE" strokeWidth="0.8" fill="none" opacity="0.75" />
+            <path d="M68,82 Q115,92 165,88" stroke="#E0F2FE" strokeWidth="0.8" fill="none" opacity="0.75" />
 
-            {/* Distinctive Small Curved Dorsal Fin (set far back) */}
+            {/* Small Curved Dorsal Fin */}
             <path
-              d="M232,52 Q240,43 248,46 Q245,53 238,55 Z"
-              fill="#1E293B"
+              d="M232,50 Q240,41 248,44 Q245,51 238,53 Z"
+              fill="#0F172A"
               stroke="#67E8F9"
-              strokeWidth="0.6"
+              strokeWidth="0.8"
             />
 
-            {/* Graceful Pectoral Fin (Flipper with gentle flex) */}
+            {/* Pectoral Fin (Flipper with gentle flex) */}
             <motion.path
               d="M105,74 Q135,96 155,116 Q145,118 128,102 Q105,82 98,75 Z"
-              fill="#1E3A8A"
+              fill="#0284C7"
               stroke="#67E8F9"
-              strokeWidth="0.9"
+              strokeWidth="1"
               animate={{
-                rotate: [0, 4, -4, 0],
+                rotate: [0, 5, -5, 0],
                 transformOrigin: '105px 74px',
               }}
               transition={{ duration: 4.2, repeat: Infinity, ease: 'easeInOut' }}
             />
 
-            {/* Mottled Starlight Skin Texture Spots */}
-            <g opacity="0.5">
-              <ellipse cx="85" cy="56" rx="4" ry="2" fill="#93C5FD" />
-              <ellipse cx="120" cy="52" rx="6" ry="2.5" fill="#BFDBFE" />
-              <ellipse cx="155" cy="58" rx="5" ry="2" fill="#93C5FD" />
-              <ellipse cx="190" cy="62" rx="7" ry="2.5" fill="#BFDBFE" />
-              <ellipse cx="225" cy="66" rx="5" ry="2" fill="#93C5FD" />
+            {/* Starlight Mottled Spots */}
+            <g opacity="0.6">
+              <ellipse cx="85" cy="54" rx="4" ry="2" fill="#BAE6FD" />
+              <ellipse cx="120" cy="50" rx="6" ry="2.5" fill="#E0F2FE" />
+              <ellipse cx="155" cy="56" rx="5" ry="2" fill="#BAE6FD" />
+              <ellipse cx="190" cy="60" rx="7" ry="2.5" fill="#E0F2FE" />
+              <ellipse cx="225" cy="64" rx="5" ry="2" fill="#BAE6FD" />
             </g>
 
-            {/* Blowhole on upper rostrum */}
-            <ellipse cx="68" cy="48" rx="3.5" ry="1.2" fill="#0F172A" stroke="#38BDF8" strokeWidth="0.5" />
+            {/* Blowhole */}
+            <ellipse cx="68" cy="46" rx="3.5" ry="1.2" fill="#020617" stroke="#38BDF8" strokeWidth="0.8" />
 
             {/* Gentle Eye with Starlight Glisten */}
-            <circle cx="52" cy="65" r="2.2" fill="#0F172A" />
-            <circle cx="51.5" cy="64.5" r="0.8" fill="#FFFFFF" />
+            <circle cx="52" cy="63" r="2.4" fill="#020617" />
+            <circle cx="51.5" cy="62.5" r="0.9" fill="#FFFFFF" />
 
             {/* Sound Wave Resonance Ring around head when singing */}
             {isSinging && (
-              <g transform="translate(52, 65)">
-                <circle cx="0" cy="0" r="14" fill="none" stroke="#67E8F9" strokeWidth="1.5">
-                  <animate attributeName="r" values="8;35;8" dur="1.8s" repeatCount="indefinite" />
+              <g transform="translate(52, 63)">
+                <circle cx="0" cy="0" r="15" fill="none" stroke="#67E8F9" strokeWidth="1.8">
+                  <animate attributeName="r" values="8;45;8" dur="1.8s" repeatCount="indefinite" />
                   <animate attributeName="opacity" values="1;0;1" dur="1.8s" repeatCount="indefinite" />
+                </circle>
+                <circle cx="0" cy="0" r="28" fill="none" stroke="#38BDF8" strokeWidth="1.2">
+                  <animate attributeName="r" values="14;60;14" dur="2.2s" repeatCount="indefinite" />
+                  <animate attributeName="opacity" values="0.8;0;0.8" dur="2.2s" repeatCount="indefinite" />
                 </circle>
               </g>
             )}
           </svg>
         </motion.div>
 
-        {/* Tap/Interaction Prompt at Bottom */}
+        {/* Dynamic Banner Notification */}
+        {bannerNotice && (
+          <div
+            style={{
+              position: 'absolute',
+              top: '56px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              padding: '0.28rem 0.85rem',
+              borderRadius: 'var(--radius-full)',
+              background: 'rgba(2, 6, 23, 0.92)',
+              border: '1.5px solid rgba(56, 189, 248, 0.65)',
+              color: '#BAE6FD',
+              fontSize: '0.72rem',
+              fontFamily: 'monospace',
+              pointerEvents: 'none',
+              zIndex: 20,
+              boxShadow: '0 4px 18px rgba(0, 0, 0, 0.6)',
+              textAlign: 'center',
+              maxWidth: '90%',
+            }}
+          >
+            {bannerNotice}
+          </div>
+        )}
+
+        {/* Bottom Interactive Hint */}
         <div
           style={{
             position: 'absolute',
@@ -894,20 +1064,22 @@ export const OceanBeach: React.FC = () => {
             fontSize: '0.68rem',
             fontFamily: 'monospace',
             color: '#E0F2FE',
-            background: 'rgba(8, 11, 24, 0.8)',
+            background: 'rgba(8, 11, 24, 0.85)',
             padding: '0.22rem 0.75rem',
             borderRadius: 'var(--radius-full)',
+            border: '1px solid rgba(147, 197, 253, 0.35)',
             maxWidth: 'calc(100% - 24px)',
             textAlign: 'center',
             boxShadow: '0 2px 10px rgba(0, 0, 0, 0.55)',
             zIndex: 15,
+            pointerEvents: 'none',
           }}
         >
-          ✦ Tap whale to sing • Drag for glow
+          ✦ Tap whale to sing • Drag water for bioluminescent ripples
         </div>
       </div>
 
-      {/* Interactive Oceanic Action Controls */}
+      {/* 3 Interactive Whale Song & Acoustic Call Controls */}
       <div
         style={{
           display: 'grid',
@@ -916,32 +1088,60 @@ export const OceanBeach: React.FC = () => {
           width: '100%',
         }}
       >
-        {/* Play Whale Song */}
+        {/* Deep 52-Hz Call */}
         <button
           type="button"
-          onClick={handleWhaleSong}
+          onClick={() => handleWhaleSong('deep')}
           style={{
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
             gap: '0.2rem',
-            padding: '0.6rem 0.35rem',
+            padding: '0.65rem 0.35rem',
             borderRadius: 'var(--radius-md)',
-            background: isSinging
+            background: isSinging && activeCallType === 'deep'
               ? 'rgba(6, 182, 212, 0.35)'
               : 'linear-gradient(135deg, rgba(30, 58, 138, 0.28) 0%, rgba(6, 182, 212, 0.15) 100%)',
-            border: isSinging ? '1.5px solid rgba(103, 232, 249, 0.8)' : '1px solid rgba(56, 189, 248, 0.45)',
+            border: isSinging && activeCallType === 'deep' ? '1.5px solid rgba(103, 232, 249, 0.8)' : '1px solid rgba(56, 189, 248, 0.45)',
             color: '#A5F3FC',
             cursor: 'pointer',
             touchAction: 'manipulation',
             transition: 'all 0.2s ease',
-            boxShadow: isSinging ? '0 0 16px rgba(6, 182, 212, 0.4)' : 'none',
+            boxShadow: isSinging && activeCallType === 'deep' ? '0 0 16px rgba(6, 182, 212, 0.4)' : 'none',
           }}
         >
           <Waves size={16} color="#38BDF8" />
-          <span style={{ fontSize: '0.74rem', fontWeight: 600 }}>Whale Song</span>
-          <span style={{ fontSize: '0.62rem', color: 'rgba(255, 255, 255, 0.7)' }}>Deep Ocean Song</span>
+          <span style={{ fontSize: '0.74rem', fontWeight: 600 }}>52-Hz Call</span>
+          <span style={{ fontSize: '0.6rem', color: 'rgba(255, 255, 255, 0.7)' }}>Deep Oceanic Rumble</span>
+        </button>
+
+        {/* Melodic Humpback Echo */}
+        <button
+          type="button"
+          onClick={() => handleWhaleSong('melodic')}
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '0.2rem',
+            padding: '0.65rem 0.35rem',
+            borderRadius: 'var(--radius-md)',
+            background: isSinging && activeCallType === 'melodic'
+              ? 'rgba(168, 85, 247, 0.35)'
+              : 'linear-gradient(135deg, rgba(88, 28, 135, 0.25) 0%, rgba(168, 85, 247, 0.15) 100%)',
+            border: isSinging && activeCallType === 'melodic' ? '1.5px solid #C084FC' : '1px solid rgba(168, 85, 247, 0.45)',
+            color: '#E9D5FF',
+            cursor: 'pointer',
+            touchAction: 'manipulation',
+            transition: 'all 0.2s ease',
+            boxShadow: isSinging && activeCallType === 'melodic' ? '0 0 16px rgba(168, 85, 247, 0.4)' : 'none',
+          }}
+        >
+          <Sparkles size={16} color="#C084FC" />
+          <span style={{ fontSize: '0.74rem', fontWeight: 600 }}>Melodic Hymn</span>
+          <span style={{ fontSize: '0.6rem', color: 'rgba(255, 255, 255, 0.7)' }}>Ascending Echo</span>
         </button>
 
         {/* Surface Breach & Blowhole Spout */}
@@ -954,120 +1154,82 @@ export const OceanBeach: React.FC = () => {
             alignItems: 'center',
             justifyContent: 'center',
             gap: '0.2rem',
-            padding: '0.6rem 0.35rem',
+            padding: '0.65rem 0.35rem',
             borderRadius: 'var(--radius-md)',
-            background: isSurfacing ? 'rgba(56, 189, 248, 0.3)' : 'rgba(255, 255, 255, 0.06)',
-            border: isSurfacing ? '1.5px solid rgba(147, 197, 253, 0.8)' : '1px solid rgba(255, 255, 255, 0.15)',
-            color: '#E0F2FE',
+            background: isSurfacing
+              ? 'rgba(14, 165, 233, 0.35)'
+              : 'linear-gradient(135deg, rgba(14, 116, 144, 0.28) 0%, rgba(56, 189, 248, 0.15) 100%)',
+            border: isSurfacing ? '1.5px solid #38BDF8' : '1px solid rgba(56, 189, 248, 0.45)',
+            color: '#BAE6FD',
             cursor: 'pointer',
             touchAction: 'manipulation',
             transition: 'all 0.2s ease',
+            boxShadow: isSurfacing ? '0 0 16px rgba(14, 165, 233, 0.4)' : 'none',
           }}
         >
-          <Wind size={16} color="#93C5FD" />
-          <span style={{ fontSize: '0.74rem', fontWeight: 600 }}>Surface & Spout</span>
-          <span style={{ fontSize: '0.62rem', color: 'rgba(255, 255, 255, 0.7)' }}>Mist Spout</span>
-        </button>
-
-        {/* Bioluminescent Bloom Spawner */}
-        <button
-          type="button"
-          onClick={() => {
-            const canvas = canvasRef.current;
-            if (canvas) {
-              const rect = canvas.getBoundingClientRect();
-              for (let i = 0; i < 15; i++) {
-                addPlanktonSwirl(
-                  rect.left + Math.random() * rect.width,
-                  rect.top + Math.random() * rect.height
-                );
-              }
-            }
-          }}
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '0.2rem',
-            padding: '0.6rem 0.35rem',
-            borderRadius: 'var(--radius-md)',
-            background: 'rgba(16, 185, 129, 0.12)',
-            border: '1px solid rgba(52, 211, 153, 0.45)',
-            color: '#A7F3D0',
-            cursor: 'pointer',
-            touchAction: 'manipulation',
-            transition: 'all 0.2s ease',
-          }}
-        >
-          <Sparkles size={16} color="#34D399" />
-          <span style={{ fontSize: '0.74rem', fontWeight: 600 }}>Plankton Swirl</span>
-          <span style={{ fontSize: '0.62rem', color: 'rgba(255, 255, 255, 0.7)' }}>Glowing Currents</span>
+          <Wind size={16} color="#BAE6FD" />
+          <span style={{ fontSize: '0.74rem', fontWeight: 600 }}>Blowhole Spout</span>
+          <span style={{ fontSize: '0.6rem', color: 'rgba(255, 255, 255, 0.7)' }}>Surface & Click Train</span>
         </button>
       </div>
 
-      {/* Cinematic Blue Whale Poetic Narrative Card */}
+      {/* Whale Lore & Emotional Connection Card */}
       <div
         style={{
           width: '100%',
-          padding: '1.15rem 1.25rem',
+          padding: '1.15rem 1.35rem',
           borderRadius: 'var(--radius-lg)',
-          background: 'rgba(14, 18, 36, 0.82)',
-          border: '1px solid rgba(147, 197, 253, 0.22)',
+          background: 'rgba(10, 15, 30, 0.8)',
+          border: '1px solid rgba(56, 189, 248, 0.22)',
           backdropFilter: 'blur(16px)',
           WebkitBackdropFilter: 'blur(16px)',
-          boxShadow: '0 10px 30px rgba(0, 0, 0, 0.45)',
+          boxShadow: '0 8px 30px rgba(0, 0, 0, 0.5)',
         }}
       >
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.45rem',
-            color: '#67E8F9',
-            fontSize: '0.82rem',
-            fontWeight: 600,
-            marginBottom: '0.35rem',
-          }}
-        >
-          <Waves size={15} />
-          <span>The Blue Whale • The Song That Crosses Oceans</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.45rem' }}>
+          <Heart size={15} color="#38BDF8" fill="#38BDF8" />
+          <h4
+            style={{
+              fontFamily: 'var(--font-serif)',
+              fontSize: '1.12rem',
+              color: '#FFFFFF',
+              margin: 0,
+            }}
+          >
+            The 52-Hertz Whale & You
+          </h4>
         </div>
 
         <p
           style={{
-            color: 'var(--color-ivory)',
+            fontFamily: 'var(--font-sans)',
             fontSize: '0.84rem',
-            lineHeight: 1.6,
-            margin: '0 0 0.55rem 0',
-          }}
-        >
-          Because your favorite sea animal is the majestic <strong>Blue Whale</strong>. In the vast silence of the deep ocean, blue whales sing low-frequency songs that travel thousands of kilometers through the water to reach the one they cherish.
-        </p>
-
-        <p
-          style={{
+            lineHeight: 1.62,
             color: 'var(--color-ivory-dim)',
-            fontSize: '0.82rem',
-            lineHeight: 1.6,
-            margin: '0 0 0.55rem 0',
-            fontStyle: 'italic',
+            margin: '0 0 0.65rem 0',
           }}
         >
-          Just like that ancient song of the deep: no matter the ~500 kilometers between Coimbatore and Chennai, every wave of the Bay of Bengal carries my thoughts, my voice, and my devotion straight to you.
+          Blue whales sing at frequencies that penetrate hundreds of miles of ocean water without fading. No matter how deep the silence or how wide the distance across Tamil Nadu feels at 3 AM, my thoughts and love travel straight across the tides to reach you.
         </p>
 
         <div
           style={{
-            fontSize: '0.76rem',
-            color: '#FDE68A',
-            fontFamily: 'var(--font-serif)',
-            letterSpacing: '0.02em',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            paddingTop: '0.55rem',
+            borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+            fontSize: '0.72rem',
+            fontFamily: 'monospace',
+            color: '#38BDF8',
           }}
         >
-          "Like the song of the blue whale travelling across dark ocean depths... my thoughts will always find their way to you ✦"
+          <span>BAY OF BENGAL ⇄ MARINA COAST</span>
+          <span>SONGS SUNG: {songCount} ✦</span>
         </div>
       </div>
     </div>
   );
 };
+
+export default OceanBeach;

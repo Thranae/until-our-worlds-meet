@@ -219,7 +219,7 @@ export const ProgressIndicator: React.FC<ProgressIndicatorProps> = ({
                     JOURNEY INDEX ✦
                   </span>
                   <h3 style={{ fontFamily: 'var(--font-serif)', color: '#FFFFFF', fontSize: '1.15rem', margin: '0.15rem 0 0 0' }}>
-                    All 28 Chapters
+                    All {totalChapters} Chapters
                   </h3>
                 </div>
 
