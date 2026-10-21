@@ -11,6 +11,15 @@ interface FloatingLeaf {
   scale: number;
 }
 
+interface FloatingDroplet {
+  id: number;
+  x: number;
+  y: number;
+  scale: number;
+  duration: number;
+  delay: number;
+}
+
 type DarshanPlace = 'adiyogi' | 'kapaleeshwarar' | 'ujjain' | 'chandra';
 
 export const ShivaSanctuary: React.FC = () => {
@@ -20,6 +29,7 @@ export const ShivaSanctuary: React.FC = () => {
   const [deepamLit, setDeepamLit] = useState(false);
   const [offeringCount, setOfferingCount] = useState(0);
   const [leaves, setLeaves] = useState<FloatingLeaf[]>([]);
+  const [droplets, setDroplets] = useState<FloatingDroplet[]>([]);
   const [waterActive, setWaterActive] = useState(false);
   const [damruRhythmActive, setDamruRhythmActive] = useState(false);
 
@@ -111,8 +121,13 @@ export const ShivaSanctuary: React.FC = () => {
     setIsOmPlaying(false);
   }, []);
 
+  const waterTimeoutRef = useRef<number | null>(null);
+
   useEffect(() => {
     return () => {
+      if (waterTimeoutRef.current) {
+        window.clearTimeout(waterTimeoutRef.current);
+      }
       stopOmAudio();
     };
   }, [stopOmAudio]);
@@ -224,18 +239,70 @@ export const ShivaSanctuary: React.FC = () => {
     }
   };
 
-  // Sacred Water (Abhishekam) action
+  // Sacred Ganga Jal water stream audio synthesis
+  const playGangaJalAudio = useCallback(() => {
+    try {
+      const AudioCtx =
+        window.AudioContext ||
+        (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      const ctx = audioCtxRef.current || new AudioCtx();
+      audioCtxRef.current = ctx;
+      if (ctx.state === 'suspended') ctx.resume();
+
+      const now = ctx.currentTime;
+      for (let i = 0; i < 24; i++) {
+        const osc = ctx.createOscillator();
+        const g = ctx.createGain();
+        osc.type = 'sine';
+        const startFreq = 620 + Math.random() * 750;
+        const startTime = now + i * 0.12 + Math.random() * 0.04;
+        osc.frequency.setValueAtTime(startFreq, startTime);
+        osc.frequency.exponentialRampToValueAtTime(startFreq + 240, startTime + 0.07);
+
+        g.gain.setValueAtTime(0.045, startTime);
+        g.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.11);
+
+        osc.connect(g);
+        g.connect(ctx.destination);
+        osc.start(startTime);
+        osc.stop(startTime + 0.13);
+      }
+    } catch {}
+  }, []);
+
+  // Sacred Water (Abhishekam) action (Tap to start or stop, with 12s active flow)
   const offerGangaJal = () => {
     playTempleBell();
+    if (waterActive) {
+      if (waterTimeoutRef.current) {
+        window.clearTimeout(waterTimeoutRef.current);
+        waterTimeoutRef.current = null;
+      }
+      setWaterActive(false);
+      return;
+    }
+
+    playGangaJalAudio();
     setOfferingCount((c) => c + 1);
     setWaterActive(true);
-    setTimeout(() => setWaterActive(false), 2400);
 
-    if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
-      try {
-        navigator.vibrate([15, 30, 15]);
-      } catch {}
+    const newDroplets: FloatingDroplet[] = Array.from({ length: 16 }).map((_, i) => ({
+      id: Date.now() + i,
+      x: 18 + Math.random() * 64,
+      y: 6 + Math.random() * 22,
+      scale: 0.7 + Math.random() * 0.5,
+      duration: 1.8 + Math.random() * 1.4,
+      delay: i * 0.08,
+    }));
+    setDroplets((prev) => [...prev.slice(-32), ...newDroplets]);
+
+    if (waterTimeoutRef.current) {
+      window.clearTimeout(waterTimeoutRef.current);
     }
+    waterTimeoutRef.current = window.setTimeout(() => {
+      setWaterActive(false);
+      waterTimeoutRef.current = null;
+    }, 12000);
   };
 
   // Light Deepam action
@@ -348,18 +415,29 @@ export const ShivaSanctuary: React.FC = () => {
       ctx.fill();
       ctx.restore();
 
-      // 5. Water Abhishekam Streams (if active)
+      // 5. Water Abhishekam Radiance & Mist on Canvas (if active)
       if (waterActive) {
         ctx.save();
-        ctx.strokeStyle = 'rgba(186, 230, 253, 0.85)';
+        // Radiating water aura glow around altar
+        const waterGlow = ctx.createRadialGradient(cx, cy + 10, 15, cx, cy + 10, 135);
+        waterGlow.addColorStop(0, 'rgba(56, 189, 248, 0.28)');
+        waterGlow.addColorStop(0.5, 'rgba(14, 165, 233, 0.14)');
+        waterGlow.addColorStop(1, 'transparent');
+        ctx.fillStyle = waterGlow;
+        ctx.beginPath();
+        ctx.arc(cx, cy + 10, 135, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Ambient descending mist streams
+        ctx.strokeStyle = 'rgba(186, 230, 253, 0.75)';
         ctx.lineWidth = 2;
         ctx.shadowColor = '#38BDF8';
-        ctx.shadowBlur = 8;
-        for (let s = -12; s <= 12; s += 8) {
-          const flowOffset = (time * 120 + Math.abs(s) * 15) % 60;
+        ctx.shadowBlur = 10;
+        for (let s = -28; s <= 28; s += 8) {
+          const flowOffset = (time * 110 + Math.abs(s) * 14) % 70;
           ctx.beginPath();
-          ctx.moveTo(cx + s, cy - 35 + flowOffset);
-          ctx.lineTo(cx + s * 1.2, cy - 15 + flowOffset);
+          ctx.moveTo(cx + s, cy - 65 + flowOffset);
+          ctx.lineTo(cx + s * 1.15, cy - 35 + flowOffset);
           ctx.stroke();
         }
         ctx.shadowBlur = 0;
@@ -383,7 +461,7 @@ export const ShivaSanctuary: React.FC = () => {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        gap: '1.25rem',
+        gap: '0.85rem',
         width: '100%',
         maxWidth: '520px',
         margin: '0 auto',
@@ -395,7 +473,7 @@ export const ShivaSanctuary: React.FC = () => {
           position: 'relative',
           width: '100%',
           maxWidth: '420px',
-          height: '330px',
+          height: '320px',
           borderRadius: 'var(--radius-lg)',
           overflow: 'hidden',
           border: '1.5px solid rgba(253, 230, 138, 0.35)',
@@ -593,6 +671,44 @@ export const ShivaSanctuary: React.FC = () => {
                 <feGaussianBlur stdDeviation="6" result="blur" />
                 <feComposite in="SourceGraphic" in2="blur" operator="over" />
               </filter>
+
+              {/* Ganga Jal Water Stream Gradient */}
+              <linearGradient id="gangaWaterGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="#FFFFFF" />
+                <stop offset="25%" stopColor="#E0F2FE" />
+                <stop offset="60%" stopColor="#38BDF8" />
+                <stop offset="100%" stopColor="#0284C7" />
+              </linearGradient>
+
+              {/* Shimmering Crystalline Water Core */}
+              <linearGradient id="waterCoreGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="rgba(56, 189, 248, 0.4)" />
+                <stop offset="35%" stopColor="#FFFFFF" />
+                <stop offset="65%" stopColor="#E0F2FE" />
+                <stop offset="100%" stopColor="rgba(56, 189, 248, 0.4)" />
+              </linearGradient>
+
+              {/* Water Splash Glow Filter */}
+              <filter id="waterSplashGlow" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="3.5" result="blur" />
+                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+              </filter>
+
+              {/* Brass Abhishekam Dhara Patra Vessel Gradient */}
+              <linearGradient id="brassVesselGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#D97706" />
+                <stop offset="35%" stopColor="#FDE68A" />
+                <stop offset="65%" stopColor="#F59E0B" />
+                <stop offset="100%" stopColor="#92400E" />
+              </linearGradient>
+
+              {/* Wet Krishnashila Granite Sheen Glaze */}
+              <linearGradient id="waterVeilSheen" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="rgba(56, 189, 248, 0.08)" />
+                <stop offset="30%" stopColor="rgba(255, 255, 255, 0.35)" />
+                <stop offset="60%" stopColor="rgba(56, 189, 248, 0.22)" />
+                <stop offset="100%" stopColor="rgba(56, 189, 248, 0.06)" />
+              </linearGradient>
             </defs>
 
             {/* 1. Divine Radiant Golden Aura behind the Lingam */}
@@ -846,9 +962,181 @@ export const ShivaSanctuary: React.FC = () => {
                 {/* Right Leaflet */}
                 <path d="M 2 4 C 8 1, 8 7, 12 4 C 8 7, 8 1, 2 4 Z" fill="url(#bilvaLeafGrad)" stroke="#064E3B" strokeWidth="0.5" />
               </g>
+
+              {/* 9. Suspended Brass Dhara Patra (Abhishekam Vessel) hanging gracefully above Lingam */}
+              <g>
+                {/* Golden Hanging Chains */}
+                <line x1="120" y1="1" x2="127" y2="20" stroke="#F59E0B" strokeWidth="1.2" strokeDasharray="2,2" />
+                <line x1="152" y1="1" x2="145" y2="20" stroke="#F59E0B" strokeWidth="1.2" strokeDasharray="2,2" />
+                {/* Vessel Pot Body */}
+                <path d="M 121 20 Q 118 29 131 36 L 133 39 L 139 39 L 141 36 Q 154 29 151 20 Z" fill="url(#brassVesselGrad)" stroke="#FEF08A" strokeWidth="0.8" />
+                {/* Vessel Top Rim */}
+                <ellipse cx="136" cy="20" rx="15" ry="4.5" fill="#FDE68A" stroke="#B45309" strokeWidth="0.8" />
+                {/* Decorative engraved band */}
+                <path d="M 123 25 Q 136 28 149 25" fill="none" stroke="#FEF08A" strokeWidth="0.8" opacity="0.85" />
+                {/* Bottom sacred vessel nozzle */}
+                <circle cx="136" cy="39" r="2.2" fill="#F59E0B" stroke="#B45309" strokeWidth="0.5" />
+                {/* Resting droplet when not flowing */}
+                {!waterActive && (
+                  <circle cx="136" cy="42" r="1.4" fill="#38BDF8" opacity="0.9" filter="url(#waterSplashGlow)" />
+                )}
+              </g>
+
+              {/* 10. Sacred Ganga Jal Abhishekam Streams & Cascades (Active) */}
+              {waterActive && (
+                <g>
+                  {/* Outpouring vertical stream from Dhara Patra nozzle onto Lingam dome */}
+                  <path
+                    d="M 132 39 Q 133 46 131 54 L 141 54 Q 139 46 140 39 Z"
+                    fill="url(#gangaWaterGrad)"
+                    opacity="0.95"
+                    filter="url(#waterSplashGlow)"
+                  />
+                  <line x1="136" y1="39" x2="136" y2="54" stroke="#FFFFFF" strokeWidth="3" strokeLinecap="round" />
+                  <line x1="134" y1="41" x2="134" y2="53" stroke="#BAE6FD" strokeWidth="1.4" />
+                  <line x1="138" y1="41" x2="138" y2="53" stroke="#BAE6FD" strokeWidth="1.4" />
+
+                  {/* Dome Crown Splash & Effervescence */}
+                  <ellipse cx="136" cy="54" rx="16" ry="6" fill="none" stroke="#FFFFFF" strokeWidth="2" filter="url(#waterSplashGlow)" />
+                  <ellipse cx="136" cy="54" rx="22" ry="8" fill="none" stroke="#38BDF8" strokeWidth="1.4" opacity="0.8" />
+                  {/* Upward Spray Droplets */}
+                  <circle cx="128" cy="48" r="1.6" fill="#FFFFFF" filter="url(#waterSplashGlow)" />
+                  <circle cx="144" cy="47" r="1.6" fill="#FFFFFF" filter="url(#waterSplashGlow)" />
+                  <circle cx="122" cy="52" r="1.2" fill="#BAE6FD" />
+                  <circle cx="150" cy="51" r="1.2" fill="#BAE6FD" />
+                  <circle cx="136" cy="46" r="1.5" fill="#E0F2FE" />
+
+                  {/* Polished Wet Krishnashila Granite Sheen */}
+                  <path
+                    d="M 110 96 C 110 50, 162 50, 162 96 L 162 162 C 162 171, 110 171, 110 162 Z"
+                    fill="url(#waterVeilSheen)"
+                    opacity="0.75"
+                  />
+
+                  {/* Left Granite Cascading Rivulet */}
+                  <path
+                    d="M 124 57 Q 116 80 115 110 Q 114 135 116 161"
+                    fill="none"
+                    stroke="url(#gangaWaterGrad)"
+                    strokeWidth="2.8"
+                    strokeLinecap="round"
+                    filter="url(#waterSplashGlow)"
+                    opacity="0.9"
+                  />
+                  <path
+                    d="M 124 57 Q 116 80 115 110 Q 114 135 116 161"
+                    fill="none"
+                    stroke="#FFFFFF"
+                    strokeWidth="1.2"
+                    strokeLinecap="round"
+                    opacity="0.8"
+                  />
+
+                  {/* Right Granite Cascading Rivulet */}
+                  <path
+                    d="M 148 57 Q 156 80 157 110 Q 158 135 156 161"
+                    fill="none"
+                    stroke="url(#gangaWaterGrad)"
+                    strokeWidth="2.8"
+                    strokeLinecap="round"
+                    filter="url(#waterSplashGlow)"
+                    opacity="0.9"
+                  />
+                  <path
+                    d="M 148 57 Q 156 80 157 110 Q 158 135 156 161"
+                    fill="none"
+                    stroke="#FFFFFF"
+                    strokeWidth="1.2"
+                    strokeLinecap="round"
+                    opacity="0.8"
+                  />
+
+                  {/* Center Flowing Veils across Vibhuti lines */}
+                  <path
+                    d="M 132 55 Q 129 90 131 125 Q 132 145 133 162"
+                    fill="none"
+                    stroke="url(#waterCoreGrad)"
+                    strokeWidth="2.2"
+                    strokeLinecap="round"
+                    opacity="0.85"
+                  />
+                  <path
+                    d="M 140 55 Q 143 90 141 125 Q 140 145 139 162"
+                    fill="none"
+                    stroke="url(#waterCoreGrad)"
+                    strokeWidth="2.2"
+                    strokeLinecap="round"
+                    opacity="0.85"
+                  />
+
+                  {/* Holy Water Pool in Avudaiyar Basin */}
+                  <ellipse
+                    cx="136"
+                    cy="163"
+                    rx="57"
+                    ry="15.5"
+                    fill="rgba(56, 189, 248, 0.52)"
+                    stroke="#38BDF8"
+                    strokeWidth="1.5"
+                    filter="url(#waterSplashGlow)"
+                  />
+                  {/* Concentric Pool Ripples */}
+                  <ellipse cx="136" cy="163" rx="36" ry="10" fill="none" stroke="#FFFFFF" strokeWidth="1.4" opacity="0.8" />
+                  <ellipse cx="136" cy="163" rx="48" ry="13" fill="none" stroke="#BAE6FD" strokeWidth="1.1" opacity="0.6" />
+
+                  {/* Gomukhi Drainage Spout Channel Flow */}
+                  <path d="M 80 159 L 18 162 L 18 167 L 80 167 Z" fill="#38BDF8" opacity="0.9" filter="url(#waterSplashGlow)" />
+                  <line x1="80" y1="163" x2="18" y2="164" stroke="#FFFFFF" strokeWidth="2" />
+
+                  {/* Gushing Gomukhi Waterfall Arc plunging into Floor Plinth */}
+                  <path
+                    d="M 18 161 C 9 168 8 190 9 218 L 16 218 C 15 190 17 170 21 163 Z"
+                    fill="url(#gangaWaterGrad)"
+                    filter="url(#waterSplashGlow)"
+                    opacity="0.95"
+                  />
+                  <path d="M 17 163 C 10 170 10 195 11 218" stroke="#FFFFFF" strokeWidth="2.4" strokeLinecap="round" />
+                  <path d="M 20 164 C 14 175 14 200 15 218" stroke="#BAE6FD" strokeWidth="1.5" strokeLinecap="round" />
+
+                  {/* Base Plinth Splash Pool */}
+                  <ellipse cx="12" cy="218" rx="16" ry="5.5" fill="rgba(56, 189, 248, 0.7)" stroke="#BAE6FD" strokeWidth="1.6" filter="url(#waterSplashGlow)" />
+                  <ellipse cx="12" cy="218" rx="9" ry="3" fill="#FFFFFF" opacity="0.9" />
+
+                  {/* Splashing Sparkle Droplets at Gomukhi Base */}
+                  <circle cx="5" cy="212" r="1.6" fill="#FFFFFF" filter="url(#waterSplashGlow)" />
+                  <circle cx="17" cy="210" r="1.4" fill="#FFFFFF" filter="url(#waterSplashGlow)" />
+                  <circle cx="3" cy="216" r="1.2" fill="#BAE6FD" />
+                  <circle cx="21" cy="214" r="1.2" fill="#BAE6FD" />
+                  <circle cx="12" cy="207" r="1.5" fill="#E0F2FE" />
+                </g>
+              )}
             </g>
           </svg>
         </div>
+
+        {/* Floating Sacred Ganga Jal Droplets Animation */}
+        <AnimatePresence>
+          {droplets.map((drop) => (
+            <motion.div
+              key={drop.id}
+              initial={{ opacity: 1, y: 0, scale: drop.scale }}
+              animate={{ opacity: [1, 0.9, 0], y: 160 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: drop.duration, delay: drop.delay, ease: 'easeIn' }}
+              style={{
+                position: 'absolute',
+                left: `${drop.x}%`,
+                top: `${drop.y}%`,
+                pointerEvents: 'none',
+                zIndex: 13,
+                display: 'flex',
+                alignItems: 'center',
+              }}
+            >
+              <span style={{ fontSize: '1.1rem', filter: 'drop-shadow(0 0 6px #38BDF8)' }}>💧</span>
+            </motion.div>
+          ))}
+        </AnimatePresence>
 
         {/* Floating Bilva Patra Leaves Animation */}
         <AnimatePresence>
@@ -936,15 +1224,27 @@ export const ShivaSanctuary: React.FC = () => {
             left: '12px',
             fontSize: '0.68rem',
             fontFamily: 'monospace',
-            color: '#FEF3C7',
-            background: 'rgba(8, 11, 24, 0.82)',
-            padding: '0.22rem 0.65rem',
+            color: waterActive ? '#BAE6FD' : '#FEF3C7',
+            background: waterActive ? 'rgba(3, 105, 161, 0.92)' : 'rgba(8, 11, 24, 0.82)',
+            padding: '0.24rem 0.7rem',
             borderRadius: 'var(--radius-full)',
-            border: '1px solid rgba(253, 230, 138, 0.35)',
+            border: waterActive
+              ? '1px solid rgba(56, 189, 248, 0.85)'
+              : '1px solid rgba(253, 230, 138, 0.35)',
+            boxShadow: waterActive ? '0 0 14px rgba(56, 189, 248, 0.6)' : 'none',
             pointerEvents: 'none',
+            transition: 'all 0.3s ease',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.35rem',
+            zIndex: 16,
           }}
         >
-          ✦ BLESSINGS OFFERED: {offeringCount}
+          {waterActive ? (
+            <span>🌊 GANGA JAL ABHISHEKAM • HAR HAR MAHADEV</span>
+          ) : (
+            <span>✦ BLESSINGS OFFERED: {offeringCount}</span>
+          )}
         </div>
       </div>
 
@@ -1014,17 +1314,36 @@ export const ShivaSanctuary: React.FC = () => {
               gap: '0.25rem',
               padding: '0.55rem 0.35rem',
               borderRadius: 'var(--radius-md)',
-              background: waterActive ? 'rgba(56, 189, 248, 0.28)' : 'rgba(56, 189, 248, 0.12)',
-              border: '1px solid rgba(56, 189, 248, 0.45)',
+              background: waterActive
+                ? 'linear-gradient(135deg, rgba(2, 132, 199, 0.45), rgba(56, 189, 248, 0.25))'
+                : 'rgba(56, 189, 248, 0.12)',
+              border: waterActive
+                ? '1px solid rgba(56, 189, 248, 0.9)'
+                : '1px solid rgba(56, 189, 248, 0.45)',
+              boxShadow: waterActive
+                ? '0 0 16px rgba(56, 189, 248, 0.55), inset 0 0 8px rgba(56, 189, 248, 0.3)'
+                : 'none',
               color: '#BAE6FD',
               cursor: 'pointer',
               touchAction: 'manipulation',
-              transition: 'all 0.2s ease',
+              transition: 'all 0.25s ease',
             }}
           >
-            <Droplets size={16} color="#38BDF8" />
-            <span style={{ fontSize: '0.72rem', fontWeight: 600 }}>Ganga Jal</span>
-            <span style={{ fontSize: '0.62rem', color: 'rgba(255, 255, 255, 0.7)' }}>Abhishekam</span>
+            <Droplets
+              size={16}
+              color="#38BDF8"
+              style={{
+                filter: waterActive ? 'drop-shadow(0 0 6px #38BDF8)' : 'none',
+                transform: waterActive ? 'scale(1.15)' : 'none',
+                transition: 'transform 0.2s ease',
+              }}
+            />
+            <span style={{ fontSize: '0.72rem', fontWeight: 600 }}>
+              {waterActive ? 'Flowing... ✦' : 'Ganga Jal'}
+            </span>
+            <span style={{ fontSize: '0.62rem', color: waterActive ? '#E0F2FE' : 'rgba(255, 255, 255, 0.7)' }}>
+              {waterActive ? 'Holy Abhishekam' : 'Abhishekam'}
+            </span>
           </button>
 
           {/* Light Deepam */}
