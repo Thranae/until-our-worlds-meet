@@ -17,7 +17,6 @@ export const BackgroundMusic: React.FC<BackgroundMusicProps> = ({
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const fadeIntervalRef = useRef<number | null>(null);
-  const activeForegroundCountRef = useRef(0);
 
   // Smoothly ramp audio volume to target
   const fadeVolumeTo = useCallback(
@@ -64,6 +63,7 @@ export const BackgroundMusic: React.FC<BackgroundMusicProps> = ({
     let audio = audioRef.current;
     if (!audio) {
       audio = new Audio(src);
+      (audio as any)._isBgm = true;
       audio.loop = true;
       audio.preload = 'auto';
       audioRef.current = audio;
@@ -100,36 +100,37 @@ export const BackgroundMusic: React.FC<BackgroundMusicProps> = ({
     });
   }, [fadeVolumeTo]);
 
+  const wasPlayingBeforeDuckRef = useRef(false);
+
   // Duck audio when another sound begins
   const handleForegroundStart = useCallback(() => {
-    activeForegroundCountRef.current += 1;
     setIsDucked(true);
 
     const audio = audioRef.current;
-    if (!audio || audio.paused || isMuted) return;
+    if (!audio) return;
 
-    // Smoothly fade out to 0 over 700ms and pause
-    fadeVolumeTo(0, 700, () => {
-      if (activeForegroundCountRef.current > 0) {
-        audio.pause();
-      }
+    if (!audio.paused && !isMuted) {
+      wasPlayingBeforeDuckRef.current = true;
+    }
+
+    // Smoothly fade out to 0 over 350ms, then pause completely to prevent any audio overlap
+    fadeVolumeTo(0, 350, () => {
+      audio.pause();
     });
   }, [isMuted, fadeVolumeTo]);
 
   // Unduck audio when other sound finishes
   const handleForegroundStop = useCallback(() => {
-    activeForegroundCountRef.current = Math.max(0, activeForegroundCountRef.current - 1);
+    setIsDucked(false);
+    const audio = audioRef.current;
+    if (!audio || isMuted) return;
 
-    if (activeForegroundCountRef.current === 0) {
-      setIsDucked(false);
-      const audio = audioRef.current;
-      if (!audio || isMuted || !hasStartedOnce) return;
-
-      // Resume playing and fade in to 5% over 1200ms
+    // Smoothly restore background music if it was playing before or initialized
+    if (wasPlayingBeforeDuckRef.current || hasStartedOnce) {
       audio.volume = 0;
       audio.play().then(() => {
         setIsPlaying(true);
-        fadeVolumeTo(targetVolume, 1200);
+        fadeVolumeTo(targetVolume, 1000);
       }).catch(() => {});
     }
   }, [isMuted, hasStartedOnce, targetVolume, fadeVolumeTo]);
@@ -137,6 +138,7 @@ export const BackgroundMusic: React.FC<BackgroundMusicProps> = ({
   // Initialize and attach global interaction listener for autoplay
   useEffect(() => {
     const audio = new Audio(src);
+    (audio as any)._isBgm = true;
     audio.loop = true;
     audio.preload = 'auto';
     audio.volume = 0;

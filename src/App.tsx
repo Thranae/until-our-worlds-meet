@@ -37,8 +37,27 @@ import { BirthdayLetter } from './chapters/BirthdayLetter';
 import { siteContent } from './data/siteContent';
 
 export const App: React.FC = () => {
-  const [currentChapter, setCurrentChapter] = useState(0);
+  const [currentChapter, setCurrentChapter] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const ch = params.get('ch');
+      if (ch !== null) {
+        const parsed = parseInt(ch, 10);
+        if (!isNaN(parsed) && parsed >= 0) return parsed;
+      }
+    }
+    return 0;
+  });
   const [isLanternModalOpen, setIsLanternModalOpen] = useState(false);
+
+  // Sync currentChapter to URL query parameter
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href);
+      url.searchParams.set('ch', String(currentChapter));
+      window.history.replaceState(null, '', url.toString());
+    }
+  }, [currentChapter]);
 
   const chapterNames = [
     'Invitation',

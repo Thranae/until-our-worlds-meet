@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Play, Pause, Music2, Sparkles, SkipForward } from 'lucide-react';
+import { audioBus } from '../utils/audioBus';
 
 interface VinylNote {
   x: number;
@@ -138,6 +139,17 @@ export const VinylRecordPlayer: React.FC = () => {
       // Safe fallback
     }
   }, []);
+
+  useEffect(() => {
+    if (isPlaying) {
+      audioBus.reportAudioStart('vinyl-player');
+    } else {
+      audioBus.reportAudioStop('vinyl-player');
+    }
+    return () => {
+      audioBus.reportAudioStop('vinyl-player');
+    };
+  }, [isPlaying]);
 
   const togglePlayback = () => {
     if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {

@@ -15,7 +15,7 @@ export const TwoWorlds: React.FC<TwoWorldsProps> = ({ onProceed }) => {
       chapterNumber={2}
       eyebrow="CHAPTER 02 • CHENNAI TO COIMBATORE"
       title="From Kovai's Hills to the Marina Coast"
-      subtitle={`Coimbatore and Chennai • ~500 km across Tamil Nadu, under the exact same starlit sky.\n\nYou've finished your studies and stepped into this exciting new chapter of your life, and across every mile of this state, I am endlessly proud of you.`}
+      subtitle={`Coimbatore and Chennai • ~500 km across Tamil Nadu, under the exact same starlit sky.\n\nFrom navigating tough beginnings to building your own independence and earning your future with sheer grit — across every mile of this state, I am endlessly proud of you.`}
       primaryAction={{
         label: 'Where we first dropped ✦',
         onClick: onProceed,

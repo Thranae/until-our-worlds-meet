@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Volume2, VolumeX, Flame, Droplets, Leaf, Bell, Heart } from 'lucide-react';
 import { siteContent } from '../data/siteContent';
+import { audioBus } from '../utils/audioBus';
 
 interface FloatingLeaf {
   id: number;
@@ -95,12 +96,14 @@ export const ShivaSanctuary: React.FC = () => {
 
       omNodesRef.current = { oscillators, masterGain };
       setIsOmPlaying(true);
+      audioBus.reportAudioStart('shiva-om');
     } catch {
       // Safe fallback
     }
   }, []);
 
   const stopOmAudio = useCallback(() => {
+    audioBus.reportAudioStop('shiva-om');
     if (!omNodesRef.current) return;
     try {
       const { oscillators, masterGain } = omNodesRef.current;
@@ -145,6 +148,7 @@ export const ShivaSanctuary: React.FC = () => {
   // Temple bell chime sound synthesis
   const playTempleBell = useCallback(() => {
     try {
+      audioBus.reportAudioStart('shiva-bell', 2400);
       const AudioCtx =
         window.AudioContext ||
         (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
@@ -173,6 +177,7 @@ export const ShivaSanctuary: React.FC = () => {
   // Damru acoustic double-beat rhythm synthesis
   const playDamru = useCallback(() => {
     try {
+      audioBus.reportAudioStart('shiva-damru', 600);
       const AudioCtx =
         window.AudioContext ||
         (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
@@ -2006,7 +2011,7 @@ export const ShivaSanctuary: React.FC = () => {
                     fontStyle: 'italic',
                   }}
                 >
-                  "In the timeless streets of Mylapore, Chennai, where temple bells ring through the coastal breeze. His presence watches over your city every single day, keeping you safe and guiding every step of your new journey after graduating."
+                  "In the timeless streets of Mylapore, Chennai, where temple bells ring through the coastal breeze. His presence watches over your city every single day, keeping you safe, blessing your hard-earned independence, and guiding every step as you build your dreams."
                 </p>
               </motion.div>
             )}

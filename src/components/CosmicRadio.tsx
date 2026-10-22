@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Radio, Volume2, Sparkles, CloudRain, Music, Heart } from 'lucide-react';
+import { audioBus } from '../utils/audioBus';
 
 interface Station {
   freq: number;
@@ -25,7 +26,7 @@ const STATIONS: Station[] = [
     name: "Lo-Fi Star Reverie",
     genre: "Warm Rhodes Chords",
     icon: <Music size={16} color="#A78BFA" />,
-    description: "Quiet mellow chords for unwinding after graduating, late night thoughts, and dreaming under Tamil Nadu skies.",
+    description: "Quiet mellow chords for unwinding after a long day's hard work, late night thoughts, and dreaming under Tamil Nadu skies.",
     color: "#A78BFA",
   },
   {
@@ -244,22 +245,16 @@ export const CosmicRadio: React.FC = () => {
 
   useEffect(() => {
     if (isPlaying) {
-      if (typeof window !== 'undefined') {
-        window.dispatchEvent(new CustomEvent('celestial-foreground-audio-start'));
-      }
+      audioBus.reportAudioStart('cosmic-radio');
     } else {
-      if (typeof window !== 'undefined') {
-        window.dispatchEvent(new CustomEvent('celestial-foreground-audio-stop'));
-      }
+      audioBus.reportAudioStop('cosmic-radio');
     }
   }, [isPlaying]);
 
   useEffect(() => {
     return () => {
       stopAudio();
-      if (typeof window !== 'undefined') {
-        window.dispatchEvent(new CustomEvent('celestial-foreground-audio-stop'));
-      }
+      audioBus.reportAudioStop('cosmic-radio');
     };
   }, []);
 

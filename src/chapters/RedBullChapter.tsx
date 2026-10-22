@@ -14,7 +14,7 @@ export const RedBullChapter: React.FC<RedBullChapterProps> = ({ onProceed }) => 
       chapterNumber={10}
       eyebrow="CHAPTER 10 • HER STARLIGHT FUEL"
       title="Pop the tab on your celestial can"
-      subtitle="For all the demanding study nights you conquered to graduate, and all the exciting new dreams ahead: here is your unlimited custom Red Bull edition."
+      subtitle="For every demanding night you pushed through hardship to earn your independence and build your future: here is your unlimited custom Red Bull edition."
       primaryAction={{
         label: 'View our living memories next ✦',
         onClick: onProceed,

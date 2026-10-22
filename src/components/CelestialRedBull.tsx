@@ -53,7 +53,7 @@ const REDBULL_EDITIONS: Record<
     wingsValue: 'Flying to You 🪽',
     netContent: 'Infinite Love',
     description:
-      "They always say Red Bull gives you wings — but if it really did, I would have flown straight from Coimbatore to Chennai to celebrate with you by now.\n\nFor all those demanding study nights you conquered to graduate, and every bright dream ahead of you: here’s your unlimited celestial can. Whenever you crack open a cold one in real life, know that I’m endlessly proud of you, cheering for you, and always right here.",
+      "They always say Red Bull gives you wings — but if it really did, I would have flown straight from Coimbatore to Chennai to celebrate with you by now.\n\nFor all those long, demanding nights where you pushed through difficult times to earn, build your independence, and create your own future: here’s your unlimited celestial can. Whenever you crack open a cold one in real life, know that I’m endlessly proud of your strength, cheering for your dreams, and always right here beside you.",
   },
   airdrop: {
     id: 'airdrop',
@@ -353,7 +353,7 @@ export const CelestialRedBull: React.FC = () => {
           lineHeight: 1.55,
         }}
       >
-        Celebrating your milestone of graduating, and powering every bright dream ahead. Select an edition and tap the cold can to pop the tab.
+        Celebrating your unstoppable strength, hard-earned independence, and every bright dream ahead. Select an edition and tap the cold can to pop the tab.
       </p>
 
       {/* Interactive Edition / Mixology Selector */}

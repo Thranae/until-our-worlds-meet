@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Play, Pause, RotateCcw, Volume2, Mic, AlertCircle, Sparkles } from 'lucide-react';
 import { siteContent } from '../data/siteContent';
+import { audioBus } from '../utils/audioBus';
 
 export const VoicePlayer: React.FC = () => {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -53,22 +54,16 @@ export const VoicePlayer: React.FC = () => {
   // Clean up synthetic audio on unmount & notify BGM
   useEffect(() => {
     if (isPlaying) {
-      if (typeof window !== 'undefined') {
-        window.dispatchEvent(new CustomEvent('celestial-foreground-audio-start'));
-      }
+      audioBus.reportAudioStart('voice-player');
     } else {
-      if (typeof window !== 'undefined') {
-        window.dispatchEvent(new CustomEvent('celestial-foreground-audio-stop'));
-      }
+      audioBus.reportAudioStop('voice-player');
     }
   }, [isPlaying]);
 
   useEffect(() => {
     return () => {
       stopSyntheticMelody();
-      if (typeof window !== 'undefined') {
-        window.dispatchEvent(new CustomEvent('celestial-foreground-audio-stop'));
-      }
+      audioBus.reportAudioStop('voice-player');
     };
   }, []);
 

@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Play, Pause, RotateCw, Sparkles, Volume2 } from 'lucide-react';
+import { audioBus } from '../utils/audioBus';
 
 interface NoteItem {
   id: number;
@@ -226,6 +227,17 @@ export const CelestialMusicBox: React.FC = () => {
     setIsPlaying(false);
     setActiveTine(null);
   }, []);
+
+  useEffect(() => {
+    if (isPlaying) {
+      audioBus.reportAudioStart('music-box');
+    } else {
+      audioBus.reportAudioStop('music-box');
+    }
+    return () => {
+      audioBus.reportAudioStop('music-box');
+    };
+  }, [isPlaying]);
 
   const togglePlay = () => {
     if (isPlaying) {

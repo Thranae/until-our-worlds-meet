@@ -240,7 +240,7 @@ export const BirthdayLetter: React.FC<BirthdayLetterProps> = ({ onReturnToVoice,
                 maxWidth: '360px',
               }}
             >
-              Written especially for your birthday on November 8, celebrating your graduation and our story. Tap to break the celestial seal and open.
+              Written especially for your birthday on November 8, celebrating your strength, independence, and our story. Tap to break the celestial seal and open.
             </p>
 
             <button

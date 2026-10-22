@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Stamp, ChevronLeft, ChevronRight, Bell, Sparkles } from 'lucide-react';
+import { audioBus } from '../utils/audioBus';
 
 interface Destination {
   title: string;
@@ -30,7 +31,7 @@ export const TravelJournal: React.FC = () => {
       title: 'Sri Mahakaleshwar Jyotirlinga • Holy Ujjain, MP',
       location: 'Ujjain • Banks of Sacred Shipra River, Madhya Pradesh',
       tagline: 'Sacred Bhasma Aarti & The Ancient Jyotirlinga of Mahakal',
-      desc: 'Stepping together into the ancient sandstone courtyards of Mahakaleshwar in Ujjain, Madhya Pradesh. Before the consecrated south-facing Shiva Lingam draped in holy Bhasma ash, silver snake canopy, and fresh bilva garlands, Vedic priests in saffron dhotis chant ancient mantras as conch shells and temple bells resonate at dawn. Devout pilgrims and families fold their hands in deep devotion, as warm brass aarti flames illuminate our prayers.',
+      desc: 'Standing together before Mahadeva during holy Bhasma Aarti at dawn. With Vedic chants and bells echoing across Ujjain, we seek His eternal blessings for your strength, happiness, and our shared journey.',
       accent: '#F59E0B',
       emoji: '🕉️',
       stamped: false,
@@ -39,7 +40,7 @@ export const TravelJournal: React.FC = () => {
       title: 'Holy Shipra River Ghats & Ram Ghat at Dusk',
       location: 'Ram Ghat • Shipra River, Ujjain, Madhya Pradesh',
       tagline: 'Evening Deep Daan & Sacred River Whispers',
-      desc: 'Walking along the historic stone ghats of the Shipra River in Ujjain as thousands of brass oil lamps float like stars upon the water. Temple priests perform the holy evening Shipra Aarti while the temple bells toll across the river breeze, blessing our shared journey with peace and eternal togetherness.',
+      desc: 'Walking along the sacred Shipra ghats as thousands of evening oil lamps glow upon the river, blessing our shared path with lasting peace.',
       accent: '#FDE68A',
       emoji: '🪔',
       stamped: false,
@@ -48,7 +49,7 @@ export const TravelJournal: React.FC = () => {
       title: 'Harsiddhi & Kal Bhairav • Ancient City of Avantika',
       location: 'Ancient Ujjain (Avantika) • Madhya Pradesh',
       tagline: 'Golden Lamp Pillars & The Eternal City',
-      desc: 'Exploring the ancient spiritual heart of Malwa where centuries of devotion and Vedic astronomy meet. Gazing up at the towering 51-foot deepastambhas (lamp pillars) glowing with hundreds of oil flames in the twilight, whispering our heartfelt prayers for each other under the blessings of Mahadeva.',
+      desc: 'Under the golden lamp pillars of Ujjain, whispering heartfelt prayers for each other and celebrating the timeless bond we share.',
       accent: '#F472B6',
       emoji: '✨',
       stamped: false,
@@ -58,6 +59,7 @@ export const TravelJournal: React.FC = () => {
   // Rubber stamp thud sound synthesis
   const playStampSound = () => {
     try {
+      audioBus.reportAudioStart('travel-stamp', 400);
       const AudioCtx =
         window.AudioContext ||
         (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
@@ -82,6 +84,7 @@ export const TravelJournal: React.FC = () => {
   // Temple bell chime sound synthesis
   const playTempleBellSound = () => {
     try {
+      audioBus.reportAudioStart('travel-bell', 2400);
       const AudioCtx =
         window.AudioContext ||
         (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
@@ -201,11 +204,11 @@ export const TravelJournal: React.FC = () => {
           background: 'linear-gradient(145deg, #181d33 0%, #0e1224 100%)',
           border: '1.5px solid rgba(216, 204, 255, 0.22)',
           boxShadow: '0 16px 45px rgba(0, 0, 0, 0.65)',
-          padding: '1.15rem 1rem',
+          padding: '0.85rem 0.85rem',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          gap: '0.85rem',
+          gap: '0.65rem',
         }}
       >
         {/* Decorative Washi Tape Strip at Top */}
@@ -238,7 +241,7 @@ export const TravelJournal: React.FC = () => {
           style={{
             position: 'relative',
             width: '100%',
-            height: 'clamp(190px, 46vw, 240px)',
+            height: 'clamp(160px, 42vw, 210px)',
             borderRadius: 'var(--radius-md)',
             background: 'linear-gradient(180deg, #1A130A 0%, #2A1C0E 60%, #150E06 100%)',
             border: '1.5px solid rgba(251, 191, 36, 0.45)',
@@ -380,20 +383,20 @@ export const TravelJournal: React.FC = () => {
           <h3
             style={{
               fontFamily: 'var(--font-serif)',
-              fontSize: '1.2rem',
+              fontSize: '1.1rem',
               color: 'var(--color-ivory)',
-              marginBottom: '0.25rem',
-              lineHeight: 1.3,
+              marginBottom: '0.15rem',
+              lineHeight: 1.25,
             }}
           >
             {currentDest.title}
           </h3>
           <div
             style={{
-              fontSize: '0.72rem',
+              fontSize: '0.7rem',
               color: 'var(--color-gold-soft)',
               fontFamily: 'monospace',
-              marginBottom: '0.65rem',
+              marginBottom: '0.45rem',
             }}
           >
             {currentDest.tagline}
@@ -401,11 +404,11 @@ export const TravelJournal: React.FC = () => {
           <p
             style={{
               color: 'var(--color-ivory-dim)',
-              fontSize: '0.82rem',
-              lineHeight: 1.6,
+              fontSize: '0.78rem',
+              lineHeight: 1.45,
               textAlign: 'left',
               background: 'rgba(0, 0, 0, 0.35)',
-              padding: '0.8rem 0.95rem',
+              padding: '0.55rem 0.75rem',
               borderRadius: 'var(--radius-sm)',
               border: '1px solid rgba(255, 255, 255, 0.08)',
               margin: 0,

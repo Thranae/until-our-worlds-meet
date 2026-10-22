@@ -149,7 +149,7 @@ export const siteContent: SiteConfiguration = {
       title: "The Marina Breeze • Chennai",
       imagePath: "/memories/1792580021104.jpg",
       personalNote:
-        "Under the warm coastal sky of Chennai, celebrating the huge milestone of finishing your studies. You've worked so hard, stayed up through so many challenges, and now this beautiful new chapter of your life begins. Even with ~500 km between Chennai and Coimbatore, your smile reaches me across Tamil Nadu in an instant.",
+        "Under the warm coastal sky of Chennai, celebrating your incredible resilience and strength. When we first met, you were navigating difficult times, yet you held onto an unwavering determination to earn, build your own path, and become an independent woman. Watching your courage turn hardship into a bright future inspires me every single day. Even across ~500 km, your spirit shines brighter than any star.",
       color: "#A78BFA", // Lavender
       glowColor: "rgba(167, 139, 250, 0.45)",
       cityName: "Chennai, Tamil Nadu",
@@ -281,10 +281,10 @@ export const siteContent: SiteConfiguration = {
       title: "Bot's Starlight Fuel",
       subtitle: "The holy grail: Red Bull",
       imagePath: "/images/redbull-bot-can.jpg",
-      badge: "GRADUATION FUEL",
-      snippet: "How a cold silver-and-blue can fueled the journey from late-night studies to graduation day.",
+      badge: "STRENGTH & INDEPENDENCE",
+      snippet: "How a cold silver-and-blue can fueled the tireless hustle and late-night determination to build your own future.",
       revealedNote:
-        "Every time I see a can of Red Bull, I instantly think of you. You powered through all those study nights, finished your degree, and now you have the whole world at your feet. Here's to your wings, Bot.",
+        "Every time I see a can of Red Bull, I instantly think of you. You powered through the toughest times, stood tall when things were difficult, and worked relentlessly to build your own independence and earn your place in the world. Here's to your wings, Bot — you've earned every bit of your future.",
       accent: "#38BDF8",
     },
   ],
@@ -334,7 +334,7 @@ export const siteContent: SiteConfiguration = {
   letter: {
     salutation: "Happy birthday, Bot. ❤️",
     paragraphs: [
-      "Watching you finish your studies and step into this new chapter has made me so immensely proud of you. I know how much effort, quiet resilience, and heart you poured into reaching this milestone.",
+      "Watching your journey — from the tough days when we first met to the fiercely independent woman you have fought to become — fills me with profound respect and pride. I know how hard you worked, how much quiet resilience you held inside, and how passionately you chased your dream of building your own future.",
       "From the shores of Chennai to the hills of Coimbatore, ~500 kilometers of Tamil Nadu lie between our worlds, but under this same sky, you never feel far away. I hope this birthday brings you deep peace, laughter, and endless excitement for everything your future holds.",
       "We haven't met in person yet, but knowing you are out there makes every day brighter. One day soon, whether it's a drive down the highway or a train pulling into the station, we'll turn all these late-night phone calls into real memories.",
       "Until our worlds meet, here's a little piece of mine for you.",

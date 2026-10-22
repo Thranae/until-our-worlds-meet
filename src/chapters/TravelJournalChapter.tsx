@@ -14,7 +14,7 @@ export const TravelJournalChapter: React.FC<TravelJournalChapterProps> = ({ onPr
       chapterNumber={22}
       eyebrow="CHAPTER 22 • THE SACRED PILGRIMAGE TO MAHAKALESHWAR"
       title="Sri Mahakaleshwar Jyotirlinga • Ujjain, Madhya Pradesh"
-      subtitle="On the sacred banks of the Shipra River in Ujjain, Madhya Pradesh • Standing together before Mahadeva during the holy Bhasma Aarti, receiving blessings from Vedic priests among thousands of devotees, and marking our sacred dream pilgrimage approved."
+      subtitle="Holy Ujjain, Madhya Pradesh • Standing together before Mahadeva at dawn, seeking blessings for our journey and sealing our sacred pilgrimage."
       primaryAction={{
         label: 'Visit the Dutch tulip gardens ✦',
         onClick: onProceed,
