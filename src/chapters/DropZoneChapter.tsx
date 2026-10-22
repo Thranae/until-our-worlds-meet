@@ -66,19 +66,21 @@ export const DropZoneChapter: React.FC<DropZoneChapterProps> = ({ onProceed }) =
           style={{
             display: 'inline-flex',
             alignItems: 'center',
-            gap: '0.6rem',
-            padding: '0.85rem 1.6rem',
+            justifyContent: 'center',
+            gap: '0.5rem',
+            padding: '0.75rem clamp(1rem, 3.5vw, 1.5rem)',
             borderRadius: 'var(--radius-full)',
             background: 'linear-gradient(135deg, rgba(239, 68, 68, 0.25) 0%, rgba(251, 191, 36, 0.25) 100%)',
             border: '1px solid rgba(251, 191, 36, 0.45)',
             color: 'var(--color-ivory)',
             fontFamily: 'var(--font-sans)',
-            fontSize: '0.92rem',
+            fontSize: 'clamp(0.8rem, 2.6vw, 0.92rem)',
             fontWeight: 500,
             cursor: 'pointer',
             marginTop: '1rem',
             boxShadow: '0 8px 24px rgba(0, 0, 0, 0.3)',
             touchAction: 'manipulation',
+            whiteSpace: 'nowrap',
           }}
         >
           <span>Continue to The Safe Zone ✦</span>

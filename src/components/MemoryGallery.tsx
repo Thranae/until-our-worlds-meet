@@ -41,26 +41,29 @@ export const MemoryGallery: React.FC = () => {
     <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
       {/* Category Filter Tabs */}
       <div
+        className="touch-scroll-row"
         style={{
           display: 'flex',
-          flexWrap: 'wrap',
-          gap: '0.5rem',
+          gap: '0.45rem',
           alignItems: 'center',
-          justifyContent: 'center',
-          padding: '0.4rem',
+          padding: '0.35rem 0.5rem',
           borderRadius: 'var(--radius-full)',
-          background: 'rgba(15, 18, 38, 0.6)',
-          border: '1px solid rgba(216, 204, 255, 0.12)',
+          background: 'rgba(15, 18, 38, 0.75)',
+          border: '1px solid rgba(216, 204, 255, 0.14)',
           backdropFilter: 'blur(12px)',
-          maxWidth: '680px',
+          maxWidth: '100%',
           margin: '0 auto',
+          overflowX: 'auto',
+          WebkitOverflowScrolling: 'touch',
         }}
       >
         <button
           type="button"
           onClick={() => setActiveFilter('all')}
           style={{
-            padding: '0.4rem 0.9rem',
+            flexShrink: 0,
+            whiteSpace: 'nowrap',
+            padding: '0.42rem 0.9rem',
             borderRadius: 'var(--radius-full)',
             background: activeFilter === 'all' ? 'rgba(167, 139, 250, 0.25)' : 'transparent',
             border: activeFilter === 'all' ? '1px solid rgba(167, 139, 250, 0.5)' : '1px solid transparent',
@@ -78,10 +81,12 @@ export const MemoryGallery: React.FC = () => {
           type="button"
           onClick={() => setActiveFilter('videos')}
           style={{
+            flexShrink: 0,
+            whiteSpace: 'nowrap',
             display: 'inline-flex',
             alignItems: 'center',
             gap: '0.35rem',
-            padding: '0.4rem 0.9rem',
+            padding: '0.42rem 0.9rem',
             borderRadius: 'var(--radius-full)',
             background: activeFilter === 'videos' ? 'rgba(56, 189, 248, 0.25)' : 'transparent',
             border: activeFilter === 'videos' ? '1px solid rgba(56, 189, 248, 0.5)' : '1px solid transparent',
@@ -100,10 +105,12 @@ export const MemoryGallery: React.FC = () => {
           type="button"
           onClick={() => setActiveFilter('photos')}
           style={{
+            flexShrink: 0,
+            whiteSpace: 'nowrap',
             display: 'inline-flex',
             alignItems: 'center',
             gap: '0.35rem',
-            padding: '0.4rem 0.9rem',
+            padding: '0.42rem 0.9rem',
             borderRadius: 'var(--radius-full)',
             background: activeFilter === 'photos' ? 'rgba(253, 230, 138, 0.25)' : 'transparent',
             border: activeFilter === 'photos' ? '1px solid rgba(253, 230, 138, 0.5)' : '1px solid transparent',
@@ -122,10 +129,12 @@ export const MemoryGallery: React.FC = () => {
           type="button"
           onClick={() => setActiveFilter('lore')}
           style={{
+            flexShrink: 0,
+            whiteSpace: 'nowrap',
             display: 'inline-flex',
             alignItems: 'center',
             gap: '0.35rem',
-            padding: '0.4rem 0.9rem',
+            padding: '0.42rem 0.9rem',
             borderRadius: 'var(--radius-full)',
             background: activeFilter === 'lore' ? 'rgba(239, 68, 68, 0.25)' : 'transparent',
             border: activeFilter === 'lore' ? '1px solid rgba(239, 68, 68, 0.5)' : '1px solid transparent',
@@ -146,8 +155,8 @@ export const MemoryGallery: React.FC = () => {
         style={{
           width: '100%',
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(270px, 1fr))',
-          gap: '1.25rem',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(min(270px, 100%), 1fr))',
+          gap: '1.1rem',
           margin: '0.5rem 0',
         }}
       >

@@ -1068,7 +1068,7 @@ export const OceanBeach: React.FC = () => {
         style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(3, 1fr)',
-          gap: '0.45rem',
+          gap: '0.4rem',
           width: '100%',
         }}
       >
@@ -1081,8 +1081,10 @@ export const OceanBeach: React.FC = () => {
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '0.2rem',
-            padding: '0.65rem 0.35rem',
+            gap: '0.15rem',
+            padding: '0.55rem 0.25rem',
+            minHeight: '66px',
+            minWidth: 0,
             borderRadius: 'var(--radius-md)',
             background: isSinging && activeCallType === 'deep'
               ? 'rgba(6, 182, 212, 0.35)'
@@ -1096,8 +1098,8 @@ export const OceanBeach: React.FC = () => {
           }}
         >
           <Waves size={16} color="#38BDF8" />
-          <span style={{ fontSize: '0.74rem', fontWeight: 600 }}>52-Hz Call</span>
-          <span style={{ fontSize: '0.6rem', color: 'rgba(255, 255, 255, 0.7)' }}>Deep Oceanic Rumble</span>
+          <span style={{ fontSize: '0.72rem', fontWeight: 600, whiteSpace: 'nowrap' }}>52-Hz Call</span>
+          <span style={{ fontSize: '0.6rem', color: 'rgba(255, 255, 255, 0.7)', whiteSpace: 'nowrap' }}>Deep Rumble</span>
         </button>
 
         {/* Melodic Humpback Echo */}
@@ -1109,8 +1111,10 @@ export const OceanBeach: React.FC = () => {
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '0.2rem',
-            padding: '0.65rem 0.35rem',
+            gap: '0.15rem',
+            padding: '0.55rem 0.25rem',
+            minHeight: '66px',
+            minWidth: 0,
             borderRadius: 'var(--radius-md)',
             background: isSinging && activeCallType === 'melodic'
               ? 'rgba(168, 85, 247, 0.35)'
@@ -1124,8 +1128,8 @@ export const OceanBeach: React.FC = () => {
           }}
         >
           <Sparkles size={16} color="#C084FC" />
-          <span style={{ fontSize: '0.74rem', fontWeight: 600 }}>Melodic Hymn</span>
-          <span style={{ fontSize: '0.6rem', color: 'rgba(255, 255, 255, 0.7)' }}>Ascending Echo</span>
+          <span style={{ fontSize: '0.72rem', fontWeight: 600, whiteSpace: 'nowrap' }}>Melodic Hymn</span>
+          <span style={{ fontSize: '0.6rem', color: 'rgba(255, 255, 255, 0.7)', whiteSpace: 'nowrap' }}>Ocean Echo</span>
         </button>
 
         {/* Surface Breach & Blowhole Spout */}
@@ -1137,8 +1141,10 @@ export const OceanBeach: React.FC = () => {
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '0.2rem',
-            padding: '0.65rem 0.35rem',
+            gap: '0.15rem',
+            padding: '0.55rem 0.25rem',
+            minHeight: '66px',
+            minWidth: 0,
             borderRadius: 'var(--radius-md)',
             background: isSurfacing
               ? 'rgba(14, 165, 233, 0.35)'
@@ -1152,8 +1158,8 @@ export const OceanBeach: React.FC = () => {
           }}
         >
           <Wind size={16} color="#BAE6FD" />
-          <span style={{ fontSize: '0.74rem', fontWeight: 600 }}>Blowhole Spout</span>
-          <span style={{ fontSize: '0.6rem', color: 'rgba(255, 255, 255, 0.7)' }}>Surface & Click Train</span>
+          <span style={{ fontSize: '0.72rem', fontWeight: 600, whiteSpace: 'nowrap' }}>Blowhole Spout</span>
+          <span style={{ fontSize: '0.6rem', color: 'rgba(255, 255, 255, 0.7)', whiteSpace: 'nowrap' }}>Surface Mist</span>
         </button>
       </div>
 
@@ -1201,9 +1207,11 @@ export const OceanBeach: React.FC = () => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: '0.35rem',
             paddingTop: '0.55rem',
             borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-            fontSize: '0.72rem',
+            fontSize: 'clamp(0.66rem, 2.2vw, 0.72rem)',
             fontFamily: 'monospace',
             color: '#38BDF8',
           }}

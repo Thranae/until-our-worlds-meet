@@ -723,7 +723,7 @@ export const TulipGarden: React.FC = () => {
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(5, 1fr)',
-            gap: '0.4rem',
+            gap: '0.35rem',
             width: '100%',
             maxWidth: '520px',
           }}
@@ -740,8 +740,10 @@ export const TulipGarden: React.FC = () => {
                   flexDirection: 'column',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  gap: '0.2rem',
-                  padding: '0.55rem 0.25rem',
+                  gap: '0.15rem',
+                  padding: '0.45rem 0.15rem',
+                  minHeight: '66px',
+                  minWidth: 0,
                   borderRadius: 'var(--radius-md)',
                   background: isSelected
                     ? 'rgba(251, 191, 36, 0.22)'
@@ -762,8 +764,22 @@ export const TulipGarden: React.FC = () => {
                   boxShadow: isSelected ? `0 0 16px ${flower.glowHex}` : 'none',
                 }}
               >
-                <span style={{ fontSize: '1.25rem' }}>{flower.icon}</span>
-                <span style={{ fontSize: '0.62rem', fontWeight: 600, fontFamily: 'var(--font-sans)', textAlign: 'center', lineHeight: 1.2 }}>
+                <span style={{ fontSize: '1.2rem', lineHeight: 1 }}>{flower.icon}</span>
+                <span
+                  style={{
+                    fontSize: 'clamp(0.56rem, 2.1vw, 0.62rem)',
+                    fontWeight: 600,
+                    fontFamily: 'var(--font-sans)',
+                    textAlign: 'center',
+                    lineHeight: 1.15,
+                    minHeight: '24px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '0 2px',
+                    wordBreak: 'break-word',
+                  }}
+                >
                   {flower.colorName}
                 </span>
 

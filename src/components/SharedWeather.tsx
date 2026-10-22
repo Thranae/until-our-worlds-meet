@@ -245,11 +245,14 @@ export const SharedWeather: React.FC = () => {
             <span style={{ color: 'var(--color-gold-soft)', fontWeight: 600 }}>21°C</span>
           </div>
 
-          <div style={{ color: 'var(--color-muted)', fontSize: '0.68rem', fontFamily: 'monospace' }}>
+          <div
+            className="lanterns-text"
+            style={{ color: 'var(--color-muted)', fontSize: '0.68rem', fontFamily: 'monospace', flexShrink: 0 }}
+          >
             SHARED HORIZON
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', flexShrink: 0 }}>
             <span>My City</span>
             <span style={{ color: 'var(--color-gold-soft)', fontWeight: 600 }}>22°C</span>
             <span style={{ color: '#F472B6' }}>●</span>
@@ -265,11 +268,12 @@ export const SharedWeather: React.FC = () => {
             transform: 'translateX(-50%)',
             textAlign: 'center',
             pointerEvents: 'none',
+            width: 'calc(100% - 24px)',
           }}
         >
           <div
             style={{
-              fontSize: '0.86rem',
+              fontSize: '0.84rem',
               fontFamily: 'var(--font-serif)',
               fontStyle: 'italic',
               color: 'var(--color-ivory)',
@@ -288,32 +292,33 @@ export const SharedWeather: React.FC = () => {
       {/* Weather Selector Controls */}
       <div
         style={{
-          display: 'flex',
-          gap: '0.5rem',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(3, 1fr)',
+          gap: '0.4rem',
           width: '100%',
-          justifyContent: 'center',
         }}
       >
         <button
           type="button"
           onClick={() => handleModeChange('rain')}
           style={{
-            flex: 1,
-            padding: '0.65rem 0.5rem',
+            padding: '0.55rem 0.25rem',
             borderRadius: 'var(--radius-md)',
             background: mode === 'rain' ? 'rgba(59, 130, 246, 0.22)' : 'rgba(14, 18, 36, 0.5)',
             border: `1px solid ${mode === 'rain' ? 'rgba(96, 165, 250, 0.6)' : 'rgba(216, 204, 255, 0.1)'}`,
             color: mode === 'rain' ? '#93C5FD' : 'var(--color-muted)',
-            fontSize: '0.78rem',
+            fontSize: 'clamp(0.68rem, 2.3vw, 0.78rem)',
+            fontWeight: 500,
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '0.35rem',
+            gap: '0.3rem',
             touchAction: 'manipulation',
+            whiteSpace: 'nowrap',
           }}
         >
-          <CloudRain size={14} />
+          <CloudRain size={13} style={{ flexShrink: 0 }} />
           <span>Midnight Rain</span>
         </button>
 
@@ -321,22 +326,23 @@ export const SharedWeather: React.FC = () => {
           type="button"
           onClick={() => handleModeChange('starlight')}
           style={{
-            flex: 1,
-            padding: '0.65rem 0.5rem',
+            padding: '0.55rem 0.25rem',
             borderRadius: 'var(--radius-md)',
             background: mode === 'starlight' ? 'rgba(168, 85, 247, 0.22)' : 'rgba(14, 18, 36, 0.5)',
             border: `1px solid ${mode === 'starlight' ? 'rgba(192, 132, 252, 0.6)' : 'rgba(216, 204, 255, 0.1)'}`,
             color: mode === 'starlight' ? '#D8B4FE' : 'var(--color-muted)',
-            fontSize: '0.78rem',
+            fontSize: 'clamp(0.68rem, 2.3vw, 0.78rem)',
+            fontWeight: 500,
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '0.35rem',
+            gap: '0.3rem',
             touchAction: 'manipulation',
+            whiteSpace: 'nowrap',
           }}
         >
-          <Sparkles size={14} />
+          <Sparkles size={13} style={{ flexShrink: 0 }} />
           <span>Clear Stars</span>
         </button>
 
@@ -344,22 +350,23 @@ export const SharedWeather: React.FC = () => {
           type="button"
           onClick={() => handleModeChange('breeze')}
           style={{
-            flex: 1,
-            padding: '0.65rem 0.5rem',
+            padding: '0.55rem 0.25rem',
             borderRadius: 'var(--radius-md)',
             background: mode === 'breeze' ? 'rgba(245, 158, 11, 0.22)' : 'rgba(14, 18, 36, 0.5)',
             border: `1px solid ${mode === 'breeze' ? 'rgba(251, 191, 36, 0.6)' : 'rgba(216, 204, 255, 0.1)'}`,
             color: mode === 'breeze' ? '#FDE68A' : 'var(--color-muted)',
-            fontSize: '0.78rem',
+            fontSize: 'clamp(0.68rem, 2.3vw, 0.78rem)',
+            fontWeight: 500,
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '0.35rem',
+            gap: '0.3rem',
             touchAction: 'manipulation',
+            whiteSpace: 'nowrap',
           }}
         >
-          <Wind size={14} />
+          <Wind size={13} style={{ flexShrink: 0 }} />
           <span>Warm Breeze</span>
         </button>
       </div>

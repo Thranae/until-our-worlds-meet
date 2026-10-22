@@ -251,28 +251,61 @@ a:focus-visible {
    Mobile Ergonomics & Responsive Adjustments
    ========================================================================== */
 
+/* Universal text-wrap and overflow safeguards */
+h1, h2, h3, h4, .heading-hero, .heading-chapter, .heading-sub {
+  text-wrap: balance;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+p, .body-lead, .body-text {
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
 @media (max-width: 640px) {
   .btn-primary {
     width: 100%;
-    min-height: 50px;
-    padding: 0.95rem 1.5rem;
-    font-size: 1rem;
+    min-height: 48px;
+    padding: 0.75rem 1.1rem;
+    font-size: clamp(0.82rem, 2.6vw, 0.92rem);
+    white-space: nowrap;
   }
 
   .btn-secondary {
     width: 100%;
-    min-height: 48px;
-    padding: 0.85rem 1.35rem;
+    min-height: 46px;
+    padding: 0.7rem 1rem;
+    font-size: clamp(0.78rem, 2.5vw, 0.88rem);
+    white-space: nowrap;
   }
 
   .glass-panel {
     border-radius: var(--radius-md);
-    padding: 1.35rem !important;
+    padding: 1.15rem 1rem !important;
+  }
+
+  .glass-panel-subtle {
+    border-radius: var(--radius-sm);
+    padding: 1rem 0.85rem !important;
+  }
+
+  .eyebrow {
+    font-size: 0.72rem !important;
+    letter-spacing: 0.08em !important;
+    line-height: 1.4 !important;
+    margin-bottom: 0.35rem !important;
+    white-space: normal !important;
+    overflow-wrap: break-word !important;
+    word-break: normal !important;
+    display: inline-block !important;
+    max-width: 100% !important;
   }
 
   .body-lead {
-    font-size: 1.05rem;
-    line-height: 1.7;
+    font-size: 0.94rem !important;
+    line-height: 1.58 !important;
+    margin-bottom: 0.95rem !important;
   }
 
   /* Bottom sheet on mobile */
@@ -290,30 +323,36 @@ a:focus-visible {
   }
 
   h1, .heading-hero {
-    font-size: clamp(1.9rem, 7vw, 2.6rem) !important;
+    font-size: clamp(1.75rem, 6.8vw, 2.3rem) !important;
     line-height: 1.2 !important;
   }
 
   h2, .heading-chapter {
-    font-size: clamp(1.45rem, 5.4vw, 1.95rem) !important;
+    font-size: clamp(1.35rem, 5.2vw, 1.75rem) !important;
     line-height: 1.25 !important;
+    margin-bottom: 0.45rem !important;
   }
 
   .eyebrow {
-    font-size: 0.68rem !important;
-    letter-spacing: 0.12em !important;
-    margin-bottom: 0.4rem !important;
+    font-size: 0.66rem !important;
+    letter-spacing: 0.06em !important;
+    line-height: 1.35 !important;
+    margin-bottom: 0.3rem !important;
   }
 
   .body-lead {
-    font-size: 0.94rem !important;
-    line-height: 1.62 !important;
-    margin-bottom: 1.1rem !important;
+    font-size: 0.86rem !important;
+    line-height: 1.52 !important;
+    margin-bottom: 0.8rem !important;
   }
 
   .glass-panel {
     border-radius: var(--radius-md) !important;
-    padding: 1.15rem 1rem !important;
+    padding: 0.95rem 0.8rem !important;
+  }
+
+  .glass-panel-subtle {
+    padding: 0.85rem 0.75rem !important;
   }
 }
 
@@ -324,18 +363,41 @@ a:focus-visible {
   .chapter-pill-name {
     display: none !important;
   }
+  .wish-btn-label {
+    display: none;
+  }
 }
 
 @media (max-width: 380px) {
   .btn-primary,
   .btn-secondary {
-    font-size: 0.88rem !important;
-    padding: 0.75rem 0.95rem !important;
+    font-size: 0.8rem !important;
+    padding: 0.65rem 0.75rem !important;
+    white-space: nowrap !important;
   }
 
   h2, .heading-chapter {
-    font-size: 1.35rem !important;
+    font-size: 1.25rem !important;
+  }
+
+  .eyebrow {
+    font-size: 0.62rem !important;
+    letter-spacing: 0.05em !important;
   }
 }
+
+/* Horizontal pill scroll containers for touch devices */
+.touch-scroll-row {
+  display: flex;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.touch-scroll-row::-webkit-scrollbar {
+  display: none;
+}
+
 
 

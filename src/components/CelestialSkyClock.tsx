@@ -97,21 +97,21 @@ export const CelestialSkyClock: React.FC = () => {
       style={{
         width: '100%',
         maxWidth: '540px',
-        padding: '1.25rem 1.5rem',
-        marginTop: '1.5rem',
+        padding: '1rem 0.95rem',
+        marginTop: '1.25rem',
         display: 'flex',
         flexWrap: 'wrap',
         alignItems: 'center',
         justifyContent: 'space-between',
-        gap: '1rem',
+        gap: '0.85rem',
       }}
     >
       {/* Left: Moon Phase */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
         <div
           style={{
-            width: '38px',
-            height: '38px',
+            width: '36px',
+            height: '36px',
             borderRadius: '50%',
             background: 'radial-gradient(circle at 35% 35%, #F5F0E8 0%, #D8CCFF 50%, #11152C 100%)',
             boxShadow: '0 0 16px rgba(216, 204, 255, 0.45)',
@@ -119,16 +119,17 @@ export const CelestialSkyClock: React.FC = () => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
+            flexShrink: 0,
           }}
         >
-          <Moon size={18} color="#080B18" />
+          <Moon size={17} color="#080B18" />
         </div>
 
         <div>
           <span
             style={{
               display: 'block',
-              fontSize: '0.74rem',
+              fontSize: '0.72rem',
               fontFamily: 'var(--font-sans)',
               letterSpacing: '0.08em',
               textTransform: 'uppercase',
@@ -140,7 +141,7 @@ export const CelestialSkyClock: React.FC = () => {
           </span>
           <span
             style={{
-              fontSize: '0.88rem',
+              fontSize: '0.84rem',
               color: 'var(--color-ivory)',
               fontFamily: 'var(--font-serif)',
               fontWeight: 500,
@@ -152,13 +153,13 @@ export const CelestialSkyClock: React.FC = () => {
       </div>
 
       {/* Right: Live Universe Clock */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-        <Clock size={15} color="#94A3B8" />
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
+        <Clock size={14} color="#94A3B8" style={{ flexShrink: 0 }} />
         <div style={{ textAlign: 'right' }}>
           <span
             style={{
               display: 'block',
-              fontSize: '0.74rem',
+              fontSize: '0.72rem',
               color: 'var(--color-muted)',
               letterSpacing: '0.05em',
             }}
@@ -167,7 +168,7 @@ export const CelestialSkyClock: React.FC = () => {
           </span>
           <span
             style={{
-              fontSize: '0.88rem',
+              fontSize: '0.84rem',
               fontFamily: 'monospace',
               color: 'var(--color-ivory-dim)',
               letterSpacing: '0.08em',
@@ -186,7 +187,7 @@ export const CelestialSkyClock: React.FC = () => {
           flexDirection: 'column',
           alignItems: 'center',
           gap: '0.4rem',
-          padding: '0.4rem 0',
+          padding: '0.3rem 0',
         }}
       >
         <motion.button
@@ -198,21 +199,22 @@ export const CelestialSkyClock: React.FC = () => {
             display: 'inline-flex',
             alignItems: 'center',
             gap: '0.45rem',
-            padding: '0.4rem 0.95rem',
+            padding: '0.45rem 1rem',
             borderRadius: 'var(--radius-full)',
             background: pulseSent ? 'rgba(239, 68, 68, 0.22)' : 'rgba(255, 255, 255, 0.06)',
             border: pulseSent ? '1px solid rgba(239, 68, 68, 0.5)' : '1px solid rgba(216, 204, 255, 0.22)',
             color: pulseSent ? '#FCA5A5' : 'var(--color-ivory)',
-            fontSize: '0.78rem',
+            fontSize: 'clamp(0.74rem, 2.5vw, 0.8rem)',
             fontWeight: 600,
             cursor: 'pointer',
             boxShadow: pulseSent ? '0 0 15px rgba(239, 68, 68, 0.4)' : 'none',
             transition: 'all 0.25s ease',
+            whiteSpace: 'nowrap',
           }}
           aria-label="Send a heartbeat pulse signal across the distance"
         >
-          <Heart size={13} color={pulseSent ? "#F87171" : "#A78BFA"} fill={pulseSent ? "#F87171" : "none"} />
-          <span>{pulseSent ? 'Heartbeat Signal Sent Across the Distance ✦' : 'Send a Heartbeat Signal ✦'}</span>
+          <Heart size={13} color={pulseSent ? "#F87171" : "#A78BFA"} fill={pulseSent ? "#F87171" : "none"} style={{ flexShrink: 0 }} />
+          <span>{pulseSent ? 'Heartbeat Signal Sent ✦' : 'Send a Heartbeat Signal ✦'}</span>
         </motion.button>
         {pulseSent && (
           <motion.span

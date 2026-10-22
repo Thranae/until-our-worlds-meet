@@ -96,7 +96,7 @@ export const SkyLanternModal: React.FC<SkyLanternModalProps> = ({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            padding: '1.25rem',
+            padding: '0.75rem',
           }}
         >
           {/* Backdrop */}
@@ -124,13 +124,14 @@ export const SkyLanternModal: React.FC<SkyLanternModalProps> = ({
             style={{
               width: '100%',
               maxWidth: '460px',
-              padding: '2rem 1.75rem',
+              maxHeight: '94vh',
+              overflowY: 'auto',
+              padding: 'clamp(1.25rem, 3.8vw, 1.85rem) clamp(1rem, 3.2vw, 1.6rem)',
               position: 'relative',
               zIndex: 2,
               textAlign: 'center',
               border: '1px solid rgba(254, 240, 138, 0.35)',
               boxShadow: '0 25px 65px rgba(0,0,0,0.6), 0 0 35px rgba(253, 230, 138, 0.2)',
-              overflow: 'hidden',
             }}
           >
             {/* Close Button */}
@@ -354,8 +355,13 @@ export const SkyLanternModal: React.FC<SkyLanternModalProps> = ({
                   className="btn-primary"
                   style={{
                     width: '100%',
-                    fontSize: '0.9rem',
+                    fontSize: 'clamp(0.78rem, 2.6vw, 0.9rem)',
                     padding: '0.75rem',
+                    whiteSpace: 'nowrap',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.45rem',
                   }}
                 >
                   <Send size={15} />

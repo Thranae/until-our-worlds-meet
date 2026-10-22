@@ -202,7 +202,8 @@ export const App: React.FC = () => {
               touchAction: 'manipulation',
             }}
           >
-            <span>✦ Wish</span>
+            <span>✦</span>
+            <span className="wish-btn-label">Wish</span>
           </button>
 
           <button

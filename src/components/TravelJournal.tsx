@@ -201,11 +201,11 @@ export const TravelJournal: React.FC = () => {
           background: 'linear-gradient(145deg, #181d33 0%, #0e1224 100%)',
           border: '1.5px solid rgba(216, 204, 255, 0.22)',
           boxShadow: '0 16px 45px rgba(0, 0, 0, 0.65)',
-          padding: '1.4rem 1.25rem',
+          padding: '1.15rem 1rem',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          gap: '1rem',
+          gap: '0.85rem',
         }}
       >
         {/* Decorative Washi Tape Strip at Top */}
@@ -238,7 +238,7 @@ export const TravelJournal: React.FC = () => {
           style={{
             position: 'relative',
             width: '100%',
-            height: '240px',
+            height: 'clamp(190px, 46vw, 240px)',
             borderRadius: 'var(--radius-md)',
             background: 'linear-gradient(180deg, #1A130A 0%, #2A1C0E 60%, #150E06 100%)',
             border: '1.5px solid rgba(251, 191, 36, 0.45)',
@@ -451,26 +451,28 @@ export const TravelJournal: React.FC = () => {
             style={{
               display: 'inline-flex',
               alignItems: 'center',
-              gap: '0.45rem',
-              padding: '0.65rem 1.25rem',
+              justifyContent: 'center',
+              gap: '0.35rem',
+              padding: '0.55rem 0.85rem',
               borderRadius: 'var(--radius-full)',
               background: currentDest.stamped
                 ? 'rgba(239, 68, 68, 0.22)'
                 : 'linear-gradient(135deg, rgba(251, 191, 36, 0.32) 0%, rgba(245, 158, 11, 0.2) 100%)',
               border: `1.5px solid ${currentDest.stamped ? '#EF4444' : 'rgba(251, 191, 36, 0.65)'}`,
               color: currentDest.stamped ? '#FCA5A5' : '#FDE68A',
-              fontSize: '0.8rem',
+              fontSize: 'clamp(0.72rem, 2.6vw, 0.8rem)',
               fontWeight: 700,
               cursor: 'pointer',
               touchAction: 'manipulation',
+              whiteSpace: 'nowrap',
               boxShadow: currentDest.stamped
                 ? '0 0 14px rgba(239, 68, 68, 0.35)'
                 : '0 0 16px rgba(251, 191, 36, 0.25)',
               transition: 'all 0.2s ease',
             }}
           >
-            <Stamp size={15} />
-            <span>{currentDest.stamped ? 'Approved ✦ Stamp Sealed' : 'Click to Approve Pilgrimage ✦'}</span>
+            <Stamp size={14} style={{ flexShrink: 0 }} />
+            <span>{currentDest.stamped ? 'Approved ✦ Stamp Sealed' : 'Approve Pilgrimage ✦'}</span>
           </button>
 
           <button

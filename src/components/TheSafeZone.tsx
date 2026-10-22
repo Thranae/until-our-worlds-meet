@@ -471,27 +471,30 @@ export const TheSafeZone: React.FC = () => {
           style={{
             display: 'inline-flex',
             alignItems: 'center',
+            justifyContent: 'center',
             gap: '0.45rem',
-            padding: '0.5rem 1.1rem',
+            padding: '0.5rem 0.9rem',
             borderRadius: 'var(--radius-full)',
             background: 'rgba(251, 191, 36, 0.15)',
             border: '1px solid rgba(251, 191, 36, 0.4)',
             color: '#FDE68A',
-            fontSize: '0.82rem',
+            fontSize: 'clamp(0.7rem, 2.3vw, 0.8rem)',
+            maxWidth: '100%',
+            textAlign: 'center',
           }}
         >
           <Sparkles size={14} color="#F59E0B" />
-          <span>Safe Zone Secured • Winner Winner Chicken Dinner</span>
+          <span style={{ whiteSpace: 'nowrap' }}>Safe Zone Secured • Winner Winner Chicken Dinner</span>
         </motion.div>
       )}
 
       {/* Tactical Duo Log Pill Selectors */}
       <div
         style={{
-          display: 'flex',
-          gap: '0.45rem',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(3, 1fr)',
+          gap: '0.4rem',
           width: '100%',
-          justifyContent: 'center',
         }}
       >
         <button
@@ -501,22 +504,22 @@ export const TheSafeZone: React.FC = () => {
             setActiveTab('safezone');
           }}
           style={{
-            flex: 1,
-            padding: '0.55rem 0.5rem',
+            padding: '0.55rem 0.35rem',
             borderRadius: 'var(--radius-md)',
             background: activeTab === 'safezone' ? 'rgba(251, 191, 36, 0.18)' : 'rgba(14, 18, 36, 0.5)',
             border: `1px solid ${activeTab === 'safezone' ? 'rgba(251, 191, 36, 0.5)' : 'rgba(216, 204, 255, 0.1)'}`,
             color: activeTab === 'safezone' ? '#FDE68A' : 'var(--color-muted)',
-            fontSize: '0.74rem',
+            fontSize: 'clamp(0.68rem, 2.3vw, 0.74rem)',
             cursor: 'pointer',
             touchAction: 'manipulation',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '0.3rem',
+            gap: '0.25rem',
+            whiteSpace: 'nowrap',
           }}
         >
-          <Shield size={13} />
+          <Shield size={12} />
           <span>The Safe Zone</span>
         </button>
 
@@ -527,22 +530,22 @@ export const TheSafeZone: React.FC = () => {
             setActiveTab('amr');
           }}
           style={{
-            flex: 1,
-            padding: '0.55rem 0.5rem',
+            padding: '0.55rem 0.35rem',
             borderRadius: 'var(--radius-md)',
             background: activeTab === 'amr' ? 'rgba(96, 165, 250, 0.18)' : 'rgba(14, 18, 36, 0.5)',
             border: `1px solid ${activeTab === 'amr' ? 'rgba(96, 165, 250, 0.5)' : 'rgba(216, 204, 255, 0.1)'}`,
             color: activeTab === 'amr' ? '#93C5FD' : 'var(--color-muted)',
-            fontSize: '0.74rem',
+            fontSize: 'clamp(0.68rem, 2.3vw, 0.74rem)',
             cursor: 'pointer',
             touchAction: 'manipulation',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '0.3rem',
+            gap: '0.25rem',
+            whiteSpace: 'nowrap',
           }}
         >
-          <Zap size={13} />
+          <Zap size={12} />
           <span>The AMR Queen</span>
         </button>
 
@@ -553,19 +556,19 @@ export const TheSafeZone: React.FC = () => {
             setActiveTab('duo');
           }}
           style={{
-            flex: 1,
-            padding: '0.55rem 0.5rem',
+            padding: '0.55rem 0.35rem',
             borderRadius: 'var(--radius-md)',
             background: activeTab === 'duo' ? 'rgba(244, 114, 182, 0.18)' : 'rgba(14, 18, 36, 0.5)',
             border: `1px solid ${activeTab === 'duo' ? 'rgba(244, 114, 182, 0.5)' : 'rgba(216, 204, 255, 0.1)'}`,
             color: activeTab === 'duo' ? '#F472B6' : 'var(--color-muted)',
-            fontSize: '0.74rem',
+            fontSize: 'clamp(0.68rem, 2.3vw, 0.74rem)',
             cursor: 'pointer',
             touchAction: 'manipulation',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '0.3rem',
+            gap: '0.25rem',
+            whiteSpace: 'nowrap',
           }}
         >
           <Heart size={13} />

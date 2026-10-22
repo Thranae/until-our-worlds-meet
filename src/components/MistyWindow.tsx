@@ -757,21 +757,26 @@ export const MistyWindow: React.FC = () => {
         <div
           style={{
             position: 'absolute',
-            top: '1rem',
+            top: '0.85rem',
             left: '50%',
             transform: 'translateX(-50%)',
-            padding: '0.42rem 0.95rem',
+            maxWidth: 'calc(100% - 1.5rem)',
+            width: 'max-content',
+            padding: '0.36rem 0.85rem',
             borderRadius: 'var(--radius-full)',
-            background: 'rgba(11, 15, 30, 0.82)',
+            background: 'rgba(11, 15, 30, 0.88)',
             backdropFilter: 'blur(12px)',
             border: '1px solid rgba(255, 255, 255, 0.18)',
             color: 'var(--color-ivory)',
-            fontSize: '0.74rem',
+            fontSize: 'clamp(0.68rem, 2.3vw, 0.74rem)',
             display: 'flex',
             alignItems: 'center',
+            justifyContent: 'center',
             gap: '0.45rem',
             pointerEvents: 'none',
             whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
             zIndex: 10,
             boxShadow: '0 4px 16px rgba(0, 0, 0, 0.4)',
           }}
@@ -790,9 +795,8 @@ export const MistyWindow: React.FC = () => {
       {/* Interactive Toolbar for Window Interactions */}
       <div
         style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          justifyContent: 'center',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(2, 1fr)',
           gap: '0.5rem',
           width: '100%',
         }}
@@ -804,14 +808,16 @@ export const MistyWindow: React.FC = () => {
           style={{
             display: 'inline-flex',
             alignItems: 'center',
+            justifyContent: 'center',
             gap: '0.4rem',
-            padding: '0.55rem 0.95rem',
+            padding: '0.55rem 0.75rem',
             borderRadius: 'var(--radius-full)',
             background: 'rgba(255, 255, 255, 0.08)',
             border: '1px solid rgba(255, 255, 255, 0.2)',
             color: 'var(--color-ivory)',
-            fontSize: '0.8rem',
+            fontSize: 'clamp(0.72rem, 2.4vw, 0.8rem)',
             fontFamily: 'var(--font-sans)',
+            whiteSpace: 'nowrap',
             cursor: 'pointer',
             touchAction: 'manipulation',
             transition: 'transform 0.15s ease-out, background 0.2s',
@@ -819,7 +825,7 @@ export const MistyWindow: React.FC = () => {
           onMouseDown={(e) => (e.currentTarget.style.transform = 'scale(0.96)')}
           onMouseUp={(e) => (e.currentTarget.style.transform = 'scale(1)')}
         >
-          <Wind size={14} color="#A78BFA" />
+          <Wind size={13} color="#A78BFA" />
           <span>Breathe on Glass</span>
         </button>
 
@@ -829,14 +835,16 @@ export const MistyWindow: React.FC = () => {
           style={{
             display: 'inline-flex',
             alignItems: 'center',
+            justifyContent: 'center',
             gap: '0.4rem',
-            padding: '0.55rem 0.95rem',
+            padding: '0.55rem 0.75rem',
             borderRadius: 'var(--radius-full)',
             background: 'rgba(239, 68, 68, 0.12)',
             border: '1px solid rgba(239, 68, 68, 0.35)',
             color: '#FCA5A5',
-            fontSize: '0.8rem',
+            fontSize: 'clamp(0.72rem, 2.4vw, 0.8rem)',
             fontFamily: 'var(--font-sans)',
+            whiteSpace: 'nowrap',
             cursor: 'pointer',
             touchAction: 'manipulation',
             transition: 'transform 0.15s ease-out, background 0.2s',
@@ -844,7 +852,7 @@ export const MistyWindow: React.FC = () => {
           onMouseDown={(e) => (e.currentTarget.style.transform = 'scale(0.96)')}
           onMouseUp={(e) => (e.currentTarget.style.transform = 'scale(1)')}
         >
-          <Heart size={14} color="#EF4444" fill="#EF4444" />
+          <Heart size={13} color="#EF4444" fill="#EF4444" />
           <span>Wipe a Heart</span>
         </button>
 
@@ -854,14 +862,16 @@ export const MistyWindow: React.FC = () => {
           style={{
             display: 'inline-flex',
             alignItems: 'center',
+            justifyContent: 'center',
             gap: '0.4rem',
-            padding: '0.55rem 0.95rem',
+            padding: '0.55rem 0.75rem',
             borderRadius: 'var(--radius-full)',
             background: 'rgba(253, 230, 138, 0.1)',
             border: '1px solid rgba(253, 230, 138, 0.3)',
             color: 'var(--color-gold-soft)',
-            fontSize: '0.8rem',
+            fontSize: 'clamp(0.72rem, 2.4vw, 0.8rem)',
             fontFamily: 'var(--font-sans)',
+            whiteSpace: 'nowrap',
             cursor: 'pointer',
             touchAction: 'manipulation',
             transition: 'transform 0.15s ease-out, background 0.2s',
@@ -869,7 +879,7 @@ export const MistyWindow: React.FC = () => {
           onMouseDown={(e) => (e.currentTarget.style.transform = 'scale(0.96)')}
           onMouseUp={(e) => (e.currentTarget.style.transform = 'scale(1)')}
         >
-          <Droplets size={14} color="#FDE68A" />
+          <Droplets size={13} color="#FDE68A" />
           <span>Clear Mist</span>
         </button>
 
@@ -892,14 +902,16 @@ export const MistyWindow: React.FC = () => {
           style={{
             display: 'inline-flex',
             alignItems: 'center',
+            justifyContent: 'center',
             gap: '0.4rem',
-            padding: '0.55rem 0.95rem',
+            padding: '0.55rem 0.75rem',
             borderRadius: 'var(--radius-full)',
             background: 'rgba(167, 139, 250, 0.12)',
             border: '1px solid rgba(167, 139, 250, 0.35)',
             color: '#DDD6FE',
-            fontSize: '0.8rem',
+            fontSize: 'clamp(0.72rem, 2.4vw, 0.8rem)',
             fontFamily: 'var(--font-sans)',
+            whiteSpace: 'nowrap',
             cursor: 'pointer',
             touchAction: 'manipulation',
             transition: 'transform 0.15s ease-out, background 0.2s',
@@ -907,8 +919,8 @@ export const MistyWindow: React.FC = () => {
           onMouseDown={(e) => (e.currentTarget.style.transform = 'scale(0.96)')}
           onMouseUp={(e) => (e.currentTarget.style.transform = 'scale(1)')}
         >
-          <Sparkles size={14} color="#C084FC" />
-          <span>{windowPhoto.includes('IMG') ? 'Show Starlight Portrait' : 'Show Sunlit Laugh'}</span>
+          <Sparkles size={13} color="#C084FC" />
+          <span>{windowPhoto.includes('IMG') ? 'Starlight Photo' : 'Sunlit Photo'}</span>
         </button>
       </div>
     </div>

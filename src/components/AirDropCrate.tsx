@@ -352,7 +352,7 @@ export const AirDropCrate: React.FC = () => {
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(2, 1fr)',
-            gap: '0.55rem',
+            gap: '0.45rem',
             width: '100%',
           }}
         >
@@ -366,8 +366,8 @@ export const AirDropCrate: React.FC = () => {
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '0.5rem',
-                  padding: '0.7rem 0.8rem',
+                  gap: '0.4rem',
+                  padding: '0.55rem 0.55rem',
                   borderRadius: 'var(--radius-md)',
                   background: isSelected ? 'rgba(59, 130, 246, 0.22)' : 'rgba(14, 18, 36, 0.6)',
                   border: `1.5px solid ${isSelected ? item.color : 'rgba(216, 204, 255, 0.12)'}`,
@@ -375,10 +375,11 @@ export const AirDropCrate: React.FC = () => {
                   textAlign: 'left',
                   cursor: 'pointer',
                   touchAction: 'manipulation',
+                  minHeight: '48px',
                 }}
               >
-                {item.icon}
-                <div style={{ fontSize: '0.74rem', fontWeight: 500, lineHeight: 1.3 }}>
+                <div style={{ flexShrink: 0 }}>{item.icon}</div>
+                <div style={{ fontSize: 'clamp(0.66rem, 2.2vw, 0.72rem)', fontWeight: 500, lineHeight: 1.25 }}>
                   {item.name}
                 </div>
               </button>

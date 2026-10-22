@@ -69,7 +69,7 @@ export const BirthdayTimeCapsule: React.FC = () => {
           boxShadow: isUnlocked
             ? '0 16px 45px rgba(245, 158, 11, 0.25), inset 0 0 30px rgba(245, 158, 11, 0.1)'
             : '0 12px 35px rgba(0, 0, 0, 0.6)',
-          padding: '1.5rem',
+          padding: 'clamp(1rem, 3.5vw, 1.5rem)',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -86,18 +86,18 @@ export const BirthdayTimeCapsule: React.FC = () => {
               gap: '0.4rem',
               color: 'var(--color-gold-soft)',
               fontFamily: 'monospace',
-              fontSize: '0.74rem',
-              letterSpacing: '0.12em',
+              fontSize: 'clamp(0.68rem, 2.3vw, 0.74rem)',
+              letterSpacing: '0.08em',
               marginBottom: '0.3rem',
             }}
           >
             <Calendar size={13} />
-            <span>CELESTIAL TIME CAPSULE // CODE: 08-NOV</span>
+            <span>CELESTIAL TIME CAPSULE // 08-NOV</span>
           </div>
           <h3
             style={{
               fontFamily: 'var(--font-serif)',
-              fontSize: '1.35rem',
+              fontSize: 'clamp(1.15rem, 3.8vw, 1.35rem)',
               color: 'var(--color-ivory)',
             }}
           >
@@ -110,11 +110,13 @@ export const BirthdayTimeCapsule: React.FC = () => {
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '1rem',
-            padding: '1rem 1.4rem',
+            justifyContent: 'center',
+            gap: 'clamp(0.4rem, 2vw, 0.9rem)',
+            padding: '0.8rem clamp(0.7rem, 2.5vw, 1.4rem)',
             borderRadius: 'var(--radius-md)',
             background: 'rgba(8, 11, 24, 0.85)',
             border: '1px solid rgba(255, 255, 255, 0.08)',
+            maxWidth: '100%',
           }}
         >
           {/* Day Tumbler */}
@@ -122,7 +124,7 @@ export const BirthdayTimeCapsule: React.FC = () => {
             <span style={{ fontSize: '0.62rem', color: 'var(--color-muted)', fontFamily: 'monospace' }}>DAY</span>
             <div
               style={{
-                width: '60px',
+                width: 'clamp(52px, 15vw, 60px)',
                 height: '52px',
                 borderRadius: '8px',
                 background: 'linear-gradient(180deg, #1f293d 0%, #111422 100%)',
@@ -131,7 +133,7 @@ export const BirthdayTimeCapsule: React.FC = () => {
                 alignItems: 'center',
                 justifyContent: 'center',
                 fontFamily: 'monospace',
-                fontSize: '1.4rem',
+                fontSize: 'clamp(1.2rem, 3.6vw, 1.4rem)',
                 fontWeight: 700,
                 color: '#FDE68A',
                 boxShadow: 'inset 0 2px 6px rgba(0,0,0,0.8)',
@@ -148,7 +150,7 @@ export const BirthdayTimeCapsule: React.FC = () => {
             <span style={{ fontSize: '0.62rem', color: 'var(--color-muted)', fontFamily: 'monospace' }}>MONTH</span>
             <div
               style={{
-                width: '74px',
+                width: 'clamp(62px, 18vw, 74px)',
                 height: '52px',
                 borderRadius: '8px',
                 background: 'linear-gradient(180deg, #1f293d 0%, #111422 100%)',
@@ -157,7 +159,7 @@ export const BirthdayTimeCapsule: React.FC = () => {
                 alignItems: 'center',
                 justifyContent: 'center',
                 fontFamily: 'monospace',
-                fontSize: '1.2rem',
+                fontSize: 'clamp(1.05rem, 3.2vw, 1.2rem)',
                 fontWeight: 700,
                 color: '#D8CCFF',
                 boxShadow: 'inset 0 2px 6px rgba(0,0,0,0.8)',
@@ -174,7 +176,7 @@ export const BirthdayTimeCapsule: React.FC = () => {
             <span style={{ fontSize: '0.62rem', color: 'var(--color-muted)', fontFamily: 'monospace' }}>KEY</span>
             <div
               style={{
-                width: '60px',
+                width: 'clamp(52px, 15vw, 60px)',
                 height: '52px',
                 borderRadius: '8px',
                 background: 'linear-gradient(180deg, #1f293d 0%, #111422 100%)',
@@ -183,7 +185,7 @@ export const BirthdayTimeCapsule: React.FC = () => {
                 alignItems: 'center',
                 justifyContent: 'center',
                 fontFamily: 'monospace',
-                fontSize: '1.1rem',
+                fontSize: 'clamp(0.98rem, 3vw, 1.1rem)',
                 fontWeight: 700,
                 color: '#F472B6',
                 boxShadow: 'inset 0 2px 6px rgba(0,0,0,0.8)',
@@ -202,16 +204,18 @@ export const BirthdayTimeCapsule: React.FC = () => {
             style={{
               display: 'inline-flex',
               alignItems: 'center',
+              justifyContent: 'center',
               gap: '0.5rem',
-              padding: '0.75rem 1.6rem',
+              padding: '0.75rem clamp(1rem, 3.5vw, 1.6rem)',
               borderRadius: 'var(--radius-full)',
               background: 'linear-gradient(135deg, rgba(251, 191, 36, 0.28) 0%, rgba(245, 158, 11, 0.18) 100%)',
               border: '1.5px solid rgba(251, 191, 36, 0.55)',
               color: '#FDE68A',
-              fontSize: '0.88rem',
+              fontSize: 'clamp(0.78rem, 2.6vw, 0.88rem)',
               fontWeight: 500,
               cursor: 'pointer',
               touchAction: 'manipulation',
+              whiteSpace: 'nowrap',
             }}
           >
             <Lock size={15} />
@@ -224,14 +228,16 @@ export const BirthdayTimeCapsule: React.FC = () => {
             style={{
               display: 'flex',
               alignItems: 'center',
+              justifyContent: 'center',
               gap: '0.45rem',
-              padding: '0.55rem 1.1rem',
+              padding: '0.55rem 1rem',
               borderRadius: 'var(--radius-full)',
               background: 'rgba(16, 185, 129, 0.15)',
               border: '1px solid rgba(16, 185, 129, 0.4)',
               color: '#34D399',
-              fontSize: '0.82rem',
+              fontSize: 'clamp(0.72rem, 2.4vw, 0.82rem)',
               fontFamily: 'monospace',
+              whiteSpace: 'nowrap',
             }}
           >
             <Unlock size={14} />

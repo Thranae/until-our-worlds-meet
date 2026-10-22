@@ -142,6 +142,7 @@ export const AirportTerminal: React.FC = () => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
+            gap: '0.5rem',
             background: 'rgba(0, 0, 0, 0.5)',
             padding: '0.65rem 0.85rem',
             borderRadius: 'var(--radius-sm)',
@@ -149,8 +150,8 @@ export const AirportTerminal: React.FC = () => {
             fontFamily: 'monospace',
           }}
         >
-          <span style={{ color: 'var(--color-muted)', fontSize: '0.74rem' }}>FLIGHT</span>
-          <span style={{ color: '#FDE68A', fontSize: '0.84rem', fontWeight: 600 }}>
+          <span style={{ color: 'var(--color-muted)', fontSize: '0.74rem', whiteSpace: 'nowrap' }}>FLIGHT</span>
+          <span style={{ color: '#FDE68A', fontSize: 'clamp(0.76rem, 2.6vw, 0.84rem)', fontWeight: 600, whiteSpace: 'nowrap' }}>
             PW-1108 • NON-STOP
           </span>
         </div>
@@ -161,6 +162,7 @@ export const AirportTerminal: React.FC = () => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
+            gap: '0.5rem',
             background: 'rgba(0, 0, 0, 0.5)',
             padding: '0.65rem 0.85rem',
             borderRadius: 'var(--radius-sm)',
@@ -168,8 +170,8 @@ export const AirportTerminal: React.FC = () => {
             fontFamily: 'monospace',
           }}
         >
-          <span style={{ color: 'var(--color-muted)', fontSize: '0.74rem' }}>ROUTE</span>
-          <span style={{ color: 'var(--color-ivory)', fontSize: '0.82rem' }}>
+          <span style={{ color: 'var(--color-muted)', fontSize: '0.74rem', whiteSpace: 'nowrap' }}>ROUTE</span>
+          <span style={{ color: 'var(--color-ivory)', fontSize: 'clamp(0.72rem, 2.5vw, 0.82rem)', whiteSpace: 'nowrap' }}>
             MY WORLD ➔ {siteContent.recipient.nickname.toUpperCase()}&apos;S WORLD
           </span>
         </div>
@@ -180,6 +182,7 @@ export const AirportTerminal: React.FC = () => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
+            gap: '0.5rem',
             background: hasLanded ? 'rgba(16, 185, 129, 0.15)' : 'rgba(0, 0, 0, 0.5)',
             padding: '0.65rem 0.85rem',
             borderRadius: 'var(--radius-sm)',
@@ -188,7 +191,7 @@ export const AirportTerminal: React.FC = () => {
             transition: 'all 0.5s ease',
           }}
         >
-          <span style={{ color: 'var(--color-muted)', fontSize: '0.74rem' }}>STATUS</span>
+          <span style={{ color: 'var(--color-muted)', fontSize: '0.74rem', whiteSpace: 'nowrap' }}>STATUS</span>
           <motion.span
             key={hasLanded ? 'landed' : 'scheduled'}
             initial={{ rotateX: -90 }}
@@ -196,9 +199,10 @@ export const AirportTerminal: React.FC = () => {
             transition={{ duration: 0.4 }}
             style={{
               color: hasLanded ? '#34D399' : '#FDE68A',
-              fontSize: '0.84rem',
+              fontSize: 'clamp(0.72rem, 2.5vw, 0.84rem)',
               fontWeight: 700,
-              letterSpacing: '0.06em',
+              letterSpacing: '0.04em',
+              whiteSpace: 'nowrap',
             }}
           >
             {hasLanded ? '✦ TOUCHDOWN • FIRST HUG' : 'INBOUND • ON SCHEDULE'}
@@ -220,11 +224,12 @@ export const AirportTerminal: React.FC = () => {
               background: 'linear-gradient(135deg, rgba(251, 191, 36, 0.28) 0%, rgba(245, 158, 11, 0.18) 100%)',
               border: '1.5px solid rgba(251, 191, 36, 0.5)',
               color: '#FDE68A',
-              fontSize: '0.84rem',
+              fontSize: 'clamp(0.78rem, 2.6vw, 0.84rem)',
               fontWeight: 500,
               cursor: 'pointer',
               marginTop: '0.4rem',
               touchAction: 'manipulation',
+              whiteSpace: 'nowrap',
             }}
           >
             <Clock size={15} />
@@ -244,9 +249,10 @@ export const AirportTerminal: React.FC = () => {
               background: 'rgba(16, 185, 129, 0.15)',
               border: '1px solid rgba(16, 185, 129, 0.4)',
               color: '#34D399',
-              fontSize: '0.8rem',
+              fontSize: 'clamp(0.74rem, 2.4vw, 0.8rem)',
               fontFamily: 'monospace',
               marginTop: '0.4rem',
+              whiteSpace: 'nowrap',
             }}
           >
             <Heart size={14} fill="currentColor" />

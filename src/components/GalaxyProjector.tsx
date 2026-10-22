@@ -408,16 +408,20 @@ export const GalaxyProjector: React.FC = () => {
               bottom: '12px',
               left: '50%',
               transform: 'translateX(-50%)',
-              fontSize: '0.7rem',
+              maxWidth: 'calc(100% - 1.5rem)',
+              fontSize: 'clamp(0.62rem, 2.2vw, 0.7rem)',
               color: 'var(--color-ivory)',
               fontFamily: 'monospace',
-              background: 'rgba(10, 14, 30, 0.8)',
+              background: 'rgba(10, 14, 30, 0.85)',
               padding: '0.22rem 0.75rem',
               borderRadius: 'var(--radius-full)',
               border: '1px solid rgba(216, 204, 255, 0.25)',
               pointerEvents: 'none',
-              letterSpacing: '0.05em',
+              letterSpacing: '0.04em',
               whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              zIndex: 9,
             }}
           >
             TAP CEILING TO CAST SHOOTING STARS ✦ ({starsCaught} WISHES)

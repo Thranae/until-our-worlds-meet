@@ -1751,12 +1751,13 @@ export const ShivaSanctuary: React.FC = () => {
       >
         <div
           style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
+            display: 'flex',
+            flexDirection: 'column',
             gap: '0.35rem',
             width: '100%',
           }}
         >
+          {/* Featured Primary Darshan: Tungnath */}
           <button
             type="button"
             onClick={() => {
@@ -1764,101 +1765,116 @@ export const ShivaSanctuary: React.FC = () => {
               setSanctuaryView('tungnath');
             }}
             style={{
-              padding: '0.45rem 0.3rem',
+              padding: '0.55rem 0.6rem',
               borderRadius: 'var(--radius-md)',
               background: activeDarshan === 'tungnath' ? 'rgba(56, 189, 248, 0.28)' : 'rgba(255, 255, 255, 0.05)',
               border: activeDarshan === 'tungnath' ? '1.5px solid rgba(147, 197, 253, 0.8)' : '1px solid rgba(255, 255, 255, 0.1)',
               color: activeDarshan === 'tungnath' ? '#E0F2FE' : 'var(--color-muted)',
-              fontSize: '0.72rem',
+              fontSize: '0.74rem',
               fontWeight: 700,
               cursor: 'pointer',
               touchAction: 'manipulation',
               transition: 'all 0.2s ease',
               textAlign: 'center',
+              width: '100%',
             }}
           >
-            🏔️ Tungnath • Himalayas ✦
+            🏔️ Sri Tungnath Mahadeva • Sacred Himalayas ✦
           </button>
 
-          <button
-            type="button"
-            onClick={() => setActiveDarshan('adiyogi')}
+          {/* Balanced 2x2 Grid for Other Sacred Darshans */}
+          <div
             style={{
-              padding: '0.45rem 0.3rem',
-              borderRadius: 'var(--radius-md)',
-              background: activeDarshan === 'adiyogi' ? 'rgba(253, 230, 138, 0.22)' : 'rgba(255, 255, 255, 0.05)',
-              border: activeDarshan === 'adiyogi' ? '1px solid rgba(253, 230, 138, 0.65)' : '1px solid rgba(255, 255, 255, 0.1)',
-              color: activeDarshan === 'adiyogi' ? '#FEF3C7' : 'var(--color-muted)',
-              fontSize: '0.72rem',
-              fontWeight: 600,
-              cursor: 'pointer',
-              touchAction: 'manipulation',
-              transition: 'all 0.2s ease',
-              textAlign: 'center',
+              display: 'grid',
+              gridTemplateColumns: 'repeat(2, 1fr)',
+              gap: '0.35rem',
+              width: '100%',
             }}
           >
-            Adiyogi • Kovai
-          </button>
+            <button
+              type="button"
+              onClick={() => setActiveDarshan('adiyogi')}
+              style={{
+                padding: '0.45rem 0.35rem',
+                borderRadius: 'var(--radius-md)',
+                background: activeDarshan === 'adiyogi' ? 'rgba(253, 230, 138, 0.22)' : 'rgba(255, 255, 255, 0.05)',
+                border: activeDarshan === 'adiyogi' ? '1px solid rgba(253, 230, 138, 0.65)' : '1px solid rgba(255, 255, 255, 0.1)',
+                color: activeDarshan === 'adiyogi' ? '#FEF3C7' : 'var(--color-muted)',
+                fontSize: '0.7rem',
+                fontWeight: 600,
+                cursor: 'pointer',
+                touchAction: 'manipulation',
+                transition: 'all 0.2s ease',
+                textAlign: 'center',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              Adiyogi • Kovai
+            </button>
 
-          <button
-            type="button"
-            onClick={() => setActiveDarshan('kapaleeshwarar')}
-            style={{
-              padding: '0.45rem 0.3rem',
-              borderRadius: 'var(--radius-md)',
-              background: activeDarshan === 'kapaleeshwarar' ? 'rgba(253, 230, 138, 0.22)' : 'rgba(255, 255, 255, 0.05)',
-              border: activeDarshan === 'kapaleeshwarar' ? '1px solid rgba(253, 230, 138, 0.65)' : '1px solid rgba(255, 255, 255, 0.1)',
-              color: activeDarshan === 'kapaleeshwarar' ? '#FEF3C7' : 'var(--color-muted)',
-              fontSize: '0.72rem',
-              fontWeight: 600,
-              cursor: 'pointer',
-              touchAction: 'manipulation',
-              transition: 'all 0.2s ease',
-              textAlign: 'center',
-            }}
-          >
-            Kapaleeshwarar • Chennai
-          </button>
+            <button
+              type="button"
+              onClick={() => setActiveDarshan('kapaleeshwarar')}
+              style={{
+                padding: '0.45rem 0.35rem',
+                borderRadius: 'var(--radius-md)',
+                background: activeDarshan === 'kapaleeshwarar' ? 'rgba(253, 230, 138, 0.22)' : 'rgba(255, 255, 255, 0.05)',
+                border: activeDarshan === 'kapaleeshwarar' ? '1px solid rgba(253, 230, 138, 0.65)' : '1px solid rgba(255, 255, 255, 0.1)',
+                color: activeDarshan === 'kapaleeshwarar' ? '#FEF3C7' : 'var(--color-muted)',
+                fontSize: '0.7rem',
+                fontWeight: 600,
+                cursor: 'pointer',
+                touchAction: 'manipulation',
+                transition: 'all 0.2s ease',
+                textAlign: 'center',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              Kapaleeshwarar • Chennai
+            </button>
 
-          <button
-            type="button"
-            onClick={() => setActiveDarshan('ujjain')}
-            style={{
-              padding: '0.45rem 0.3rem',
-              borderRadius: 'var(--radius-md)',
-              background: activeDarshan === 'ujjain' ? 'rgba(251, 191, 36, 0.28)' : 'rgba(255, 255, 255, 0.05)',
-              border: activeDarshan === 'ujjain' ? '1px solid rgba(251, 191, 36, 0.75)' : '1px solid rgba(255, 255, 255, 0.1)',
-              color: activeDarshan === 'ujjain' ? '#FDE68A' : 'var(--color-muted)',
-              fontSize: '0.72rem',
-              fontWeight: 600,
-              cursor: 'pointer',
-              touchAction: 'manipulation',
-              transition: 'all 0.2s ease',
-              textAlign: 'center',
-            }}
-          >
-            Mahakaleshwar • Ujjain ✦
-          </button>
+            <button
+              type="button"
+              onClick={() => setActiveDarshan('ujjain')}
+              style={{
+                padding: '0.45rem 0.35rem',
+                borderRadius: 'var(--radius-md)',
+                background: activeDarshan === 'ujjain' ? 'rgba(251, 191, 36, 0.28)' : 'rgba(255, 255, 255, 0.05)',
+                border: activeDarshan === 'ujjain' ? '1px solid rgba(251, 191, 36, 0.75)' : '1px solid rgba(255, 255, 255, 0.1)',
+                color: activeDarshan === 'ujjain' ? '#FDE68A' : 'var(--color-muted)',
+                fontSize: '0.7rem',
+                fontWeight: 600,
+                cursor: 'pointer',
+                touchAction: 'manipulation',
+                transition: 'all 0.2s ease',
+                textAlign: 'center',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              Mahakaleshwar • Ujjain ✦
+            </button>
 
-          <button
-            type="button"
-            onClick={() => setActiveDarshan('chandra')}
-            style={{
-              padding: '0.45rem 0.3rem',
-              borderRadius: 'var(--radius-md)',
-              background: activeDarshan === 'chandra' ? 'rgba(253, 230, 138, 0.22)' : 'rgba(255, 255, 255, 0.05)',
-              border: activeDarshan === 'chandra' ? '1px solid rgba(253, 230, 138, 0.65)' : '1px solid rgba(255, 255, 255, 0.1)',
-              color: activeDarshan === 'chandra' ? '#FEF3C7' : 'var(--color-muted)',
-              fontSize: '0.72rem',
-              fontWeight: 600,
-              cursor: 'pointer',
-              touchAction: 'manipulation',
-              transition: 'all 0.2s ease',
-              textAlign: 'center',
-            }}
-          >
-            Chandra • Divine Grace
-          </button>
+            <button
+              type="button"
+              onClick={() => setActiveDarshan('chandra')}
+              style={{
+                padding: '0.45rem 0.35rem',
+                borderRadius: 'var(--radius-md)',
+                background: activeDarshan === 'chandra' ? 'rgba(253, 230, 138, 0.22)' : 'rgba(255, 255, 255, 0.05)',
+                border: activeDarshan === 'chandra' ? '1px solid rgba(253, 230, 138, 0.65)' : '1px solid rgba(255, 255, 255, 0.1)',
+                color: activeDarshan === 'chandra' ? '#FEF3C7' : 'var(--color-muted)',
+                fontSize: '0.7rem',
+                fontWeight: 600,
+                cursor: 'pointer',
+                touchAction: 'manipulation',
+                transition: 'all 0.2s ease',
+                textAlign: 'center',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              Chandra • Divine Grace
+            </button>
+          </div>
         </div>
 
         {/* Darshan Detail Card */}

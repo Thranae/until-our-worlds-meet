@@ -1015,7 +1015,7 @@ export const CelestialRedBull: React.FC = () => {
             marginTop: '1.25rem',
             width: '100%',
             maxWidth: '480px',
-            padding: '1.75rem 1.5rem',
+            padding: '1.25rem 1rem',
             textAlign: 'center',
             border: '1px solid rgba(254, 240, 138, 0.4)',
             boxShadow: '0 16px 45px rgba(0, 0, 0, 0.45), 0 0 30px rgba(253, 230, 138, 0.18)',
@@ -1027,26 +1027,26 @@ export const CelestialRedBull: React.FC = () => {
             style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(3, 1fr)',
-              gap: '0.5rem',
-              padding: '0.75rem',
+              gap: '0.35rem',
+              padding: '0.65rem 0.45rem',
               borderRadius: 'var(--radius-sm)',
               background: 'rgba(255, 255, 255, 0.04)',
               border: '1px solid rgba(255, 255, 255, 0.08)',
-              marginBottom: '1.2rem',
-              fontSize: '0.74rem',
+              marginBottom: '1.1rem',
+              fontSize: 'clamp(0.65rem, 2.4vw, 0.74rem)',
             }}
           >
             <div>
-              <span style={{ display: 'block', color: 'var(--color-muted)', fontSize: '0.66rem' }}>{edition.boostTitle}</span>
-              <span style={{ fontWeight: 700, color: '#FDE68A' }}>{edition.boostValue}</span>
+              <span style={{ display: 'block', color: 'var(--color-muted)', fontSize: '0.62rem', whiteSpace: 'nowrap' }}>{edition.boostTitle}</span>
+              <span style={{ fontWeight: 700, color: '#FDE68A', fontSize: 'clamp(0.7rem, 2.5vw, 0.78rem)' }}>{edition.boostValue}</span>
             </div>
             <div>
-              <span style={{ display: 'block', color: 'var(--color-muted)', fontSize: '0.66rem' }}>{edition.wingsTitle}</span>
-              <span style={{ fontWeight: 700, color: '#A78BFA' }}>{edition.wingsValue}</span>
+              <span style={{ display: 'block', color: 'var(--color-muted)', fontSize: '0.62rem', whiteSpace: 'nowrap' }}>{edition.wingsTitle}</span>
+              <span style={{ fontWeight: 700, color: '#A78BFA', fontSize: 'clamp(0.7rem, 2.5vw, 0.78rem)' }}>{edition.wingsValue}</span>
             </div>
             <div>
-              <span style={{ display: 'block', color: 'var(--color-muted)', fontSize: '0.66rem' }}>NET CONTENT</span>
-              <span style={{ fontWeight: 700, color: '#93C5FD' }}>{edition.netContent}</span>
+              <span style={{ display: 'block', color: 'var(--color-muted)', fontSize: '0.62rem', whiteSpace: 'nowrap' }}>NET CONTENT</span>
+              <span style={{ fontWeight: 700, color: '#93C5FD', fontSize: 'clamp(0.7rem, 2.5vw, 0.78rem)' }}>{edition.netContent}</span>
             </div>
           </div>
 

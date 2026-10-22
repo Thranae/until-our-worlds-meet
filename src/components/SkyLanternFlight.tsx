@@ -662,11 +662,16 @@ export const SkyLanternFlight: React.FC<SkyLanternFlightProps> = ({ onProceedToL
                   background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
                   boxShadow: '0 6px 25px rgba(245, 158, 11, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.4)',
                   borderColor: 'rgba(254, 240, 138, 0.7)',
-                  fontSize: '0.92rem',
-                  padding: '0.8rem',
+                  fontSize: 'clamp(0.82rem, 2.7vw, 0.92rem)',
+                  padding: '0.75rem',
+                  whiteSpace: 'nowrap',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.45rem',
                 }}
               >
-                <Flame size={17} />
+                <Flame size={16} />
                 <span>Light & Release into the Clouds ✦</span>
               </motion.button>
             </motion.div>
@@ -677,7 +682,7 @@ export const SkyLanternFlight: React.FC<SkyLanternFlightProps> = ({ onProceedToL
               animate={{ opacity: 1, y: 0 }}
               className="glass-panel"
               style={{
-                padding: '1.75rem 1.5rem',
+                padding: 'clamp(1.25rem, 3.5vw, 1.75rem) clamp(1rem, 3vw, 1.5rem)',
                 textAlign: 'center',
                 border: '1px solid rgba(254, 240, 138, 0.45)',
                 boxShadow: '0 16px 45px rgba(0, 0, 0, 0.5), 0 0 35px rgba(253, 230, 138, 0.25)',
@@ -703,7 +708,7 @@ export const SkyLanternFlight: React.FC<SkyLanternFlightProps> = ({ onProceedToL
               <p
                 style={{
                   fontFamily: 'var(--font-serif)',
-                  fontSize: '1.25rem',
+                  fontSize: 'clamp(1.1rem, 3.8vw, 1.25rem)',
                   color: 'var(--color-ivory)',
                   fontStyle: 'italic',
                   lineHeight: 1.6,
@@ -717,7 +722,7 @@ export const SkyLanternFlight: React.FC<SkyLanternFlightProps> = ({ onProceedToL
                 style={{
                   display: 'flex',
                   flexWrap: 'wrap',
-                  gap: '0.75rem',
+                  gap: '0.65rem',
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}
@@ -727,12 +732,16 @@ export const SkyLanternFlight: React.FC<SkyLanternFlightProps> = ({ onProceedToL
                   onClick={onProceedToLetter}
                   className="btn-primary"
                   style={{
-                    fontSize: '0.88rem',
-                    padding: '0.65rem 1.4rem',
+                    fontSize: 'clamp(0.8rem, 2.5vw, 0.88rem)',
+                    padding: '0.65rem 1.25rem',
+                    whiteSpace: 'nowrap',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.4rem',
                   }}
                 >
                   <span>Open Birthday Letter</span>
-                  <ArrowRight size={16} />
+                  <ArrowRight size={15} />
                 </button>
 
                 <button
@@ -740,8 +749,12 @@ export const SkyLanternFlight: React.FC<SkyLanternFlightProps> = ({ onProceedToL
                   onClick={handleReset}
                   className="btn-secondary"
                   style={{
-                    fontSize: '0.82rem',
-                    padding: '0.65rem 1.1rem',
+                    fontSize: 'clamp(0.76rem, 2.4vw, 0.82rem)',
+                    padding: '0.65rem 1rem',
+                    whiteSpace: 'nowrap',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.4rem',
                   }}
                 >
                   <RotateCcw size={14} />

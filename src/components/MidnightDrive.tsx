@@ -363,11 +363,11 @@ export const MidnightDrive: React.FC = () => {
       {/* Car Dashboard Quick Toggles */}
       <div
         style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: '0.5rem',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(3, 1fr)',
+          gap: '0.45rem',
           width: '100%',
-          justifyContent: 'center',
+          maxWidth: '520px',
         }}
       >
         <button
@@ -377,23 +377,24 @@ export const MidnightDrive: React.FC = () => {
             setHighBeams(!highBeams);
           }}
           style={{
-            flex: '1 1 120px',
-            padding: '0.65rem 0.6rem',
+            padding: '0.6rem 0.35rem',
             borderRadius: 'var(--radius-full)',
             background: highBeams ? 'rgba(253, 230, 138, 0.22)' : 'rgba(14, 18, 36, 0.6)',
             border: `1.5px solid ${highBeams ? '#FDE68A' : 'rgba(216, 204, 255, 0.12)'}`,
             color: highBeams ? '#FDE68A' : 'var(--color-muted)',
-            fontSize: '0.78rem',
+            fontSize: 'clamp(0.68rem, 2.4vw, 0.78rem)',
+            fontWeight: 500,
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '0.35rem',
+            gap: '0.3rem',
             touchAction: 'manipulation',
+            whiteSpace: 'nowrap',
           }}
         >
-          <Lightbulb size={14} />
-          <span>{highBeams ? 'High Beams ON' : 'Low Beams'}</span>
+          <Lightbulb size={13} style={{ flexShrink: 0 }} />
+          <span>{highBeams ? 'High Beams' : 'Low Beams'}</span>
         </button>
 
         <button
@@ -403,46 +404,48 @@ export const MidnightDrive: React.FC = () => {
             setSpeed(speed === 82 ? 105 : 82);
           }}
           style={{
-            flex: '1 1 140px',
-            padding: '0.65rem 0.6rem',
+            padding: '0.6rem 0.35rem',
             borderRadius: 'var(--radius-full)',
             background: speed > 82 ? 'rgba(244, 114, 182, 0.22)' : 'rgba(14, 18, 36, 0.6)',
             border: `1.5px solid ${speed > 82 ? '#F472B6' : 'rgba(216, 204, 255, 0.12)'}`,
             color: speed > 82 ? '#F472B6' : 'var(--color-muted)',
-            fontSize: '0.78rem',
+            fontSize: 'clamp(0.68rem, 2.4vw, 0.78rem)',
+            fontWeight: 500,
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '0.35rem',
+            gap: '0.3rem',
             touchAction: 'manipulation',
+            whiteSpace: 'nowrap',
           }}
         >
-          <Wind size={14} />
-          <span>{speed > 82 ? 'Windows Down • 105 km/h' : 'Cruising • 82 km/h'}</span>
+          <Wind size={13} style={{ flexShrink: 0 }} />
+          <span>{speed > 82 ? '105 km/h' : '82 km/h'}</span>
         </button>
 
         <button
           type="button"
           onClick={() => setShowPassengerCam(!showPassengerCam)}
           style={{
-            flex: '1 1 140px',
-            padding: '0.65rem 0.6rem',
+            padding: '0.6rem 0.35rem',
             borderRadius: 'var(--radius-full)',
             background: showPassengerCam ? 'rgba(56, 189, 248, 0.22)' : 'rgba(14, 18, 36, 0.6)',
             border: `1.5px solid ${showPassengerCam ? '#38BDF8' : 'rgba(216, 204, 255, 0.12)'}`,
             color: showPassengerCam ? '#38BDF8' : 'var(--color-muted)',
-            fontSize: '0.78rem',
+            fontSize: 'clamp(0.68rem, 2.4vw, 0.78rem)',
+            fontWeight: 500,
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '0.35rem',
+            gap: '0.3rem',
             touchAction: 'manipulation',
+            whiteSpace: 'nowrap',
           }}
         >
-          <Camera size={14} />
-          <span>{showPassengerCam ? 'Passenger Cam ON' : 'Passenger Cam OFF'}</span>
+          <Camera size={13} style={{ flexShrink: 0 }} />
+          <span>{showPassengerCam ? 'Cam ON' : 'Cam OFF'}</span>
         </button>
       </div>
 

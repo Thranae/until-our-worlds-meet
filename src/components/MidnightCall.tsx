@@ -145,7 +145,6 @@ export const MidnightCall: React.FC = () => {
         width: '100%',
         maxWidth: '520px',
         margin: '0 auto',
-        paddingBottom: '5rem',
       }}
     >
       {/* Smartphone Call Screen Frame */}

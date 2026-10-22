@@ -548,11 +548,11 @@ export const CosmicRadio: React.FC = () => {
         {/* RADIO BUTTONS & PRESETS */}
         <div
           style={{
-            display: 'flex',
-            flexWrap: 'wrap',
+            display: 'grid',
+            gridTemplateColumns: 'repeat(2, 1fr)',
             alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: '0.75rem',
+            gap: '0.5rem',
+            width: '100%',
           }}
         >
           {/* Main Power Button */}
@@ -562,26 +562,26 @@ export const CosmicRadio: React.FC = () => {
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.95 }}
             style={{
-              flex: '1 1 140px',
               display: 'inline-flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '0.5rem',
-              padding: '0.65rem 1.25rem',
+              gap: '0.4rem',
+              padding: '0.65rem 0.75rem',
               borderRadius: 'var(--radius-full)',
               background: isPlaying
                 ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)'
                 : 'rgba(255, 255, 255, 0.06)',
               border: isPlaying ? '1px solid rgba(254, 240, 138, 0.6)' : '1px solid rgba(255, 255, 255, 0.15)',
               color: isPlaying ? '#FEF3C7' : 'var(--color-ivory)',
-              fontSize: '0.84rem',
+              fontSize: 'clamp(0.74rem, 2.4vw, 0.82rem)',
               fontWeight: 600,
               cursor: 'pointer',
               boxShadow: isPlaying ? '0 0 20px rgba(245, 158, 11, 0.4)' : 'none',
               transition: 'all 0.25s',
+              whiteSpace: 'nowrap',
             }}
           >
-            <Volume2 size={16} />
+            <Volume2 size={15} />
             <span>{isPlaying ? 'Radio Active ✦' : 'Turn On Radio'}</span>
           </motion.button>
 
@@ -591,10 +591,15 @@ export const CosmicRadio: React.FC = () => {
             onClick={() => handleTuneChange(110.8)}
             className="btn-secondary"
             style={{
-              fontSize: '0.78rem',
-              padding: '0.55rem 0.95rem',
+              fontSize: 'clamp(0.72rem, 2.3vw, 0.78rem)',
+              padding: '0.65rem 0.75rem',
               borderColor: 'rgba(244, 114, 182, 0.4)',
               color: '#F472B6',
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.35rem',
+              whiteSpace: 'nowrap',
             }}
             aria-label="Tune to Bot's birthday frequency 110.8"
           >

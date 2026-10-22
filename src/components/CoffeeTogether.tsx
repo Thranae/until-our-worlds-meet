@@ -483,11 +483,9 @@ export const CoffeeTogether: React.FC = () => {
       {/* Interactive Toolbar for Latte Art & Aroma */}
       <div
         style={{
-          display: 'flex',
-          gap: '0.5rem',
-          alignItems: 'center',
-          justifyContent: 'center',
-          flexWrap: 'wrap',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(3, 1fr)',
+          gap: '0.4rem',
           width: '100%',
         }}
       >
@@ -497,19 +495,21 @@ export const CoffeeTogether: React.FC = () => {
           style={{
             display: 'inline-flex',
             alignItems: 'center',
-            gap: '0.4rem',
-            padding: '0.45rem 0.9rem',
+            justifyContent: 'center',
+            gap: '0.3rem',
+            padding: '0.5rem 0.35rem',
             borderRadius: 'var(--radius-full)',
             background: 'rgba(217, 119, 6, 0.22)',
             border: '1px solid rgba(245, 158, 11, 0.45)',
             color: '#FEF3C7',
-            fontSize: '0.78rem',
+            fontSize: 'clamp(0.68rem, 2.3vw, 0.76rem)',
             fontWeight: 500,
             cursor: 'pointer',
+            whiteSpace: 'nowrap',
           }}
         >
-          <Coffee size={14} />
-          <span>Cheers Mugs {sipsCount > 0 ? `(${sipsCount})` : ''}</span>
+          <Coffee size={13} />
+          <span>Cheers {sipsCount > 0 ? `(${sipsCount})` : ''}</span>
         </button>
 
         <button
@@ -522,18 +522,20 @@ export const CoffeeTogether: React.FC = () => {
           style={{
             display: 'inline-flex',
             alignItems: 'center',
-            gap: '0.4rem',
-            padding: '0.45rem 0.9rem',
+            justifyContent: 'center',
+            gap: '0.3rem',
+            padding: '0.5rem 0.35rem',
             borderRadius: 'var(--radius-full)',
             background: 'rgba(255, 255, 255, 0.08)',
             border: '1px solid rgba(255, 255, 255, 0.18)',
             color: 'var(--color-ivory)',
-            fontSize: '0.78rem',
+            fontSize: 'clamp(0.68rem, 2.3vw, 0.76rem)',
             cursor: 'pointer',
+            whiteSpace: 'nowrap',
           }}
         >
-          <Heart size={14} />
-          <span>Latte Art: {latteArt.toUpperCase()}</span>
+          <Heart size={13} />
+          <span>Art: {latteArt.toUpperCase()}</span>
         </button>
 
         <button
@@ -557,18 +559,20 @@ export const CoffeeTogether: React.FC = () => {
           style={{
             display: 'inline-flex',
             alignItems: 'center',
-            gap: '0.4rem',
-            padding: '0.45rem 0.9rem',
+            justifyContent: 'center',
+            gap: '0.3rem',
+            padding: '0.5rem 0.35rem',
             borderRadius: 'var(--radius-full)',
             background: 'rgba(255, 255, 255, 0.08)',
             border: '1px solid rgba(255, 255, 255, 0.18)',
             color: 'var(--color-ivory)',
-            fontSize: '0.78rem',
+            fontSize: 'clamp(0.68rem, 2.3vw, 0.76rem)',
             cursor: 'pointer',
+            whiteSpace: 'nowrap',
           }}
         >
-          <Wind size={14} />
-          <span>Fresh Aroma ♨️</span>
+          <Wind size={13} />
+          <span>Aroma ♨️</span>
         </button>
       </div>
 

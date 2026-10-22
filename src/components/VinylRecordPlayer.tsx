@@ -531,7 +531,7 @@ export const VinylRecordPlayer: React.FC = () => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: '0.75rem',
+          gap: 'clamp(0.45rem, 2vw, 0.75rem)',
           width: '100%',
         }}
       >
@@ -539,15 +539,16 @@ export const VinylRecordPlayer: React.FC = () => {
           type="button"
           onClick={() => setSpeed(speed === '33' ? '45' : '33')}
           style={{
-            padding: '0.55rem 0.85rem',
+            padding: '0.55rem 0.8rem',
             borderRadius: 'var(--radius-full)',
             background: 'rgba(14, 18, 36, 0.6)',
             border: '1px solid rgba(216, 204, 255, 0.15)',
             color: 'var(--color-muted)',
-            fontSize: '0.72rem',
+            fontSize: 'clamp(0.68rem, 2.2vw, 0.72rem)',
             fontFamily: 'monospace',
             cursor: 'pointer',
             touchAction: 'manipulation',
+            whiteSpace: 'nowrap',
           }}
         >
           {speed} RPM
@@ -560,22 +561,23 @@ export const VinylRecordPlayer: React.FC = () => {
             display: 'inline-flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '0.5rem',
-            padding: '0.75rem 1.6rem',
+            gap: '0.45rem',
+            padding: '0.7rem clamp(0.95rem, 3vw, 1.5rem)',
             borderRadius: 'var(--radius-full)',
             background: isPlaying
               ? 'linear-gradient(135deg, rgba(239, 68, 68, 0.3) 0%, rgba(220, 38, 38, 0.18) 100%)'
               : 'linear-gradient(135deg, rgba(251, 191, 36, 0.3) 0%, rgba(245, 158, 11, 0.18) 100%)',
             border: `1.5px solid ${isPlaying ? 'rgba(239, 68, 68, 0.5)' : 'rgba(251, 191, 36, 0.55)'}`,
             color: isPlaying ? '#FCA5A5' : '#FDE68A',
-            fontSize: '0.88rem',
+            fontSize: 'clamp(0.78rem, 2.5vw, 0.86rem)',
             fontWeight: 500,
             cursor: 'pointer',
             boxShadow: '0 6px 20px rgba(0, 0, 0, 0.35)',
             touchAction: 'manipulation',
+            whiteSpace: 'nowrap',
           }}
         >
-          {isPlaying ? <Pause size={16} /> : <Play size={16} fill="currentColor" />}
+          {isPlaying ? <Pause size={15} /> : <Play size={15} fill="currentColor" />}
           <span>{isPlaying ? 'Lift Tonearm' : 'Drop Needle ✦'}</span>
         </button>
 
